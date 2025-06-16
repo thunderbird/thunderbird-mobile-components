@@ -10,6 +10,82 @@
 # 3. Run the examples and check for any issues.
 
 [versions]
+# AGP and tools should be updated together
+androidGradlePlugin = "8.10.1"
+androidTools = "31.10.1"
+androidXActivity = "1.10.1"
+dependencyCheckPlugin = "0.52.0"
+detektPlugin = "1.23.5"
+detektPluginCompose = "0.4.22"
 gradle = "8.14.2"
+composeHotReload = "1.0.0-alpha10"
+composeMultiplatform = "1.8.1"
+jetbrainsComposeLifecycle = "2.9.0"
+kotlinBom = "2.1.21"
 # Needs to match the version used by Gradle, just check with `./gradlew --version`
 kotlinGradleBom = "2.0.21"
+kotlinKsp = "2.1.21-2.0.2"
+kotlinxCoroutines = "1.10.2"
+kotlinxCollectionsImmutable = "0.4.0"
+kotlinxDateTime = "0.6.2"
+kotlinxSerialization = "1.8.1"
+spotlessPlugin = "7.0.4"
+turbine = "1.2.0"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-lint = { id = "com.android.lint", version.ref = "androidGradlePlugin" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinBom" }
+compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+dependency-check = { id = "com.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinBom" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinBom" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinBom" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
+
+[libraries]
+android-tools-common = { module = "com.android.tools:common", version.ref = "androidTools" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
+detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
+jetbrains-compose-lifecycle-runtime = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsComposeLifecycle" }
+jetbrains-compose-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "jetbrainsComposeLifecycle" }
+jetbrains-compose-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsComposeLifecycle" }
+jetbrains-compose-lifecycle-viewmodel-savedstate = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "jetbrainsComposeLifecycle" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinBom" }
+kotlin-gradle-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinGradleBom" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDateTime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+[bundles]
+shared-kmp-common = [
+  "kotlinx-collections-immutable",
+  "kotlinx-coroutines-core",
+  "kotlinx-datetime",
+  "kotlinx-serialization-json",
+]
+shared-kmp-android = [
+  "kotlinx-coroutines-android",
+]
+shared-kmp-compose = [
+  "jetbrains-compose-lifecycle-runtime",
+  "jetbrains-compose-lifecycle-viewmodel",
+  "jetbrains-compose-lifecycle-viewmodel-compose",
+  "jetbrains-compose-lifecycle-viewmodel-savedstate",
+]
+shared-kmp-common-test = [
+  "kotlin-test",
+  "kotlinx-coroutines-test",
+  "turbine",
+]
