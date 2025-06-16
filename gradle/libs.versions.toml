@@ -1,0 +1,15 @@
+# Judging the impact of newer library versions on the app requires being intimately familiar with the code base.
+# Please don't open pull requests upgrading dependencies if you're a new contributor.
+# Instead, open an issue and let's discuss the upgrade there.
+#
+# Declarations are sorted alphabetically within their section.
+#
+# When upgrading dependencies, please follow these steps:
+# 1. Update the version in this file.
+# 2. Run `./gradlew build` and fix any issues.
+# 3. Run the examples and check for any issues.
+
+[versions]
+gradle = "8.14.2"
+# Needs to match the version used by Gradle, just check with `./gradlew --version`
+kotlinGradleBom = "2.0.21"
