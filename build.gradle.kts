@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
 
+    id("thunderbird.quality.detekt.root")
     id("thunderbird.quality.spotless.root")
     id("thunderbird.dependency.check")
 }

@@ -26,12 +26,21 @@ tasks.withType<Detekt>().configureEach {
         sarif.required.set(true)
         xml.required.set(true)
     }
+
+    tasks.getByName("build").dependsOn(this)
 }
 
 tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = ThunderbirdProjectConfig.Compiler.javaCompatibility.toString()
 
     exclude(defaultExcludes)
+}
+
+tasks.register("detektAll") {
+    group = "verification"
+    description = "Runs detekt on this project"
+
+    dependsOn(tasks.withType<Detekt>())
 }
 
 dependencies {
