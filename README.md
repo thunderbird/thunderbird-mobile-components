@@ -13,7 +13,7 @@ self-contained and can be used independently or in combination with other compon
 Kotlin Multiplatform to share code across platforms, allowing us to write once and run on both 
 Android and iOS.
 
-The components are are in different stages of development, and some may not be fully functional yet:
+The components are in different stages of development, and some may not be fully functional yet:
 
 - 🛠 In development: The component is being actively developed and may not be fully functional.
 - 🧪 Testing: The component is being tested and may have known issues.
