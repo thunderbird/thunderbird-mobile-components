@@ -1,0 +1,5 @@
+# General component owners
+* @thunderbird/mobile-android-reviewers
+
+# CODEOWNERS protection
+/.github/CODEOWNERS @kewisch
