@@ -1,6 +1,6 @@
 # Contributing
 
-Welcome to the Thunderbird Mobile Components project! We're excited to have you here and welcome 
+Welcome to the Thunderbird Mobile Components project! We're excited to have you here and welcome
 your contributions.
 
 ## Getting Started
@@ -20,7 +20,7 @@ If you encounter a bug or have a feature request, please follow these steps:
 
 > [!IMPORTANT]
 > The Thunderbird Mobile Components project is currently in the early stages of development.
-> We welcome contributions, but please be aware that the codebase is subject to change and may 
+> We welcome contributions, but please be aware that the codebase is subject to change and may
 > not be fully stable yet.
 
 Thank you for your willingness to contribute code! Here's how you can get started:
@@ -62,6 +62,7 @@ Thank you for your willingness to contribute code! Here's how you can get starte
 
 - Create a pull request to merge your changes into the main project.
 - Provide a clear and concise description of your changes, including:
-    - A reference to the issue you're addressing.
-    - A summary of the changes you made.
-    - Any relevant screenshots or testing results.
+  - A reference to the issue you're addressing.
+  - A summary of the changes you made.
+  - Any relevant screenshots or testing results.
+
