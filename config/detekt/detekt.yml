@@ -575,11 +575,13 @@ style:
   ForbiddenComment:
     active: true
     comments:
-      - reason: 'Forbidden FIXME todo marker in comment, please fix the problem.'
+      - reason: 'Forbidden FIXME todo marker in comment, please fix the problem or create an issue to address it.'
         value: 'FIXME:'
-      - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
+      - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping.'
         value: 'STOPSHIP:'
-    allowedPatterns: ''
+      - reason: 'Forbidden TODO todo marker in comment, please do the changes or create an issue to address it.'
+        value: 'TODO:'
+    allowedPatterns: '(TODO|FIXME)\((@[a-zA-z0-9-]+|#[0-9-]+)\):'
   ForbiddenImport:
     active: false
     imports: []
