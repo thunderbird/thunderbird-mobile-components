@@ -624,6 +624,7 @@ style:
     ignoreAnnotation: false
     ignoreAnnotated:
       - 'Preview'
+      - 'PreviewLightDark'
     ignoreNamedArgument: true
     ignoreEnums: false
     ignoreRanges: false
