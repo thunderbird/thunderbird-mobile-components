@@ -56,6 +56,7 @@ tb-publishing = { id = "net.thunderbird.gradle.plugin.publishing" }
 tb-quality-code-coverage = { id = "net.thunderbird.gradle.plugin.quality.coverage" }
 tb-quality-detekt = { id = "net.thunderbird.gradle.plugin.quality.detekt" }
 tb-quality-spotless = { id = "net.thunderbird.gradle.plugin.quality.spotless" }
+tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }

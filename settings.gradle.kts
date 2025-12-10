@@ -18,6 +18,8 @@ pluginManagement {
     includeBuild("build-plugin")
 }
 
+include(":components:bom")
+
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {

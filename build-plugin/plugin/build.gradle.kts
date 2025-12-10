@@ -23,6 +23,8 @@ dependencies {
     implementation(plugin(libs.plugins.kover))
     implementation(plugin(libs.plugins.detekt))
     implementation(plugin(libs.plugins.spotless))
+
+    compileOnly(libs.kotlinx.datetime)
 }
 
 gradlePlugin {
@@ -61,6 +63,11 @@ gradlePlugin {
         register("QualitySpotless") {
             id = "net.thunderbird.gradle.plugin.quality.spotless"
             implementationClass = "net.thunderbird.gradle.plugin.quality.spotless.SpotlessPlugin"
+        }
+
+        register("Versioning") {
+            id = "net.thunderbird.gradle.plugin.versioning"
+            implementationClass = "net.thunderbird.gradle.plugin.versioning.VersioningPlugin"
         }
     }
 }
