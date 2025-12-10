@@ -18,6 +18,7 @@ dependencies {
 
     implementation(plugin(libs.plugins.dependency.check))
 
+    implementation(plugin(libs.plugins.kover))
     implementation(plugin(libs.plugins.detekt))
     implementation(plugin(libs.plugins.spotless))
 }
@@ -42,6 +43,10 @@ gradlePlugin {
             implementationClass = "net.thunderbird.gradle.plugin.dependency.check.DependencyCheckPlugin"
         }
 
+        register("QualityCodeCoverage") {
+            id = "net.thunderbird.gradle.plugin.quality.coverage"
+            implementationClass = "net.thunderbird.gradle.plugin.quality.coverage.CodeCoveragePlugin"
+        }
         register("QualityDetekt") {
             id = "net.thunderbird.gradle.plugin.quality.detekt"
             implementationClass = "net.thunderbird.gradle.plugin.quality.detekt.DetektPlugin"
