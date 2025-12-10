@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.lint) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.compose.compiler) apply false
@@ -10,9 +9,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
 
-    id("thunderbird.quality.detekt.root")
-    id("thunderbird.quality.spotless.root")
-    id("thunderbird.dependency.check")
+    alias(libs.plugins.tb.dependency.check)
+    alias(libs.plugins.tb.quality.code.coverage)
+    alias(libs.plugins.tb.quality.detekt)
+    alias(libs.plugins.tb.quality.spotless)
 }
 
 tasks.named<Wrapper>("wrapper") {
