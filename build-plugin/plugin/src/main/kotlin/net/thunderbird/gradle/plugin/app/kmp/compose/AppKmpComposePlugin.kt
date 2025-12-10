@@ -12,6 +12,13 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+/**
+ * A Gradle plugin to configure a Kotlin Multiplatform Compose Application project.
+ *
+ * Supported platforms include Android, iOS (x64, Arm64, Simulator Arm64), and Desktop (JVM).
+ *
+ * It sets up the necessary plugins, targets, source sets, dependencies, and Android application settings.
+ */
 class AppKmpComposePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {

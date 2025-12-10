@@ -10,6 +10,13 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
+/**
+ * A Gradle plugin to configure a Kotlin Multiplatform Library project.
+ *
+ * Supported platforms include Android, iOS (x64, Arm64, Simulator Arm64), and JVM.
+ *
+ * It sets up the necessary plugins, targets, source sets, and dependencies.
+ */
 class LibraryKmpPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {

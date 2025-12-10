@@ -6,6 +6,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
+/**
+ * A Gradle plugin to configure Spotless code formatting for Kotlin, Kotlin Gradle scripts, Markdown,
+ * and miscellaneous files like .gitignore.
+ */
 class SpotlessPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {

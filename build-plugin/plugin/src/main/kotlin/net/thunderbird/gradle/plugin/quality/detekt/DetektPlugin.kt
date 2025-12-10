@@ -13,7 +13,7 @@ import org.gradle.kotlin.dsl.withType
 /**
  * Detekt plugin configuration.
  *
- *
+ * Applies the Detekt plugin, sets up configuration, and defines tasks for static code analysis.
  */
 class DetektPlugin : Plugin<Project> {
     override fun apply(target: Project) {

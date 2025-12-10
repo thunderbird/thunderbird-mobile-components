@@ -5,6 +5,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.withType
 
+/**
+ * A Gradle plugin to check for dependency updates while filtering out non-stable versions
+ * unless the current version is also non-stable.
+ */
 class DependencyCheckPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
