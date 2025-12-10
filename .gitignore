@@ -32,3 +32,6 @@ out/
 
 # Mac thumbnail db
 .DS_Store
+
+# Signing
+.signing/

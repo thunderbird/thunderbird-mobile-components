@@ -26,6 +26,7 @@ kotlinxCollectionsImmutable = "0.4.0"
 kotlinxDateTime = "0.7.1"
 kotlinxSerialization = "1.9.0"
 kover = "0.9.4"
+mavenPublish = "0.35.0"
 spotlessPlugin = "8.1.0"
 turbine = "1.2.1"
 
@@ -43,6 +44,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinBom" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
 
 # Build plugins
@@ -50,6 +52,7 @@ tb-app-kmp-compose = { id = "net.thunderbird.gradle.plugin.app.kmp.compose" }
 tb-library-kmp = { id = "net.thunderbird.gradle.plugin.library.kmp" }
 tb-library-kmp-compose = { id = "net.thunderbird.gradle.plugin.library.kmp.compose" }
 tb-dependency-check = { id = "net.thunderbird.gradle.plugin.dependency.check" }
+tb-publishing = { id = "net.thunderbird.gradle.plugin.publishing" }
 tb-quality-code-coverage = { id = "net.thunderbird.gradle.plugin.quality.coverage" }
 tb-quality-detekt = { id = "net.thunderbird.gradle.plugin.quality.detekt" }
 tb-quality-spotless = { id = "net.thunderbird.gradle.plugin.quality.spotless" }

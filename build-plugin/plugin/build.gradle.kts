@@ -18,6 +18,8 @@ dependencies {
 
     implementation(plugin(libs.plugins.dependency.check))
 
+    implementation(plugin(libs.plugins.maven.publish))
+
     implementation(plugin(libs.plugins.kover))
     implementation(plugin(libs.plugins.detekt))
     implementation(plugin(libs.plugins.spotless))
@@ -41,6 +43,11 @@ gradlePlugin {
         register("DependencyCheck") {
             id = "net.thunderbird.gradle.plugin.dependency.check"
             implementationClass = "net.thunderbird.gradle.plugin.dependency.check.DependencyCheckPlugin"
+        }
+
+        register("Publishing") {
+            id = "net.thunderbird.gradle.plugin.publishing"
+            implementationClass = "net.thunderbird.gradle.plugin.publishing.PublishingPlugin"
         }
 
         register("QualityCodeCoverage") {

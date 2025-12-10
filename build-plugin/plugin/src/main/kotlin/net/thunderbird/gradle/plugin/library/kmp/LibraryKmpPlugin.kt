@@ -18,6 +18,8 @@ class LibraryKmpPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")
 
+                apply("net.thunderbird.gradle.plugin.publishing")
+
                 apply("net.thunderbird.gradle.plugin.quality.coverage")
                 apply("net.thunderbird.gradle.plugin.quality.detekt")
                 apply("net.thunderbird.gradle.plugin.quality.spotless")
