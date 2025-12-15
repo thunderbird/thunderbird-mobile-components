@@ -1,0 +1,73 @@
+name: Components CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths-ignore:
+      - '.idea/**'
+      - '.gitattributes'
+      - '.gitignore'
+      - '**.md'
+      - 'LICENSE'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: components-ci-${{ github.ref }}-${{ github.event.pull_request.number || 'no-pr' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  assemble:
+    name: Assemble all components
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Show disk usage
+        uses: ./.github/actions/disk-usage
+
+      - name: Cleanup disk
+        uses: ./.github/actions/disk-cleanup
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+        with:
+          write-cache: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Prime configuration and dependency cache
+        run: ./gradlew --no-daemon help
+
+      - name: build all components
+        run: ./gradlew assemble
+
+      - name: Show disk usage
+        uses: ./.github/actions/disk-usage
+
+  test-junit:
+    name: Run JUnit tests for all components
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    needs: [assemble]
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Cleanup disk
+        uses: ./.github/actions/disk-cleanup
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+
+      - name: test all components
+        run: ./gradlew test
