@@ -12,6 +12,7 @@
 [versions]
 androidGradlePlugin = "8.13.2"
 androidXActivity = "1.10.1"
+assertk = "0.28.1"
 dependencyCheckPlugin = "0.53.0"
 detektPlugin = "1.23.8"
 detektPluginCompose = "0.5.8"
@@ -49,9 +50,10 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
 
 # Build plugins
 tb-app-kmp-compose = { id = "net.thunderbird.gradle.plugin.app.kmp.compose" }
+tb-changelog = { id = "net.thunderbird.gradle.plugin.changelog" }
+tb-dependency-check = { id = "net.thunderbird.gradle.plugin.dependency.check" }
 tb-library-kmp = { id = "net.thunderbird.gradle.plugin.library.kmp" }
 tb-library-kmp-compose = { id = "net.thunderbird.gradle.plugin.library.kmp.compose" }
-tb-dependency-check = { id = "net.thunderbird.gradle.plugin.dependency.check" }
 tb-publishing = { id = "net.thunderbird.gradle.plugin.publishing" }
 tb-quality-code-coverage = { id = "net.thunderbird.gradle.plugin.quality.coverage" }
 tb-quality-detekt = { id = "net.thunderbird.gradle.plugin.quality.detekt" }
@@ -60,6 +62,7 @@ tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
 jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 jetbrains-compose-components-ui-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }

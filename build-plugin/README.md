@@ -33,6 +33,43 @@ Supportive/quality and tooling plugins:
 - `net.thunderbird.gradle.plugin.publishing` — Configures publishing (Maven coordinates, POM metadata, and common
   repositories like `mavenLocal()` and a local build repo under `build/maven-repo`)
 
+- `net.thunderbird.gradle.plugin.changelog` — Maintains component‑local `CHANGELOG.md` files next to each component’s
+  nearest `version.properties` (modules that share the same nearest `version.properties` directory are grouped together).
+  - Task:
+    - `updateChangelog`: ensures a component‑local `CHANGELOG.md` exists and auto‑populates the
+      `## Unreleased` section from Conventional Commit titles in git.
+      - Scope: only commits that touch the component directory (relative to the repository root) are considered.
+      - History: entries are read from first-parent history on `origin/main`/`main`, so pull request branch commits
+        are ignored.
+      - Release boundary: the task uses an exact component tag range based on the latest released changelog version
+        (for example `bom-1.0.0..main`) and fails when the expected previous release tag does not exist.
+      - Grouping: entries are grouped by type into sections (`Features`, `Bug Fixes`, `Documentation`, `Styles`,
+        `Refactoring`, `Tests`, `Chores`, `Reverts`).
+      - De‑duplication: existing bullets are preserved and duplicates from git subjects are avoided.
+      - Workflow: run changelog updates during release preparation, not during normal builds. See the
+        [Release Guide](../docs/release-guide.md).
+    - `finalizeChangelog`: finalizes the current `## Unreleased` section for a release version and inserts a new
+      empty `## Unreleased` section above it.
+      - Required property: `-PreleaseVersion=<version>`
+      - Optional property: `-PreleaseDate=YYYY-MM-DD` (defaults to the current local date)
+      - Validation: fails when `Unreleased` is missing, empty, or when the target release already exists.
+  - Usage:
+    ```kotlin
+    // In any project that should contribute a component changelog
+    plugins {
+        id("net.thunderbird.gradle.plugin.changelog")
+    }
+    ```
+
+    Command:
+    ```bash
+    # Run for a single component (example: BOM)
+    ./gradlew :components:bom:updateChangelog
+
+    # Finalize the changelog for a release
+    ./gradlew :components:bom:finalizeChangelog -PreleaseVersion=1.0.0
+    ```
+
 ### Applying a plugin
 
 In any module’s `build.gradle.kts`:

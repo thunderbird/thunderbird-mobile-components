@@ -9,6 +9,11 @@ Before you start contributing, please take a moment to familiarize yourself with
 
 - **Mozilla Community Participation Guidelines:** [https://www.mozilla.org/en-US/about/governance/policies/participation/](https://www.mozilla.org/en-US/about/governance/policies/participation/)
 
+### Git Commit Guide
+
+We follow [Conventional Commits](https://www.conventionalcommits.org/). Please read our
+[Git Commit Guide](docs/commit-guide.md) for examples, allowed types, scopes, and best practices.
+
 ## Bug Reports and Feature Requests
 
 If you encounter a bug or have a feature request, please follow these steps:
