@@ -10,31 +10,28 @@
 # 3. Run the examples and check for any issues.
 
 [versions]
-# AGP and tools should be updated together
-androidGradlePlugin = "8.10.1"
-androidTools = "31.10.1"
+androidGradlePlugin = "8.13.2"
 androidXActivity = "1.10.1"
-dependencyCheckPlugin = "0.52.0"
-detektPlugin = "1.23.5"
-detektPluginCompose = "0.4.22"
-gradle = "8.14.2"
-composeHotReload = "1.0.0-alpha10"
-composeMultiplatform = "1.8.1"
-jetbrainsComposeLifecycle = "2.9.0"
-kotlinBom = "2.1.21"
-# Needs to match the version used by Gradle, just check with `./gradlew --version`
-kotlinGradleBom = "2.0.21"
-kotlinKsp = "2.1.21-2.0.2"
+dependencyCheckPlugin = "0.53.0"
+detektPlugin = "1.23.8"
+detektPluginCompose = "0.4.27"
+gradle = "9.2.1"
+composeHotReload = "1.0.0"
+composeMultiplatform = "1.9.3"
+jetbrainsComposeLifecycle = "2.9.6"
+kotlinBom = "2.2.21"
+kotlinKsp = "2.3.3"
 kotlinxCoroutines = "1.10.2"
 kotlinxCollectionsImmutable = "0.4.0"
-kotlinxDateTime = "0.6.2"
-kotlinxSerialization = "1.8.1"
-spotlessPlugin = "7.0.4"
-turbine = "1.2.0"
+kotlinxDateTime = "0.7.1"
+kotlinxSerialization = "1.9.0"
+kover = "0.9.4"
+mavenPublish = "0.35.0"
+spotlessPlugin = "8.1.0"
+turbine = "1.2.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 android-lint = { id = "com.android.lint", version.ref = "androidGradlePlugin" }
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinBom" }
@@ -45,11 +42,23 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinBom" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinBom" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinBom" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
 
+# Build plugins
+tb-app-kmp-compose = { id = "net.thunderbird.gradle.plugin.app.kmp.compose" }
+tb-library-kmp = { id = "net.thunderbird.gradle.plugin.library.kmp" }
+tb-library-kmp-compose = { id = "net.thunderbird.gradle.plugin.library.kmp.compose" }
+tb-dependency-check = { id = "net.thunderbird.gradle.plugin.dependency.check" }
+tb-publishing = { id = "net.thunderbird.gradle.plugin.publishing" }
+tb-quality-code-coverage = { id = "net.thunderbird.gradle.plugin.quality.coverage" }
+tb-quality-detekt = { id = "net.thunderbird.gradle.plugin.quality.detekt" }
+tb-quality-spotless = { id = "net.thunderbird.gradle.plugin.quality.spotless" }
+tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
+
 [libraries]
-android-tools-common = { module = "com.android.tools:common", version.ref = "androidTools" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
 jetbrains-compose-lifecycle-runtime = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsComposeLifecycle" }
@@ -57,7 +66,6 @@ jetbrains-compose-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifec
 jetbrains-compose-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsComposeLifecycle" }
 jetbrains-compose-lifecycle-viewmodel-savedstate = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "jetbrainsComposeLifecycle" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinBom" }
-kotlin-gradle-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinGradleBom" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
