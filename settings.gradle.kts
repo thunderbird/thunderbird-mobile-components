@@ -20,6 +20,8 @@ pluginManagement {
 
 include(":components:bom")
 
+include(":quality:konsist")
+
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
