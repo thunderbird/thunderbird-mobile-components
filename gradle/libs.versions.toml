@@ -62,10 +62,15 @@ tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
+jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
+jetbrains-compose-components-ui-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 jetbrains-compose-lifecycle-runtime = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsComposeLifecycle" }
 jetbrains-compose-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "jetbrainsComposeLifecycle" }
 jetbrains-compose-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsComposeLifecycle" }
 jetbrains-compose-lifecycle-viewmodel-savedstate = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "jetbrainsComposeLifecycle" }
+jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinBom" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
