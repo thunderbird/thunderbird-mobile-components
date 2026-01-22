@@ -14,7 +14,6 @@ dependencies {
 
     compileOnly(plugin(libs.plugins.compose.compiler))
     compileOnly(plugin(libs.plugins.compose.multiplatform))
-    compileOnly(plugin(libs.plugins.compose.hot.reload))
 
     implementation(plugin(libs.plugins.dependency.check))
 
