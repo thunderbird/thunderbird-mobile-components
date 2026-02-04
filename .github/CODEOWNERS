@@ -2,4 +2,4 @@
 * @thunderbird/mobile-android-reviewers
 
 # CODEOWNERS protection
-/.github/CODEOWNERS @kewisch
+/.github/CODEOWNERS @jbott-tbird
