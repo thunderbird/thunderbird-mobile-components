@@ -27,7 +27,7 @@ kotlinxDateTime = "0.7.1"
 kotlinxSerialization = "1.9.0"
 kover = "0.9.6"
 mavenPublish = "0.36.0"
-spotlessPlugin = "8.1.0"
+spotlessPlugin = "8.2.1"
 turbine = "1.2.1"
 
 [plugins]
