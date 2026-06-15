@@ -18,4 +18,5 @@ plugins {
 tasks.named<Wrapper>("wrapper") {
     gradleVersion = libs.versions.gradle.get()
     distributionType = Wrapper.DistributionType.ALL
+    distributionSha256Sum = libs.versions.gradleSha256.get()
 }
