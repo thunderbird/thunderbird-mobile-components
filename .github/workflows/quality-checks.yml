@@ -1,4 +1,4 @@
-name: Quality checks
+name: Quality - Checks
 
 on:
   push:

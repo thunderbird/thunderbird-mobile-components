@@ -20,13 +20,13 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  assemble:
+  assemble-components:
     name: Assemble all components
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
     steps:
-      - name: Checkout the repo
+      - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 1
@@ -51,11 +51,11 @@ jobs:
       - name: Show disk usage
         uses: ./.github/actions/disk-usage
 
-  test-junit:
-    name: Run JUnit tests for all components
+  quality-unit-test:
+    name: Quality - Unit tests
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    needs: [assemble]
+    needs: [assemble-components]
 
     steps:
       - name: Checkout the repo
