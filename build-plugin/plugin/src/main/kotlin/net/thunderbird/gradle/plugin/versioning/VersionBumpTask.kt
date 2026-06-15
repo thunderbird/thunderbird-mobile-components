@@ -42,8 +42,11 @@ abstract class VersionBumpTask : DefaultTask() {
 
         val bumped = when (part.get().lowercase()) {
             "major" -> version.bumpMajor()
+
             "minor" -> version.bumpMinor()
+
             "patch" -> version.bumpPatch()
+
             else -> throw IllegalArgumentException(
                 "Invalid part to bump: ${part.get()}. Expected: major, minor, or patch.",
             )
