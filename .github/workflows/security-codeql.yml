@@ -1,4 +1,4 @@
-name: Security - CodeQL Scan
+name: Security - CodeQL
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  security-codeql-scan:
+  security-codeql:
     name: Security - CodeQL Scan
 
     permissions:
