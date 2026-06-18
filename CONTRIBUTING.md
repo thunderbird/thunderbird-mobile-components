@@ -14,6 +14,11 @@ Before you start contributing, please take a moment to familiarize yourself with
 We follow [Conventional Commits](https://www.conventionalcommits.org/). Please read our
 [Git Commit Guide](docs/commit-guide.md) for examples, allowed types, scopes, and best practices.
 
+### Release Guide
+
+Maintainers and release owners should read the [Release Guide](docs/release-guide.md) for the
+release-preparation workflow, changelog generation, and tagging conventions.
+
 ## Bug Reports and Feature Requests
 
 If you encounter a bug or have a feature request, please follow these steps:
