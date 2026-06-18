@@ -43,6 +43,10 @@ gradlePlugin {
             id = "net.thunderbird.gradle.plugin.library.kmp.compose"
             implementationClass = "net.thunderbird.gradle.plugin.library.kmp.compose.LibraryKmpComposePlugin"
         }
+        register("Bom") {
+            id = "net.thunderbird.gradle.plugin.bom"
+            implementationClass = "net.thunderbird.gradle.plugin.bom.BomPlugin"
+        }
 
         register("DependencyCheck") {
             id = "net.thunderbird.gradle.plugin.dependency.check"

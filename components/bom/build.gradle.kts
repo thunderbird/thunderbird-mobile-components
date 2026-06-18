@@ -1,12 +1,5 @@
 plugins {
-    `java-platform`
-    id("net.thunderbird.gradle.plugin.changelog")
-    id("net.thunderbird.gradle.plugin.publishing")
-    id("net.thunderbird.gradle.plugin.versioning")
-}
-
-javaPlatform {
-    allowDependencies()
+    id("net.thunderbird.gradle.plugin.bom")
 }
 
 dependencies {
