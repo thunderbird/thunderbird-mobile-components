@@ -1,0 +1,47 @@
+name: Validate - Pull Request Title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: none
+
+concurrency:
+  group: validate-pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate-pr-title:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Validate Conventional Commit title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+
+          pattern='^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|deps|revert)(\([a-zA-Z0-9._ -]+\))?!?: .+$'
+
+          if [[ ! "$PR_TITLE" =~ $pattern ]]; then
+            cat <<'MESSAGE'
+          Pull request title must use Conventional Commit format because release changelogs are generated from PR merge commits.
+
+          Expected format:
+            <type>(<scope>): <description>
+
+          Examples:
+            feat(account): add OAuth setup
+            fix(build): restore publishing metadata
+            chore(deps): update Kotlin
+
+          Allowed types:
+            feat, fix, docs, style, refactor, perf, test, chore, build, ci, deps, revert
+          MESSAGE
+            echo
+            echo "Actual title: $PR_TITLE"
+            exit 1
+          fi
