@@ -28,7 +28,8 @@ class BomPluginTest {
         assertThat(project.plugins.findPlugin(JavaPlatformPlugin::class.java)).isNotNull()
         assertThat(project.tasks.findByName("updateChangelog")).isNotNull()
         assertThat(project.tasks.findByName("printVersion")).isNotNull()
-        assertThat(project.tasks.findByName("publishDailySnapshotToMavenLocal")).isNotNull()
+        assertThat(project.tasks.findByName("validateSnapshotVersionForPublishing")).isNotNull()
+        assertThat(project.tasks.findByName("publishToMavenLocal")).isNotNull()
     }
 
     @Test

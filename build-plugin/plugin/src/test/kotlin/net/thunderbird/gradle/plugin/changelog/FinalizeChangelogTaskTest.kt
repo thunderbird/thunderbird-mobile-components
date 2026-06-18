@@ -22,7 +22,7 @@ class FinalizeChangelogTaskTest {
     fun `finalizeChangelog moves Unreleased entries to release and creates empty Unreleased section`() {
         // Arrange
         val componentDir = createComponentDir(CHANGES_UNDER_UNRELEASED)
-        val task = createTask(componentDir, releaseVersion = "0.1.0", releaseDate = "2026-06-18")
+        val task = createTask(componentDir, releaseDate = "2026-06-18")
 
         // Act
         task.finalizeChangelog()
@@ -35,6 +35,34 @@ class FinalizeChangelogTaskTest {
             "- update build-plugin ([#4](https://github.com/thunderbird/thunderbird-mobile-components/pull/4))",
         )
         assertThat(changelog.substringAfter("## Unreleased").substringBefore("## 0.1.0").trim()).isEqualTo("")
+    }
+
+    @Test
+    fun `finalizeChangelog accepts matching release version override`() {
+        // Arrange
+        val componentDir = createComponentDir(CHANGES_UNDER_UNRELEASED)
+        val task = createTask(componentDir, releaseVersion = "0.1.0", releaseDate = "2026-06-18")
+
+        // Act
+        task.finalizeChangelog()
+
+        // Assert
+        val changelog = componentDir.resolve(FileHelper.CHANGELOG_FILE).readText()
+        assertThat(changelog).contains("## 0.1.0 - 2026-06-18")
+    }
+
+    @Test
+    fun `finalizeChangelog fails when release version override differs from version properties`() {
+        // Arrange
+        val componentDir = createComponentDir(CHANGES_UNDER_UNRELEASED)
+        val task = createTask(componentDir, releaseVersion = "0.2.0", releaseDate = "2026-06-18")
+
+        // Act
+        val failure = assertFailure { task.finalizeChangelog() }
+
+        // Assert
+        failure.isInstanceOf<IllegalArgumentException>()
+        failure.messageContains("releaseVersion '0.2.0' does not match version.properties '0.1.0'")
     }
 
     @Test
@@ -66,16 +94,17 @@ class FinalizeChangelogTaskTest {
     }
 
     @Test
-    fun `finalizeChangelog fails when release version is missing`() {
+    fun `finalizeChangelog fails when release version is blank`() {
         // Arrange
         val componentDir = createComponentDir(CHANGES_UNDER_UNRELEASED)
-        val task = createTask(componentDir, releaseDate = "2026-06-18")
+        val task = createTask(componentDir, releaseVersion = " ", releaseDate = "2026-06-18")
 
         // Act
         val failure = assertFailure { task.finalizeChangelog() }
 
         // Assert
-        failure.isInstanceOf<IllegalStateException>()
+        failure.isInstanceOf<IllegalArgumentException>()
+        failure.messageContains("releaseVersion must not be blank")
     }
 
     private fun createComponentDir(changelog: String): File {
@@ -95,6 +124,7 @@ class FinalizeChangelogTaskTest {
             .build()
         return project.tasks.create(FinalizeChangelogTask.TASK_NAME, FinalizeChangelogTask::class.java).apply {
             changelogFile.set(componentDir.resolve(FileHelper.CHANGELOG_FILE))
+            versionFile.set(componentDir.resolve(FileHelper.VERSION_FILE))
             if (releaseVersion != null) {
                 this.releaseVersion.set(releaseVersion)
             }

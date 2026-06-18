@@ -7,6 +7,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
 
 /**
  * Publishing plugin configuration.
@@ -28,18 +29,15 @@ class PublishingPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            ensureProjectGroup()
+            configurePublishedGroup()
             loadSigningProperties()
 
             pluginManager.apply("com.vanniktech.maven.publish")
 
             configurePublishing()
             configurePublish()
+            registerReleasePublishingTasks()
         }
-    }
-
-    private fun Project.ensureProjectGroup() {
-        group = group.toString().replace("tmc", ProjectConfig.group + ".")
     }
 
     private fun Project.loadSigningProperties() {
@@ -107,6 +105,24 @@ class PublishingPlugin : Plugin<Project> {
             publishToMavenCentral()
 
             signAllPublications()
+        }
+    }
+
+    private fun Project.registerReleasePublishingTasks() {
+        val currentProjectPath = path
+        tasks.register<ValidatePublicationVersionTask>("validateStableVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a stable release version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(false)
+        }
+        tasks.register<ValidatePublicationVersionTask>("validateSnapshotVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a snapshot version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(true)
         }
     }
 }

@@ -58,8 +58,13 @@ class ChangelogPlugin : Plugin<Project> {
                             project.provider { File(versionDir, FileHelper.CHANGELOG_FILE) },
                         ),
                     )
-                    releaseVersion.set(providers.gradleProperty("releaseVersion"))
-                    releaseDate.set(providers.gradleProperty("releaseDate"))
+                    versionFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.VERSION_FILE) },
+                        ),
+                    )
+                    releaseVersion.convention(providers.gradleProperty("releaseVersion"))
+                    releaseDate.convention(providers.gradleProperty("releaseDate"))
                 }
             }
         }
