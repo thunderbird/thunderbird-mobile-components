@@ -62,7 +62,7 @@ For example:
 bom-1.0.0
 ```
 
-The task fails if the component version is still a snapshot or the tag already exists.
+The task fails if the tag already exists.
 
 ## Review Checklist
 

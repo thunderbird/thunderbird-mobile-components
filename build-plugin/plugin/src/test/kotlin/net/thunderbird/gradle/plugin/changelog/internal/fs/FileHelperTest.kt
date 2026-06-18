@@ -114,7 +114,6 @@ class FileHelperTest {
             MAJOR=1
             MINOR=0
             PATCH=0
-            SNAPSHOT=false
         """.trimIndent()
     }
 }

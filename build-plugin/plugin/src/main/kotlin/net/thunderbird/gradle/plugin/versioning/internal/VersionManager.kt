@@ -2,8 +2,6 @@ package net.thunderbird.gradle.plugin.versioning.internal
 
 import java.io.File
 import java.util.Properties
-import net.thunderbird.gradle.plugin.versioning.internal.Version
-import net.thunderbird.gradle.plugin.versioning.internal.VersionPropertiesMapper
 
 /**
  * Internal utility to centralize version file discovery, parsing, and persistence.
@@ -30,7 +28,7 @@ internal class VersionManager(
         }
         throw IllegalStateException(
             "[versioning] No version.properties found between ${base.path} and ${root.path}. " +
-                "Create one with MAJOR, MINOR, PATCH and optional SNAPSHOT (defaults to true).",
+                "Create one with MAJOR, MINOR and PATCH.",
         )
     }
 
@@ -43,21 +41,18 @@ internal class VersionManager(
         }
     }
 
+    fun sourceFile(): File? = source
+
     private fun locateNearestVersionFile(start: File, repoRoot: File): File? {
         var dir: File? = start
         while (dir != null) {
             val candidate = File(dir, FILE_NAME)
             if (candidate.exists()) {
-                // Log the located version.properties file for visibility
-                println("[versioning] Using version file: ${candidate.path}")
                 return candidate
             }
             if (dir == repoRoot) break
             dir = dir.parentFile
         }
-        println(
-            "[versioning] No version.properties found for ${start.path} and nearest parents up to ${repoRoot.path}.",
-        )
         return null
     }
 
@@ -67,7 +62,7 @@ internal class VersionManager(
         if (parsed != null) return parsed
         throw IllegalStateException(
             "[versioning] Invalid version.properties at ${file.path}. " +
-                "Expected keys: MAJOR, MINOR, PATCH and optional SNAPSHOT (defaults to true).",
+                "Expected keys: MAJOR, MINOR and PATCH.",
         )
     }
 

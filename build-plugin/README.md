@@ -32,6 +32,20 @@ Supportive/quality and tooling plugins:
   - Common tasks: `./gradlew koverHtmlReport`, `./gradlew koverXmlReport`, `./gradlew koverVerify`
 - `net.thunderbird.gradle.plugin.publishing` — Configures publishing (Maven coordinates, POM metadata, and common
   repositories like `mavenLocal()` and a local build repo under `build/maven-repo`)
+- `net.thunderbird.gradle.plugin.versioning` — Reads and updates component versions from the nearest
+  `version.properties`.
+  - Version resolution: builds from a commit tagged with `<component>-<version>` use `<version>`;
+    all other builds use `<version>-SNAPSHOT`.
+  - Tasks:
+    - `versionBumpMajor`, `versionBumpMinor`, `versionBumpPatch`: update the nearest `version.properties`.
+    - `printVersion`: prints the version resolved from the nearest `version.properties`.
+    - `createReleaseTag`: creates the component release git tag from `version.properties`.
+      - Format: `<component>-<version>` (for example `bom-1.0.0`)
+      - Validation: fails for existing tags.
+  - Release tag command:
+    ```bash
+    ./gradlew :components:bom:createReleaseTag
+    ```
 
 - `net.thunderbird.gradle.plugin.changelog` — Maintains component‑local `CHANGELOG.md` files next to each component’s
   nearest `version.properties` (modules that share the same nearest `version.properties` directory are grouped together).

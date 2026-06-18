@@ -107,7 +107,6 @@ class FinalizeChangelogTaskTest {
             MAJOR=0
             MINOR=1
             PATCH=0
-            SNAPSHOT=false
         """.trimIndent()
 
         private val EMPTY_UNRELEASED = """

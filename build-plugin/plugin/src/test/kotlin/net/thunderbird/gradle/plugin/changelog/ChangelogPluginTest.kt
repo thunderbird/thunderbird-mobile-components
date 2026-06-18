@@ -49,7 +49,7 @@ class ChangelogPluginTest {
         fixture.project.plugins.apply(VersioningPlugin::class.java)
 
         // Assert
-        assertThat(fixture.project.version.toString()).isEqualTo("1.2.3")
+        assertThat(fixture.project.version.toString()).isEqualTo("1.2.3-SNAPSHOT")
         assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNotNull()
         assertThat(fixture.project.tasks.findByName("versionBumpPatch")).isNotNull()
     }
@@ -112,7 +112,6 @@ class ChangelogPluginTest {
             MAJOR=1
             MINOR=2
             PATCH=3
-            SNAPSHOT=false
         """.trimIndent()
     }
 }
