@@ -62,6 +62,7 @@ class VersioningPluginTest {
         assertThat(fixture.project.tasks.findByName("versionBumpMinor")).isNotNull()
         assertThat(fixture.project.tasks.findByName("versionBumpPatch")).isNotNull()
         assertThat(fixture.project.tasks.findByName(PrintVersionTask.TASK_NAME)).isNotNull()
+        assertThat(fixture.project.tasks.findByName(PrintReleaseTagTask.TASK_NAME)).isNotNull()
         assertThat(fixture.project.tasks.findByName(CreateReleaseTagTask.TASK_NAME)).isNotNull()
     }
 

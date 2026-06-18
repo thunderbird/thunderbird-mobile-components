@@ -31,7 +31,7 @@ abstract class ValidatePublicationVersionTask : DefaultTask() {
         if (versionString.endsWith(SNAPSHOT_SUFFIX)) {
             throw GradleException(
                 "Stable releases require a non-SNAPSHOT version, but project '${projectPath.get()}' " +
-                    "resolved '$versionString'. Create the component release tag before publishing a stable release.",
+                    "resolved '$versionString'. Create the component release tag before publishing a release.",
             )
         }
     }

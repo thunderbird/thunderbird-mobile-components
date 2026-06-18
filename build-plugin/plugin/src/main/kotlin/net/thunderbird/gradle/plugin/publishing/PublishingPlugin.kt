@@ -112,7 +112,7 @@ class PublishingPlugin : Plugin<Project> {
         val currentProjectPath = path
         tasks.register<ValidatePublicationVersionTask>("validateStableVersionForPublishing") {
             group = "publishing"
-            description = "Validate that this project resolves to a stable release version."
+            description = "Validate that this project resolves to a release version."
             version.set(project.version.toString())
             projectPath.set(currentProjectPath)
             snapshotRequired.set(false)

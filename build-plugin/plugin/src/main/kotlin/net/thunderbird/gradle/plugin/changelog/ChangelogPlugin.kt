@@ -66,6 +66,27 @@ class ChangelogPlugin : Plugin<Project> {
                     releaseVersion.convention(providers.gradleProperty("releaseVersion"))
                     releaseDate.convention(providers.gradleProperty("releaseDate"))
                 }
+
+                tasks.register<WriteReleaseNotesTask>(WriteReleaseNotesTask.TASK_NAME) {
+                    group = "documentation"
+                    description = "Write GitHub release notes from the finalized component-local CHANGELOG.md section"
+
+                    changelogFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.CHANGELOG_FILE) },
+                        ),
+                    )
+                    versionFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.VERSION_FILE) },
+                        ),
+                    )
+                    outputFile.convention(layout.buildDirectory.file("release/release-notes.md"))
+                    providers.gradleProperty("releaseNotesFile").orNull?.let { releaseNotesFile ->
+                        outputFile.set(layout.file(provider { File(releaseNotesFile) }))
+                    }
+                    releaseVersion.convention(providers.gradleProperty("releaseVersion"))
+                }
             }
         }
     }

@@ -26,6 +26,7 @@ import org.gradle.kotlin.dsl.register
  * - versionBumpMinor: Bump MINOR version.
  * - versionBumpPatch: Bump PATCH version.
  * - printVersion: Print the effective project version.
+ * - printReleaseTag: Print the component release tag.
  */
 class VersioningPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -33,6 +34,7 @@ class VersioningPlugin : Plugin<Project> {
             configureVersioning()
             registerBumpTasks()
             registerPrintVersionTask()
+            registerPrintReleaseTagTask()
             registerCreateReleaseTagTask()
         }
     }
@@ -80,6 +82,15 @@ class VersioningPlugin : Plugin<Project> {
         tasks.register<PrintVersionTask>(PrintVersionTask.TASK_NAME) {
             group = "versioning"
             description = "Print the version resolved from the nearest version.properties"
+            startDir.set(project.layout.projectDirectory)
+            repoRootDir.set(project.rootProject.layout.projectDirectory)
+        }
+    }
+
+    private fun Project.registerPrintReleaseTagTask() {
+        tasks.register<PrintReleaseTagTask>(PrintReleaseTagTask.TASK_NAME) {
+            group = "versioning"
+            description = "Print the component release git tag from version.properties"
             startDir.set(project.layout.projectDirectory)
             repoRootDir.set(project.rootProject.layout.projectDirectory)
         }
