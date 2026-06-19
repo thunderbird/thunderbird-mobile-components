@@ -24,7 +24,7 @@ class DetektPlugin : Plugin<Project> {
                 add("detektPlugins", libs.detekt.plugin.compose)
             }
 
-            if (this == rootProject) {
+            if (path == ":") {
                 configureRootDetektTasks()
             } else {
                 configureDetekt()
@@ -33,12 +33,14 @@ class DetektPlugin : Plugin<Project> {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     private fun Project.configureDetekt() {
         extensions.configure<DetektExtension>("detekt") {
-            config.setFrom(project.rootProject.files("config/detekt/detekt.yml"))
+            config.setFrom(project.isolated.rootProject.projectDirectory.file("config/detekt/detekt.yml"))
 
             val name = project.path.replace(":", "-").replace("/", "-")
-            baseline = project.rootProject.file("config/detekt/detekt-baseline$name.xml")
+            baseline = project.isolated.rootProject.projectDirectory
+                .file("config/detekt/detekt-baseline$name.xml").asFile
 
             ignoredBuildTypes = listOf("release")
         }
@@ -79,11 +81,7 @@ class DetektPlugin : Plugin<Project> {
         with(tasks) {
             register("detektAll") {
                 group = "verification"
-                description = "Runs detekt on the whole project"
-
-                allprojects {
-                    this@register.dependsOn(tasks.withType<Detekt>())
-                }
+                description = "Runs detekt on the root project"
             }
         }
     }

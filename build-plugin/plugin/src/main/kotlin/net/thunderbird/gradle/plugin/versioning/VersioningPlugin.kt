@@ -40,15 +40,16 @@ class VersioningPlugin : Plugin<Project> {
     }
 
     private fun Project.configureVersioning() {
-        val root = this.rootProject
+        @Suppress("UnstableApiUsage")
+        val repoRoot = isolated.rootProject.projectDirectory.asFile
         val versionManager = VersionManager(
             base = projectDir,
-            root = root.projectDir,
+            root = repoRoot,
         ) { message -> logger.warn(message) }
         val version = versionManager.get()
         val versionFile = versionManager.sourceFile()
             ?: error("No version.properties file found to resolve the project version.")
-        val versionProvider = GitVersionProvider(providers).resolve(root.projectDir, versionFile, version)
+        val versionProvider = GitVersionProvider(providers).resolve(repoRoot, versionFile, version)
 
         this.version = ProviderBackedVersion(versionProvider)
         logger.lifecycle("[versioning] Project version will be resolved from ${versionFile.path}")
@@ -59,21 +60,24 @@ class VersioningPlugin : Plugin<Project> {
             group = "versioning"
             description = "Bump MAJOR and reset MINOR/PATCH to 0 in nearest version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
             part.set("major")
         }
         tasks.register<VersionBumpTask>("versionBumpMinor") {
             group = "versioning"
             description = "Bump MINOR and reset PATCH to 0 in nearest version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
             part.set("minor")
         }
         tasks.register<VersionBumpTask>("versionBumpPatch") {
             group = "versioning"
             description = "Bump PATCH in nearest version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
             part.set("patch")
         }
     }
@@ -83,7 +87,8 @@ class VersioningPlugin : Plugin<Project> {
             group = "versioning"
             description = "Print the version resolved from the nearest version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
         }
     }
 
@@ -92,7 +97,8 @@ class VersioningPlugin : Plugin<Project> {
             group = "versioning"
             description = "Print the component release git tag from version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
         }
     }
 
@@ -101,7 +107,8 @@ class VersioningPlugin : Plugin<Project> {
             group = "release"
             description = "Create the component release git tag from version.properties"
             startDir.set(project.layout.projectDirectory)
-            repoRootDir.set(project.rootProject.layout.projectDirectory)
+            @Suppress("UnstableApiUsage")
+            repoRootDir.set(project.isolated.rootProject.projectDirectory)
         }
     }
 }

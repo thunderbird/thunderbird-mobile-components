@@ -15,7 +15,7 @@ class SpotlessPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.diffplug.spotless")
 
-            if (this == rootProject) {
+            if (path == ":") {
                 configureSpotlessRoot()
             } else {
                 configureSpotless()
@@ -23,8 +23,11 @@ class SpotlessPlugin : Plugin<Project> {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     private fun Project.configureSpotless() {
         extensions.configure<SpotlessExtension> {
+            val editorConfigPath = isolated.rootProject.projectDirectory.file(".editorconfig").asFile.path
+
             kotlin {
                 target(
                     "src/*/kotlin/*.kt",
@@ -32,7 +35,7 @@ class SpotlessPlugin : Plugin<Project> {
                 )
 
                 ktlint()
-                    .setEditorConfigPath("${rootProject.projectDir}/.editorconfig")
+                    .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(kotlinEditorConfigOverride)
             }
 
@@ -42,7 +45,7 @@ class SpotlessPlugin : Plugin<Project> {
                 )
 
                 ktlint()
-                    .setEditorConfigPath("${rootProject.projectDir}/.editorconfig")
+                    .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(
                         mapOf(
                             "ktlint_code_style" to "intellij_idea",
@@ -66,15 +69,18 @@ class SpotlessPlugin : Plugin<Project> {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     private fun Project.configureSpotlessRoot() {
         extensions.configure<SpotlessExtension> {
+            val editorConfigPath = isolated.rootProject.projectDirectory.file(".editorconfig").asFile.path
+
             kotlin {
                 target(
                     "build-plugin/plugin/src/*/kotlin/*.kt",
                     "build-plugin/plugin/src/*/kotlin/**/*.kt",
                 )
                 ktlint()
-                    .setEditorConfigPath("${project.rootProject.projectDir}/.editorconfig")
+                    .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(kotlinEditorConfigOverride)
             }
 
@@ -86,7 +92,7 @@ class SpotlessPlugin : Plugin<Project> {
                 )
 
                 ktlint()
-                    .setEditorConfigPath("${project.rootProject.projectDir}/.editorconfig")
+                    .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(
                         mapOf(
                             "ktlint_code_style" to "intellij_idea",

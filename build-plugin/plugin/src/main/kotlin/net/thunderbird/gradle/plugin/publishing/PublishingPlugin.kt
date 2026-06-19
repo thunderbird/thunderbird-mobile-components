@@ -40,8 +40,9 @@ class PublishingPlugin : Plugin<Project> {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     private fun Project.loadSigningProperties() {
-        val signingPropsFile = rootProject.file(".signing/signing.properties")
+        val signingPropsFile = isolated.rootProject.projectDirectory.file(".signing/signing.properties").asFile
         if (signingPropsFile.exists()) {
             val properties = Properties()
             signingPropsFile.inputStream().use { properties.load(it) }
@@ -61,7 +62,8 @@ class PublishingPlugin : Plugin<Project> {
 
                 maven {
                     name = "localBuild"
-                    url = rootProject.layout.buildDirectory.dir("maven-repo").get().asFile.toURI()
+                    @Suppress("UnstableApiUsage")
+                    url = isolated.rootProject.projectDirectory.dir("build/maven-repo").asFile.toURI()
                 }
             }
         }

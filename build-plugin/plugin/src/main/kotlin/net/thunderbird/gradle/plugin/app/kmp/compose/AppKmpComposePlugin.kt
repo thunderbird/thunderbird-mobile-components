@@ -126,7 +126,8 @@ class AppKmpComposePlugin : Plugin<Project> {
                 warningsAsErrors = false
                 abortOnError = true
                 checkDependencies = true
-                lintConfig = project.file("${project.rootProject.projectDir}/config/lint/lint.xml")
+                @Suppress("UnstableApiUsage")
+                lintConfig = project.isolated.rootProject.projectDirectory.file("config/lint/lint.xml").asFile
             }
 
             packaging {

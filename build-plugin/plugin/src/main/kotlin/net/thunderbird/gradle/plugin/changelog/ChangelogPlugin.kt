@@ -18,7 +18,9 @@ class ChangelogPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             val start = project.projectDir
-            val root = rootProject.projectDir
+
+            @Suppress("UnstableApiUsage")
+            val root = isolated.rootProject.projectDirectory.asFile
             val versionDir = FileHelper.locateNearestVersionDir(start, root)
 
             if (versionDir == null) {
@@ -45,7 +47,8 @@ class ChangelogPlugin : Plugin<Project> {
                         ),
                     )
 
-                    repoRootDir.set(rootProject.layout.projectDirectory)
+                    @Suppress("UnstableApiUsage")
+                    repoRootDir.set(isolated.rootProject.projectDirectory)
                     repoUrl.set(ProjectConfig.Publishing.url)
                 }
 

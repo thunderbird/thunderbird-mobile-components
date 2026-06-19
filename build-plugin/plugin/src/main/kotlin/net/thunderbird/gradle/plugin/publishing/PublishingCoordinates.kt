@@ -14,13 +14,14 @@ private fun Project.hasDefaultGroup(): Boolean {
     return currentGroup == DEFAULT_GROUP || currentGroup == defaultGradleGroup()
 }
 
+@Suppress("UnstableApiUsage")
 private fun Project.defaultGradleGroup(): String {
-    val parentSegments = path
+    val parentPath = path
         .split(":")
         .filter(String::isNotBlank)
         .dropLast(1)
 
-    return (listOf(rootProject.name) + parentSegments)
+    return (listOf(isolated.rootProject.name) + parentPath)
         .joinToString(".")
 }
 
