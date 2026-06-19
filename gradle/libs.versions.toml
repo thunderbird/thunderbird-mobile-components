@@ -11,7 +11,7 @@
 
 [versions]
 androidGradlePlugin = "9.2.1"
-androidXActivity = "1.10.1"
+androidXActivity = "1.13.0"
 androidXCompose = "1.11.3"
 assertk = "0.28.1"
 dependencyCheckPlugin = "0.53.0"
