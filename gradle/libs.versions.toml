@@ -10,8 +10,9 @@
 # 3. Run the examples and check for any issues.
 
 [versions]
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.2.1"
 androidXActivity = "1.10.1"
+androidXCompose = "1.11.3"
 assertk = "0.28.1"
 dependencyCheckPlugin = "0.53.0"
 detektPlugin = "1.23.8"
@@ -29,6 +30,7 @@ kotlinxDateTime = "0.8.0"
 kotlinxSerialization = "1.10.0"
 kover = "0.9.8"
 mavenPublish = "0.37.0"
+robolectric = "4.16.1"
 spotlessPlugin = "8.6.0"
 turbine = "1.2.1"
 
@@ -62,6 +64,7 @@ tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidXCompose" }
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
 jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
@@ -73,6 +76,8 @@ jetbrains-compose-lifecycle-viewmodel-compose = { module = "org.jetbrains.androi
 jetbrains-compose-lifecycle-viewmodel-savedstate = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "jetbrainsComposeLifecycle" }
 jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlinBom" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
@@ -83,6 +88,7 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDateTime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [bundles]
@@ -95,14 +101,53 @@ shared-kmp-common = [
 shared-kmp-android = [
   "kotlinx-coroutines-android",
 ]
-shared-kmp-compose = [
+shared-kmp-jvm = [
+]
+shared-kmp-native = [
+]
+
+shared-kmp-common-test = [
+  "assertk",
+  "kotlin-test",
+  "kotlinx-coroutines-test",
+  "turbine",
+]
+shared-kmp-android-test = [
+]
+shared-kmp-jvm-test = [
+]
+shared-kmp-native-test = [
+]
+
+shared-kmp-compose-commmon = [
+  "jetbrains-compose-runtime",
+  "jetbrains-compose-foundation",
+  "jetbrains-compose-components-resources",
+  "jetbrains-compose-components-ui-preview",
   "jetbrains-compose-lifecycle-runtime",
   "jetbrains-compose-lifecycle-viewmodel",
   "jetbrains-compose-lifecycle-viewmodel-compose",
   "jetbrains-compose-lifecycle-viewmodel-savedstate",
+  "jetbrains-compose-ui",
+  # Disabled, as it's not used yet
+  #  "jetbrains-compose-navigation3",
+  #  "jetbrains-compose-navigation-event",
 ]
-shared-kmp-common-test = [
-  "kotlin-test",
-  "kotlinx-coroutines-test",
-  "turbine",
+shared-kmp-compose-android = [
+]
+shared-kmp-compose-jvm = [
+]
+shared-kmp-compose-native = [
+]
+
+shared-kmp-compose-common-test = [
+  "jetbrains-compose-ui-test"
+]
+shared-kmp-compose-android-test = [
+  "androidx-compose-ui-test-manifest",
+  "robolectric",
+]
+shared-kmp-compose-jvm-test = [
+]
+shared-kmp-compose-native-test = [
 ]
