@@ -17,6 +17,7 @@ assertk = "0.28.1"
 dependencyCheckPlugin = "0.54.0"
 detektPlugin = "1.23.8"
 detektPluginCompose = "0.6.2"
+dokkaPlugin = "2.2.0"
 gradle = "9.5.1"
 gradleSha256 = "c72fb9991f6025cbe337d52ba77e531b3faf62bdd3e348fe1ccee9f51c71adb0"
 composeMultiplatform = "1.11.1"
@@ -42,6 +43,7 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 dependency-check = { id = "com.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaPlugin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinBom" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinBom" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinBom" }

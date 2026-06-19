@@ -23,6 +23,7 @@ class LibraryKmpComposePlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.kotlin.multiplatform.library")
                 apply("org.jetbrains.compose")
+                apply("org.jetbrains.dokka")
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")

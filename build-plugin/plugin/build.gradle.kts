@@ -16,6 +16,7 @@ dependencies {
     compileOnly(plugin(libs.plugins.compose.multiplatform))
 
     implementation(plugin(libs.plugins.dependency.check))
+    implementation(plugin(libs.plugins.dokka))
 
     implementation(plugin(libs.plugins.maven.publish))
 

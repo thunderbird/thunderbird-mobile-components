@@ -20,6 +20,7 @@ class LibraryKmpPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.android.kotlin.multiplatform.library")
+                apply("org.jetbrains.dokka")
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")
 
