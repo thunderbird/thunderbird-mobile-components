@@ -15,7 +15,7 @@ androidXActivity = "1.13.0"
 androidXCompose = "1.11.3"
 assertk = "0.28.1"
 dependencyCheckPlugin = "0.54.0"
-detektPlugin = "1.23.8"
+detektPlugin = "2.0.0-alpha.5"
 detektPluginCompose = "0.6.2"
 dokkaPlugin = "2.2.0"
 gradle = "9.5.1"
@@ -42,7 +42,7 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinBom" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 dependency-check = { id = "com.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektPlugin" }
+detekt = { id = "dev.detekt", version.ref = "detektPlugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaPlugin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinBom" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinBom" }
