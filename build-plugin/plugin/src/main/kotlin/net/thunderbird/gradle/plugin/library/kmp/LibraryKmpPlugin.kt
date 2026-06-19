@@ -7,6 +7,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * A Gradle plugin to configure a Kotlin Multiplatform Library project.
@@ -33,8 +34,10 @@ class LibraryKmpPlugin : Plugin<Project> {
                 apply("net.thunderbird.gradle.plugin.quality.spotless")
             }
 
+            @OptIn(ExperimentalAbiValidation::class)
             extensions.configure<KotlinMultiplatformExtension> {
                 explicitApi()
+                abiValidation()
 
                 compilerOptions {
                     freeCompilerArgs.add("-Xexpect-actual-classes")
