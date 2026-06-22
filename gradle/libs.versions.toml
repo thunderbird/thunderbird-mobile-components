@@ -27,7 +27,7 @@ kotlinxCollectionsImmutable = "0.4.0"
 kotlinxDateTime = "0.8.0"
 kotlinxSerialization = "1.10.0"
 kover = "0.9.8"
-mavenPublish = "0.36.0"
+mavenPublish = "0.37.0"
 spotlessPlugin = "8.6.0"
 turbine = "1.2.1"
 
