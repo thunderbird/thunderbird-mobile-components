@@ -33,6 +33,7 @@ kover = "0.9.8"
 mavenPublish = "0.37.0"
 robolectric = "4.16.1"
 spotlessPlugin = "8.7.0"
+testBalloon = "1.0.1-K2.4.0"
 turbine = "1.2.1"
 
 [plugins]
@@ -51,6 +52,7 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
+testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 
 # Build plugins
 tb-app-kmp-compose = { id = "net.thunderbird.gradle.plugin.app.kmp.compose" }
@@ -91,6 +93,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDateTime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+testBalloon-framework-core = { module = "de.infix.testBalloon:testBalloon-framework-core", version.ref = "testBalloon" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [bundles]
@@ -113,6 +116,7 @@ shared-kmp-common-test = [
   "kotlin-test",
   "kotlinx-coroutines-test",
   "turbine",
+  "testBalloon-framework-core",
 ]
 shared-kmp-android-test = [
 ]

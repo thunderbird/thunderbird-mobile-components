@@ -1,17 +1,12 @@
 plugins {
     alias(libs.plugins.tb.library.kmp)
+    alias(libs.plugins.testBalloon)
 }
 
 kotlin {
     @Suppress("UnstableApiUsage")
     android {
         namespace = "net.thunderbird.components.core.outcome"
-    }
-    sourceSets {
-        commonTest.dependencies {
-            implementation(libs.assertk)
-            implementation(libs.kotlinx.coroutines.test)
-        }
     }
 }
 
