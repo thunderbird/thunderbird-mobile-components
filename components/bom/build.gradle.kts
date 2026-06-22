@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     constraints {
-        // Add constraints for published components here, e.g.:
-        // api("net.thunderbird:some-component:${project.version}")
+        api(projects.components.core.outcome)
     }
 }
