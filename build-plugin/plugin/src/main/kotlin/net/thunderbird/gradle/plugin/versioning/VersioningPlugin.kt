@@ -42,7 +42,7 @@ class VersioningPlugin : Plugin<Project> {
         val versionManager = VersionManager(
             base = projectDir,
             root = root.projectDir,
-        )
+        ) { message -> logger.warn(message) }
         val version = versionManager.get()
         val versionFile = versionManager.sourceFile()
             ?: error("No version.properties file found to resolve the project version.")

@@ -13,6 +13,7 @@ import java.util.Properties
 internal class VersionManager(
     val base: File,
     val root: File,
+    private val logWarn: (String) -> Unit = {},
 ) {
 
     private val mapper = VersionPropertiesMapper()
@@ -48,6 +49,7 @@ internal class VersionManager(
         while (dir != null) {
             val candidate = File(dir, FILE_NAME)
             if (candidate.exists()) {
+                logWarn("[versioning] Using version file: ${candidate.path}")
                 return candidate
             }
             if (dir == repoRoot) break

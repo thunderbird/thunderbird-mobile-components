@@ -63,7 +63,7 @@ abstract class UpdateChangelogTask : DefaultTask() {
         val relativePathRaw = root.toPath().relativize(componentDir.toPath()).toString()
         val relativePath = relativePathRaw.takeIf { it.isNotBlank() }
 
-        val git = GitClient { msg -> logger.warn(msg) }
+        val git = GitClient { message -> logger.warn(message) }
         val latestRelease = changelogManager.getLatestRelease(changelog)
         val startRef = if (latestRelease != null) {
             val tagCandidates = releaseTagCandidates(latestRelease.version, componentDir.name)

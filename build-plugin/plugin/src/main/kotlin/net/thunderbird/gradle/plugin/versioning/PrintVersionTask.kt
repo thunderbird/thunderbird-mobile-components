@@ -26,12 +26,12 @@ abstract class PrintVersionTask : DefaultTask() {
         val versionManager = VersionManager(
             base = base,
             root = root,
-        )
+        ) { message -> logger.warn(message) }
         val version = versionManager.get()
         val versionFile = versionManager.sourceFile()
             ?: error("No version.properties file found to print the project version.")
 
-        println(GitVersionReader().read(root, versionFile, version))
+        logger.lifecycle(GitVersionReader().read(root, versionFile, version))
     }
 
     companion object {

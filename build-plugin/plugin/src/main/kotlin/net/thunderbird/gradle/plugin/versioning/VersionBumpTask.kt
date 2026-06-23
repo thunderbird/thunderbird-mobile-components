@@ -1,13 +1,11 @@
 package net.thunderbird.gradle.plugin.versioning
 
-import java.io.File
 import net.thunderbird.gradle.plugin.versioning.internal.VersionManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -36,7 +34,7 @@ abstract class VersionBumpTask : DefaultTask() {
         val versionManager = VersionManager(
             base = base,
             root = root,
-        )
+        ) { message -> logger.warn(message) }
 
         val version = versionManager.get()
 

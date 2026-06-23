@@ -31,7 +31,7 @@ abstract class CreateReleaseTagTask : DefaultTask() {
         val versionManager = VersionManager(
             base = startDir.get().asFile,
             root = repoRootDir.get().asFile,
-        )
+        ) { message -> logger.warn(message) }
         val version = versionManager.get()
 
         val versionFile = versionManager.sourceFile()

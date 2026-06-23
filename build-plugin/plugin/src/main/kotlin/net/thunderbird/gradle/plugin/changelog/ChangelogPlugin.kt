@@ -27,7 +27,7 @@ class ChangelogPlugin : Plugin<Project> {
                         "CHANGELOG.md will not be created or updated.",
                 )
             } else {
-                logger.info("[changelog] Using folder at: ${versionDir.path} for component changelog")
+                logger.debug("[changelog] Using folder at: ${versionDir.path} for component changelog")
 
                 tasks.register<UpdateChangelogTask>(UpdateChangelogTask.TASK_NAME) {
                     group = "documentation"
