@@ -3,6 +3,7 @@ package net.thunderbird.gradle.plugin.library.kmp.compose
 import net.thunderbird.gradle.plugin.ProjectConfig
 import net.thunderbird.gradle.plugin.library.kmp.android
 import net.thunderbird.gradle.plugin.library.kmp.androidHostTest
+import net.thunderbird.gradle.plugin.library.kmp.namespaceByPath
 import net.thunderbird.gradle.plugin.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -48,6 +49,7 @@ class LibraryKmpComposePlugin : Plugin<Project> {
                 }
 
                 android {
+                    namespaceByPath(target)
                     minSdk = ProjectConfig.Android.sdkMin
                     compileSdk = ProjectConfig.Android.sdkCompile
 

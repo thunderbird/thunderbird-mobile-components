@@ -1,9 +1,11 @@
 package net.thunderbird.gradle.plugin.library.kmp
 
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
+import net.thunderbird.gradle.plugin.ProjectConfig
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.NamedDomainObjectProvider
+import org.gradle.api.Project
 import org.gradle.api.artifacts.ExternalModuleDependency
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.plugins.ExtensionAware
@@ -18,6 +20,17 @@ val NamedDomainObjectContainer<KotlinSourceSet>.androidHostTest: NamedDomainObje
 
 fun KotlinMultiplatformExtension.android(configure: Action<KotlinMultiplatformAndroidLibraryTarget>) {
     (this as ExtensionAware).extensions.configure("android", configure)
+}
+
+fun KotlinMultiplatformAndroidLibraryTarget.namespaceByPath(project: Project) {
+    val pathSegments = project.path.split(':')
+        .filter { it.isNotBlank() }
+        .flatMap { it.split('-') }
+        .filter { it.isNotBlank() }
+
+    namespace = listOf(ProjectConfig.group)
+        .plus(pathSegments)
+        .joinToString(separator = ".")
 }
 
 /**
