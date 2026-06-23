@@ -79,14 +79,16 @@ internal class GitClient(
     private fun run(cmd: List<String>): List<String> = try {
         val pb = ProcessBuilder(cmd)
         pb.redirectErrorStream(true)
-        val proc = pb.start()
-        val out = proc.inputStream.bufferedReader().readLines()
-        val exit = proc.waitFor()
-        if (exit != 0) {
-            logWarn("[changelog] Command failed ($exit): ${cmd.joinToString(" ")}")
-            emptyList()
-        } else {
-            out
+        val process = pb.start()
+        process.inputStream.bufferedReader().use { reader ->
+            val output = reader.readLines()
+            val exitCode = process.waitFor()
+            if (exitCode == 0) {
+                output
+            } else {
+                logWarn("[changelog] Command failed ($exitCode): ${cmd.joinToString(" ")}")
+                emptyList()
+            }
         }
     } catch (e: Exception) {
         logWarn("[changelog] Failed to run ${cmd.joinToString(" ")}: ${e.message}")

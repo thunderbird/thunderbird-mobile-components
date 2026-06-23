@@ -22,11 +22,14 @@ internal class GitVersionReader(
             val process = ProcessBuilder(command)
                 .redirectErrorStream(true)
                 .start()
-            val output = process.inputStream.bufferedReader().readLines()
-            if (process.waitFor() == 0) {
-                output.joinToString("\n")
-            } else {
-                ""
+
+            process.inputStream.bufferedReader().use { reader ->
+                val output = reader.readLines()
+                if (process.waitFor() == 0) {
+                    output.joinToString("\n")
+                } else {
+                    ""
+                }
             }
         } catch (_: Exception) {
             ""

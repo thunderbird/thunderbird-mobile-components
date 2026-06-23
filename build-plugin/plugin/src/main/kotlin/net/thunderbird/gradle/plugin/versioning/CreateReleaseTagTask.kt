@@ -62,10 +62,13 @@ abstract class CreateReleaseTagTask : DefaultTask() {
         val process = ProcessBuilder(command)
             .redirectErrorStream(true)
             .start()
-        val output = process.inputStream.bufferedReader().readText()
-        val exitCode = process.waitFor()
-        check(exitCode == 0) {
-            "Command failed ($exitCode): ${command.joinToString(" ")}\n$output"
+
+        process.inputStream.bufferedReader().use { reader ->
+            val output = reader.readText()
+            val exitCode = process.waitFor()
+            check(exitCode == 0) {
+                "Command failed ($exitCode): ${command.joinToString(" ")}\n$output"
+            }
         }
     }
 
