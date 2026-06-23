@@ -3,10 +3,17 @@
 Use [Conventional Commits](https://www.conventionalcommits.org/) to write consistent and meaningful commit messages.
 This makes your work easier to review, track, and maintain for everyone involved in the project.
 
+## Summary
+
+- Use [Conventional Commits](#️-commit-message-format) for consistency.
+- Keep commit messages short, structured, and focused.
+- Make each commit purposeful and self-contained.
+- Write commits that make collaboration and future development easier for everyone—including you.
+
 ## ✍️ Commit Message Format
 
 ```git
-<type>(<scope>): <description>
+<type>(<scope>)!: <description>
 
 <body>
 
@@ -17,6 +24,8 @@ Components:
 
 - `<type>`: The [type of change](#-commit-types) being made (e.g., feat, fix, docs).
 - `<scope>` **(optional)**: The [scope](#optional-scope) indicates the area of the codebase affected by the change (e.g., auth, ui).
+- `!` **(optional)**: Marks a breaking change. It can be used after the type or scope, e.g. `feat!: ...` or
+  `feat(api)!: ...`.
 - `<description>`: Short description of the change (50 characters or less)
 - `<body>` **(optional)**: Explain what changed and why, include context if helpful.
 - `<footer(s)>` **(optional)**: Include issue references, breaking changes, etc.
@@ -33,6 +42,12 @@ With scope:
 
 ```git
 feat(auth): add login functionality
+```
+
+Breaking change:
+
+```git
+feat(api)!: replace login response model
 ```
 
 With body and issue reference:
@@ -96,11 +111,4 @@ codebase are involved.
 - ✅ Explain non-obvious changes or decisions in the message body.
 - ✅ Consider the commit as a documentation tool.
 - ❌ Avoid jargon, acronyms, or vague messages like `update stuff`.
-
-## Summary
-
-- Use [Conventional Commits](#-conventional-commits) for consistency.
-- Keep commit messages short, structured, and focused.
-- Make each commit purposeful and self-contained.
-- Write commits that make collaboration and future development easier for everyone—including you.
 
