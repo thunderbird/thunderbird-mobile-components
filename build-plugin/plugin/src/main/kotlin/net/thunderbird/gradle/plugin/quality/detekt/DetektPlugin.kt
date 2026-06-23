@@ -9,6 +9,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
 
 /**
@@ -19,6 +21,7 @@ import org.gradle.kotlin.dsl.withType
 class DetektPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
+            pluginManager.apply("base")
             pluginManager.apply("dev.detekt")
 
             dependencies {
@@ -56,8 +59,6 @@ class DetektPlugin : Plugin<Project> {
                     sarif.required.set(true)
                     markdown.required.set(true)
                 }
-
-                tasks.getByName("build").dependsOn(this)
             }
 
             withType<DetektCreateBaselineTask>().configureEach {
@@ -70,11 +71,15 @@ class DetektPlugin : Plugin<Project> {
                 exclude(defaultExcludes)
             }
 
-            register("detektAll") {
+            val detektAll = register("detektAll") {
                 group = "verification"
                 description = "Runs detekt on this project"
 
                 dependsOn(tasks.withType<Detekt>())
+            }
+
+            named("check") {
+                dependsOn(detektAll)
             }
         }
     }
