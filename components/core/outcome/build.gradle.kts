@@ -9,8 +9,3 @@ kotlin {
         namespace = "net.thunderbird.components.core.outcome"
     }
 }
-
-codeCoverage {
-    branchCoverage = 28
-    lineCoverage = 53
-}

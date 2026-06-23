@@ -35,6 +35,28 @@ val outcomeTest by testSuite("Outcome") {
             assertThat(outcome.isSuccess).isFalse()
             assertThat(failure.error).isEqualTo("error")
         }
+
+        test("failure factory creates a failure without cause") {
+            // Arrange
+            val outcome: Outcome<Int, String> = Outcome.failure("error")
+
+            // Act
+            val failure = outcome as Outcome.Failure
+
+            // Assert
+            assertThat(failure.cause).isNull()
+        }
+
+        test("failure data class keeps cause") {
+            // Arrange
+            val cause = IllegalArgumentException("cause")
+
+            // Act
+            val failure = Outcome.Failure("error", cause)
+
+            // Assert
+            assertThat(failure.cause === cause).isTrue()
+        }
     }
 
     testSuite("map") {
@@ -85,13 +107,16 @@ val outcomeTest by testSuite("Outcome") {
 
         test("passes failure through unchanged") {
             // Arrange
-            val outcome = Outcome.Failure("failure")
+            val cause = IllegalStateException("cause")
+            val outcome = Outcome.Failure("failure", cause)
 
             // Act
             val mapped = outcome.mapSuccess { 999 }
 
             // Assert
+            assertThat(mapped === outcome).isTrue()
             assertThat((mapped as Outcome.Failure).error).isEqualTo("failure")
+            assertThat(mapped.cause === cause).isTrue()
         }
     }
 
@@ -109,15 +134,33 @@ val outcomeTest by testSuite("Outcome") {
             assertThat((mapped as Outcome.Success).data).isEqualTo("success")
         }
 
+        test("flat maps success value to failure") {
+            // Arrange
+            val cause = IllegalArgumentException("cause")
+            val outcome = Outcome.Success(1)
+
+            // Act
+            val mapped = outcome.flatMapSuccess {
+                Outcome.Failure("failure", cause)
+            }
+
+            // Assert
+            assertThat((mapped as Outcome.Failure).error).isEqualTo("failure")
+            assertThat(mapped.cause === cause).isTrue()
+        }
+
         test("passes failure through unchanged") {
             // Arrange
-            val outcome: Outcome<Int, String> = Outcome.Failure("failure")
+            val cause = IllegalStateException("cause")
+            val outcome: Outcome<Int, String> = Outcome.Failure("failure", cause)
 
             // Act
             val mapped = outcome.flatMapSuccess { Outcome.Success("unused") }
 
             // Assert
+            assertThat(mapped === outcome).isTrue()
             assertThat((mapped as Outcome.Failure).error).isEqualTo("failure")
+            assertThat(mapped.cause === cause).isTrue()
         }
     }
 
@@ -130,6 +173,7 @@ val outcomeTest by testSuite("Outcome") {
             val mapped = outcome.mapFailure { error: String, _ -> "$error?" }
 
             // Assert
+            assertThat(mapped === outcome).isTrue()
             assertThat((mapped as Outcome.Success).data).isEqualTo("success")
         }
 
