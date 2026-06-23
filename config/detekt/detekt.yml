@@ -161,12 +161,12 @@ complexity:
     ignorePrivate: false
     ignoreInternal: false
     ignoreOverridden: false
-    ignoreAnnotatedFunctions: ['Preview']
+    ignoreAnnotatedFunctions: ['Preview', 'PreviewLightDark', 'PreviewLightDarkLandscape']
 
 coroutines:
   active: true
   CoroutineLaunchedInTestWithoutRunTest:
-    active: false
+    active: true
   GlobalCoroutineUsage:
     active: false
   InjectDispatcher:
@@ -330,7 +330,7 @@ naming:
     active: true
     aliases: ['FunctionName']
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/nativeTest/**']
-    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
     ignoreAnnotated:
       - 'Composable'
@@ -522,7 +522,12 @@ potential-bugs:
     allowAdjacentDifferentTypeParams: true
     allowSingleParamUse: true
     ignoreArgumentsMatchingNames: true
-    ignoreFunctionCall: []
+    ignoreFunctionCall:
+      - androidx.compose.runtime.remember
+      - kotlin.comparisons.maxOf
+      - kotlin.comparisons.minOf
+      - kotlin.math.max
+      - kotlin.Pair.<init>
   UnnecessaryNotNullCheck:
     active: false
   UnnecessaryNotNullOperator:
@@ -628,8 +633,8 @@ style:
         value: 'FIXME:'
       - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
         value: 'STOPSHIP:'
-    #      - reason: 'Forbidden TODO todo marker in comment, please do the changes.'
-    #        value: 'TODO:'
+      - reason: 'Forbidden TODO todo marker in comment, please do the changes or create an issue to address it.'
+        value: 'TODO:'
     allowedPatterns: ''
   ForbiddenImport:
     active: false
@@ -744,7 +749,7 @@ style:
       - 'equals'
     excludeLabeled: false
     excludeReturnFromLambda: true
-    excludeGuardClauses: false
+    excludeGuardClauses: true
   SafeCast:
     active: true
   SerialVersionUIDInSerializableClass:
