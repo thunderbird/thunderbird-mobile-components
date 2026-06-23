@@ -28,7 +28,7 @@ abstract class PrintReleaseTagTask : DefaultTask() {
         val versionFile = versionManager.sourceFile()
             ?: error("No version.properties file found to print the release tag.")
 
-        println("${versionFile.parentFile.name}-${version.toStringValue()}")
+        logger.lifecycle("${versionFile.parentFile.name}-${version.toStringValue()}")
     }
 
     companion object {
