@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
 
+    alias(libs.plugins.tb.changelog)
     alias(libs.plugins.tb.dependency.check)
     alias(libs.plugins.tb.quality.code.coverage)
     alias(libs.plugins.tb.quality.detekt)

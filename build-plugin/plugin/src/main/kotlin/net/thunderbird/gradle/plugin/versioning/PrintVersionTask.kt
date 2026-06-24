@@ -1,5 +1,6 @@
 package net.thunderbird.gradle.plugin.versioning
 
+import net.thunderbird.gradle.plugin.versioning.internal.GitVersionReader
 import net.thunderbird.gradle.plugin.versioning.internal.VersionManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
@@ -25,10 +26,12 @@ abstract class PrintVersionTask : DefaultTask() {
         val versionManager = VersionManager(
             base = base,
             root = root,
-        )
+        ) { message -> logger.warn(message) }
         val version = versionManager.get()
+        val versionFile = versionManager.sourceFile()
+            ?: error("No version.properties file found to print the project version.")
 
-        println(version.toStringValue())
+        logger.lifecycle(GitVersionReader().read(root, versionFile, version))
     }
 
     companion object {

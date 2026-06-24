@@ -28,6 +28,7 @@ class LibraryKmpComposePlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")
 
+                apply("net.thunderbird.gradle.plugin.changelog")
                 apply("net.thunderbird.gradle.plugin.publishing")
                 apply("net.thunderbird.gradle.plugin.versioning")
 

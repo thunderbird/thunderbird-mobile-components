@@ -13,8 +13,7 @@ internal class VersionPropertiesMapper {
         val major = properties["MAJOR"]?.toString()?.toIntOrNull() ?: return null
         val minor = properties["MINOR"]?.toString()?.toIntOrNull() ?: return null
         val patch = properties["PATCH"]?.toString()?.toIntOrNull() ?: return null
-        val snapshot = properties["SNAPSHOT"]?.toString()?.equals("true", ignoreCase = true) ?: true
-        return Version(major, minor, patch, snapshot)
+        return Version(major, minor, patch)
     }
 
     fun from(version: Version): Properties {
@@ -22,7 +21,6 @@ internal class VersionPropertiesMapper {
         properties["MAJOR"] = version.major.toString()
         properties["MINOR"] = version.minor.toString()
         properties["PATCH"] = version.patch.toString()
-        properties["SNAPSHOT"] = version.snapshot.toString()
         return properties
     }
 }

@@ -23,7 +23,10 @@ dependencies {
     implementation(plugin(libs.plugins.detekt))
     implementation(plugin(libs.plugins.spotless))
 
-    compileOnly(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.datetime)
+
+    testImplementation(libs.assertk)
+    testImplementation(libs.kotlin.test)
 }
 
 gradlePlugin {
@@ -67,6 +70,11 @@ gradlePlugin {
         register("Versioning") {
             id = "net.thunderbird.gradle.plugin.versioning"
             implementationClass = "net.thunderbird.gradle.plugin.versioning.VersioningPlugin"
+        }
+
+        register("Changelog") {
+            id = "net.thunderbird.gradle.plugin.changelog"
+            implementationClass = "net.thunderbird.gradle.plugin.changelog.ChangelogPlugin"
         }
     }
 }
