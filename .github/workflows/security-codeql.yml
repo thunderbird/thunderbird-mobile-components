@@ -26,8 +26,6 @@ jobs:
             build-mode: 'none'
           - language: 'java-kotlin'
             build-mode: 'manual'
-          - language: 'python'
-            build-mode: 'none'
 
     runs-on: ubuntu-latest
 
