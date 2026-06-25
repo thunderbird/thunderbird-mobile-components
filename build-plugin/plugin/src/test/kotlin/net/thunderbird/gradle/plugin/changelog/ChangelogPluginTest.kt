@@ -37,6 +37,11 @@ class ChangelogPluginTest {
         val finalizeTask = fixture.project.tasks.named(FinalizeChangelogTask.TASK_NAME).get() as FinalizeChangelogTask
         assertThat(finalizeTask.changelogFile.get().asFile.canonicalFile)
             .isEqualTo(fixture.changelogFile.canonicalFile)
+
+        val writeReleaseNotesTask =
+            fixture.project.tasks.named(WriteReleaseNotesTask.TASK_NAME).get() as WriteReleaseNotesTask
+        assertThat(writeReleaseNotesTask.changelogFile.get().asFile.canonicalFile)
+            .isEqualTo(fixture.changelogFile.canonicalFile)
     }
 
     @Test
@@ -51,6 +56,7 @@ class ChangelogPluginTest {
         // Assert
         assertThat(fixture.project.version.toString()).isEqualTo("1.2.3-SNAPSHOT")
         assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNotNull()
+        assertThat(fixture.project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNotNull()
         assertThat(fixture.project.tasks.findByName("versionBumpPatch")).isNotNull()
     }
 
@@ -70,6 +76,7 @@ class ChangelogPluginTest {
         // Assert
         assertThat(project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNull()
         assertThat(project.tasks.findByName(FinalizeChangelogTask.TASK_NAME)).isNull()
+        assertThat(project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNull()
     }
 
     private fun createNestedComponentProject(

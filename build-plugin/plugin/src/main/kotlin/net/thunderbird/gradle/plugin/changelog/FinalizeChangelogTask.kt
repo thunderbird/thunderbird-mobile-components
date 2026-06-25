@@ -7,12 +7,16 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import net.thunderbird.gradle.plugin.changelog.internal.ChangelogManager
 import net.thunderbird.gradle.plugin.changelog.internal.Release
+import net.thunderbird.gradle.plugin.versioning.internal.VersionManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -25,7 +29,12 @@ abstract class FinalizeChangelogTask : DefaultTask() {
     abstract val changelogFile: RegularFileProperty
 
     @get:Input
+    @get:Optional
     abstract val releaseVersion: Property<String>
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val versionFile: RegularFileProperty
 
     @get:Input
     @get:Optional
@@ -41,7 +50,7 @@ abstract class FinalizeChangelogTask : DefaultTask() {
 
     @TaskAction
     fun finalizeChangelog() {
-        val version = releaseVersion.get().trim()
+        val version = resolveReleaseVersion()
         require(version.isNotBlank()) { "releaseVersion must not be blank." }
         require(!version.equals(UNRELEASED, ignoreCase = true)) { "releaseVersion must not be '$UNRELEASED'." }
 
@@ -79,6 +88,24 @@ abstract class FinalizeChangelogTask : DefaultTask() {
 
         manager.update(changelog.copy(releases = releases))
         logger.lifecycle("[changelog] Finalized ${changelogFile.get().asFile.path} for $version ($date)")
+    }
+
+    private fun resolveReleaseVersion(): String {
+        val configuredVersion = VersionManager(
+            base = versionFile.get().asFile.parentFile,
+            root = versionFile.get().asFile.parentFile,
+        ).get().toStringValue()
+        val overrideVersion = releaseVersion.orNull?.trim()
+
+        if (!releaseVersion.isPresent) {
+            return configuredVersion
+        }
+        require(!overrideVersion.isNullOrBlank()) { "releaseVersion must not be blank." }
+
+        require(overrideVersion == configuredVersion) {
+            "releaseVersion '$overrideVersion' does not match version.properties '$configuredVersion'."
+        }
+        return overrideVersion
     }
 
     companion object {

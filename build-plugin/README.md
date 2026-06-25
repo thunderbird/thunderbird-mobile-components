@@ -64,9 +64,13 @@ Supportive/quality and tooling plugins:
         [Release Guide](../docs/release-guide.md).
     - `finalizeChangelog`: finalizes the current `## Unreleased` section for a release version and inserts a new
       empty `## Unreleased` section above it.
-      - Required property: `-PreleaseVersion=<version>`
+      - Version source: nearest `version.properties`
+      - Optional property: `-PreleaseVersion=<version>` (must match `version.properties` when provided)
       - Optional property: `-PreleaseDate=YYYY-MM-DD` (defaults to the current local date)
       - Validation: fails when `Unreleased` is missing, empty, or when the target release already exists.
+    - `writeReleaseNotes`: writes the finalized release section to a markdown file for GitHub Releases.
+      - Version source: nearest `version.properties`
+      - Optional property: `-PreleaseNotesFile=<path>` (defaults to `build/release/release-notes.md`)
   - Usage:
     ```kotlin
     // In any project that should contribute a component changelog
@@ -81,7 +85,7 @@ Supportive/quality and tooling plugins:
     ./gradlew :components:bom:updateChangelog
 
     # Finalize the changelog for a release
-    ./gradlew :components:bom:finalizeChangelog -PreleaseVersion=1.0.0
+    ./gradlew :components:bom:finalizeChangelog
     ```
 
 ### Applying a plugin
@@ -132,6 +136,12 @@ The `net.thunderbird.gradle.plugin.publishing` plugin:
 - Sets Maven coordinates from the project and configures POM metadata
 - Adds local repositories: `mavenLocal()` and `${rootProject}/build/maven-repo`
 - Configures publishing to Maven Central and signs all publications
+- Adds release-oriented validation tasks:
+    - `validateStableVersionForPublishing`: validates a non-`SNAPSHOT` version before release publishing.
+    - `validateSnapshotVersionForPublishing`: validates a `SNAPSHOT` version before snapshot publishing.
+- Adds release tag tasks:
+    - `printReleaseTag`: prints the component release tag derived from `version.properties`.
+    - `createReleaseTag`: creates the component release tag locally.
 
 Signing properties can be supplied from a file at `${rootProject}/.signing/signing.properties` with keys:
 

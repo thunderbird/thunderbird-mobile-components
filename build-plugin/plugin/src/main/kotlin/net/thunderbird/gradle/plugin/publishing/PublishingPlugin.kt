@@ -7,6 +7,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
 
 /**
  * Publishing plugin configuration.
@@ -28,22 +29,20 @@ class PublishingPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            ensureProjectGroup()
+            configurePublishedGroup()
             loadSigningProperties()
 
             pluginManager.apply("com.vanniktech.maven.publish")
 
             configurePublishing()
             configurePublish()
+            registerReleasePublishingTasks()
         }
     }
 
-    private fun Project.ensureProjectGroup() {
-        group = group.toString().replace("tmc", ProjectConfig.group + ".")
-    }
-
+    @Suppress("UnstableApiUsage")
     private fun Project.loadSigningProperties() {
-        val signingPropsFile = rootProject.file(".signing/signing.properties")
+        val signingPropsFile = isolated.rootProject.projectDirectory.file(".signing/signing.properties").asFile
         if (signingPropsFile.exists()) {
             val properties = Properties()
             signingPropsFile.inputStream().use { properties.load(it) }
@@ -63,7 +62,8 @@ class PublishingPlugin : Plugin<Project> {
 
                 maven {
                     name = "localBuild"
-                    url = rootProject.layout.buildDirectory.dir("maven-repo").get().asFile.toURI()
+                    @Suppress("UnstableApiUsage")
+                    url = isolated.rootProject.projectDirectory.dir("build/maven-repo").asFile.toURI()
                 }
             }
         }
@@ -107,6 +107,24 @@ class PublishingPlugin : Plugin<Project> {
             publishToMavenCentral()
 
             signAllPublications()
+        }
+    }
+
+    private fun Project.registerReleasePublishingTasks() {
+        val currentProjectPath = path
+        tasks.register<ValidatePublicationVersionTask>("validateStableVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a release version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(false)
+        }
+        tasks.register<ValidatePublicationVersionTask>("validateSnapshotVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a snapshot version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(true)
         }
     }
 }

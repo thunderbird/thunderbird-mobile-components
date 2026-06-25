@@ -1,0 +1,119 @@
+name: Publish - Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      component_path:
+        description: "Gradle path of the component to publish, e.g. :components:bom"
+        required: true
+        default: ":components:bom"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-release-${{ inputs.component_path }}
+  cancel-in-progress: false
+
+jobs:
+  publish-release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      COMPONENT_PATH: ${{ inputs.component_path }}
+      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+      ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_IN_MEMORY_KEY_ID }}
+      ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+
+    steps:
+      - name: Validate branch
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_NAME}" != "main" ]]; then
+            echo "Releases must be published from main. Current ref: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+
+      - name: Configure Git author
+        run: |
+          git config user.name "TMC Release Bot"
+          git config user.email "tmc-release-bot@thunderbird.net"
+
+      - name: Create release tag
+        id: release-tag
+        run: |
+          set -euo pipefail
+
+          tag="$(./gradlew -q "${COMPONENT_PATH}:printReleaseTag")"
+
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            tag_commit="$(git rev-list -n 1 "${tag}")"
+            head_commit="$(git rev-parse HEAD)"
+
+            if [[ "${tag_commit}" != "${head_commit}" ]]; then
+              echo "Release tag ${tag} already exists but does not point at HEAD."
+              exit 1
+            fi
+
+            echo "Release tag ${tag} already exists on HEAD."
+            echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          ./gradlew "${COMPONENT_PATH}:createReleaseTag"
+
+          if ! git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            echo "Expected release tag ${tag} to be created."
+            exit 1
+          fi
+
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+
+      - name: Write release notes
+        run: ./gradlew "${COMPONENT_PATH}:writeReleaseNotes" -PreleaseNotesFile="${RUNNER_TEMP}/release-notes.md"
+
+      - name: Publish release
+        run: ./gradlew "${COMPONENT_PATH}:validateStableVersionForPublishing" "${COMPONENT_PATH}:publishAndReleaseToMavenCentral"
+
+      - name: Push release tag
+        run: |
+          set -euo pipefail
+
+          tag="${{ steps.release-tag.outputs.tag }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "Remote release tag ${tag} already exists."
+            exit 0
+          fi
+
+          git push origin "refs/tags/${tag}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          tag="${{ steps.release-tag.outputs.tag }}"
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            echo "GitHub release ${tag} already exists."
+            exit 0
+          fi
+
+          gh release create "${tag}" \
+            --title "${tag}" \
+            --target "${GITHUB_SHA}" \
+            --verify-tag \
+            --notes-file "${RUNNER_TEMP}/release-notes.md"

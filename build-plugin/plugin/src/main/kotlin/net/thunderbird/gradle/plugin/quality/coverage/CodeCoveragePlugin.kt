@@ -60,7 +60,7 @@ class CodeCoveragePlugin : Plugin<Project> {
             afterEvaluate {
                 configureKover(
                     coverageExtension = extension,
-                    isRoot = this == rootProject,
+                    isRoot = path == ":",
                 )
             }
         }

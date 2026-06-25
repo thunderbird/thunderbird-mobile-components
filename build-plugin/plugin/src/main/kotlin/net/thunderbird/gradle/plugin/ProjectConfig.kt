@@ -8,7 +8,7 @@ object ProjectConfig {
     const val group = "net.thunderbird"
 
     object Android {
-        const val sdkMin = 21
+        const val sdkMin = 23
 
         // Only needed for application
         const val sdkTarget = 35

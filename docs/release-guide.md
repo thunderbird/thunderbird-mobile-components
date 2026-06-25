@@ -1,40 +1,75 @@
 # Release Guide
 
-This guide describes the release workflow for Thunderbird Mobile Components.
+This guide is for maintainers preparing and publishing Thunderbird Mobile Components releases.
 
 ## Prerequisites
 
-- Start from an up-to-date `main` branch.
+- Maven Central credentials and signing properties are available to the publishing environment.
 
-## Release Workflow
+The publishing workflows expect these repository secrets:
 
-1. Create a release branch from an up-to-date `main` branch. See [Release Branches](#release-branches).
-2. Run the changelog update task for the component being released.
-3. Review the generated `Unreleased` changelog entries.
-4. Apply the release version changes.
-5. Finalize the changelog for the release version.
-6. Open a release pull request with the changelog and version changes.
-7. Merge the release pull request.
-8. Create the component release tag from the merged release commit.
-9. Publish the release.
-10. Bump the component version for the next development cycle.
+- `MAVEN_CENTRAL_USERNAME`
+- `MAVEN_CENTRAL_PASSWORD`
+- `SIGNING_IN_MEMORY_KEY`
+- `SIGNING_IN_MEMORY_KEY_ID`
+- `SIGNING_IN_MEMORY_KEY_PASSWORD`
+
+## Release
+
+Releases start with a release preparation pull request.
+
+1. Create a release branch from `main`. See [Release Branches](#release-branches).
+2. Verify that the component `version.properties` contains the intended release version. If the release should be
+   promoted from the current patch development version to a minor or major version, update it before finalizing the
+   changelog.
+3. Update the component changelog:
+
+```bash
+./gradlew <component-path>:updateChangelog
+```
+
+4. Review `CHANGELOG.md` and keep only entries intended for this release.
+5. Finalize the changelog:
+
+```bash
+./gradlew <component-path>:finalizeChangelog
+```
+
+The task uses the component version from `version.properties`.
+
+To use a specific release date:
+
+```bash
+./gradlew <component-path>:finalizeChangelog -PreleaseDate=2026-06-18
+```
+
+6. Open the release pull request.
+7. Before merging, verify:
+
+- `version.properties` contains the intended release version.
+- `CHANGELOG.md` contains the finalized release section.
+- The finalized changelog version matches `version.properties`.
+- The pull request contains no unrelated changes.
 
 ## Release Branches
 
-Release branch names must follow this pattern:
+For a single component release, use this branch name:
 
 ```text
 release/<component>-<version>
 ```
 
-Example:
+For nested components, use the component path without the leading colon and replace `:` with `-`.
 
-```text
-release/bom-1.0.0
+Examples:
+
+```bash
+git switch -c release/components-bom-1.0.0
+git switch -c release/components-feature-sync-1.0.0
 ```
 
-For a coordinated release of multiple components, use a release-train branch name instead of encoding every component
-and version in the branch name:
+For a coordinated release of multiple components, use a dated release-train branch name instead of encoding every
+component and version in the branch name:
 
 ```text
 release/tmc-YYYY-MM-DD
@@ -42,8 +77,8 @@ release/tmc-YYYY-MM-DD
 
 Example:
 
-```text
-release/tmc-2026-06-23
+```bash
+git switch -c release/tmc-2026-06-23
 ```
 
 List the exact component versions in the release pull request description.
@@ -54,52 +89,52 @@ Validation regex:
 ^release\/([a-zA-Z-]+-\d+\.\d+\.\d+|tmc-\d{4}-\d{2}-\d{2}(-\d+)?)$
 ```
 
-## Changelog Tasks
+## Release Publishing
 
-For a component, run the changelog task on that component project. Example for `:components:bom`:
+Publish a release only after the release pull request has merged into `main`.
 
-```bash
-./gradlew :components:bom:updateChangelog
-```
-
-The changelog is written next to the component `version.properties` file.
-
-After reviewing the generated entries, finalize the `Unreleased` section:
-
-```bash
-./gradlew :components:bom:finalizeChangelog -PreleaseVersion=1.0.0
-```
-
-To use a specific release date:
-
-```bash
-./gradlew :components:bom:finalizeChangelog -PreleaseVersion=1.0.0 -PreleaseDate=2026-06-18
-```
-
-The finalize task updates the changelog only. It does not create a git tag.
-
-## Release Tags
-
-After the release pull request has been merged, update `main` to the merged release commit and create the component
-release tag. Example for `:components:bom`:
-
-```bash
-./gradlew :components:bom:createReleaseTag
-```
-
-The task reads the component version from `version.properties` and creates a local git tag in this format:
+The release tag must be created from the merged release commit. The tag format is:
 
 ```text
 <component>-<version>
 ```
 
-For example:
+Example:
 
 ```text
-bom-1.0.0
+<component>-1.0.0
 ```
 
-The task fails if the tag already exists.
+Trigger the `Publish Release` workflow from `main` and provide the component path, for example
+`:components:bom`.
+
+The workflow creates the release tag locally, writes GitHub Release notes from the finalized component changelog,
+publishes the component to Maven Central, then pushes the tag and creates the GitHub Release after publishing succeeds.
+
+For a coordinated release of multiple components, run the `Publish Release` workflow once per component from the same
+merged `main` commit. Each run creates the component-specific tag, GitHub Release, and Maven Central publication for
+that component.
+
+The workflow performs these Gradle steps:
+
+```bash
+./gradlew <component-path>:createReleaseTag
+./gradlew <component-path>:writeReleaseNotes
+./gradlew <component-path>:validateStableVersionForPublishing <component-path>:publishAndReleaseToMavenCentral
+```
+
+For local verification before publishing to Maven Central, publish to Maven Local instead:
+
+```bash
+./gradlew <component-path>:validateStableVersionForPublishing <component-path>:publishToMavenLocal
+```
+
+Before publishing, verify:
+
+- The release pull request has been merged.
+- The workflow is started from `main`.
+- The component path input points at the component being released.
+- For coordinated releases, each component workflow run uses the same merged `main` commit.
 
 ## Post-release Version Bump
 
@@ -107,7 +142,7 @@ After publishing a release, bump the component `version.properties` to the next 
 pull request:
 
 ```bash
-./gradlew :components:bom:versionBumpPatch
+./gradlew <component-path>:versionBumpPatch
 ```
 
 If the next release later needs to become a minor or major release, promote the development version with the matching
@@ -121,12 +156,32 @@ until the matching release tag is created on a future release commit.
 This post-release bump can be automated after a successful publish, but it should still be committed separately from
 the release commit so the release tag continues to point at the exact released version.
 
-## Review Checklist
+## Snapshot Publishing
 
-Before merging the release pull request, verify:
+Snapshots are published from an untagged `main` commit. Do not create a release pull request, do not finalize the
+changelog, and do not create a release tag for a snapshot.
 
-- The changelog contains only entries for the release being prepared.
-- Entries are grouped under the expected sections.
-- The release version and changelog version match.
-- A post-release version bump is planned or automated after publishing.
+The `Publish Snapshot` workflow is triggered manually from `main` and publishes all publishable components.
+
+The workflow skips publishing when the mutable `snapshot/latest` marker tag already points at the current `main`
+commit. After a successful publish, the workflow moves `snapshot/latest` to the published commit.
+
+The workflow performs these Gradle steps:
+
+```bash
+./gradlew validateSnapshotVersionForPublishing
+./gradlew publishToMavenCentral
+```
+
+For local verification, publish to Maven Local instead:
+
+```bash
+./gradlew validateSnapshotVersionForPublishing
+./gradlew publishToMavenLocal
+```
+
+Before publishing a snapshot, verify:
+
+- The job runs from the intended `main` commit.
+- The commit is not tagged with the matching component release tag.
 

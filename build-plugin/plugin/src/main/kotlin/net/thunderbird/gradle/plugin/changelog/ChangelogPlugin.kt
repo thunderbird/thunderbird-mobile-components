@@ -18,7 +18,9 @@ class ChangelogPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             val start = project.projectDir
-            val root = rootProject.projectDir
+
+            @Suppress("UnstableApiUsage")
+            val root = isolated.rootProject.projectDirectory.asFile
             val versionDir = FileHelper.locateNearestVersionDir(start, root)
 
             if (versionDir == null) {
@@ -45,7 +47,8 @@ class ChangelogPlugin : Plugin<Project> {
                         ),
                     )
 
-                    repoRootDir.set(rootProject.layout.projectDirectory)
+                    @Suppress("UnstableApiUsage")
+                    repoRootDir.set(isolated.rootProject.projectDirectory)
                     repoUrl.set(ProjectConfig.Publishing.url)
                 }
 
@@ -58,8 +61,34 @@ class ChangelogPlugin : Plugin<Project> {
                             project.provider { File(versionDir, FileHelper.CHANGELOG_FILE) },
                         ),
                     )
-                    releaseVersion.set(providers.gradleProperty("releaseVersion"))
-                    releaseDate.set(providers.gradleProperty("releaseDate"))
+                    versionFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.VERSION_FILE) },
+                        ),
+                    )
+                    releaseVersion.convention(providers.gradleProperty("releaseVersion"))
+                    releaseDate.convention(providers.gradleProperty("releaseDate"))
+                }
+
+                tasks.register<WriteReleaseNotesTask>(WriteReleaseNotesTask.TASK_NAME) {
+                    group = "documentation"
+                    description = "Write GitHub release notes from the finalized component-local CHANGELOG.md section"
+
+                    changelogFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.CHANGELOG_FILE) },
+                        ),
+                    )
+                    versionFile.set(
+                        project.layout.file(
+                            project.provider { File(versionDir, FileHelper.VERSION_FILE) },
+                        ),
+                    )
+                    outputFile.convention(layout.buildDirectory.file("release/release-notes.md"))
+                    providers.gradleProperty("releaseNotesFile").orNull?.let { releaseNotesFile ->
+                        outputFile.set(layout.file(provider { File(releaseNotesFile) }))
+                    }
+                    releaseVersion.convention(providers.gradleProperty("releaseVersion"))
                 }
             }
         }
