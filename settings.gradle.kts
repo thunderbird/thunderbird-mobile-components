@@ -18,10 +18,6 @@ pluginManagement {
     includeBuild("build-plugin")
 }
 
-include(":components:bom")
-
-include(":quality:konsist")
-
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
@@ -39,6 +35,15 @@ dependencyResolutionManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
+
+include(":components:bom")
+
+// Core
+include(
+    ":components:core:outcome",
+)
+
+include(":quality:konsist")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     """

@@ -44,6 +44,7 @@ class LibraryKmpPlugin : Plugin<Project> {
                 }
 
                 android {
+                    namespaceByPath(target)
                     minSdk = ProjectConfig.Android.sdkMin
                     compileSdk = ProjectConfig.Android.sdkCompile
 

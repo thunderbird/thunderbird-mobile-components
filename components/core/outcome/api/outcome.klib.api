@@ -1,0 +1,56 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <net.thunderbird.components.core:outcome>
+sealed interface <#A: out kotlin/Any?, #B: out kotlin/Any?> net.thunderbird.components.core.outcome/Outcome { // net.thunderbird.components.core.outcome/Outcome|null[0]
+    open val isFailure // net.thunderbird.components.core.outcome/Outcome.isFailure|{}isFailure[0]
+        open fun <get-isFailure>(): kotlin/Boolean // net.thunderbird.components.core.outcome/Outcome.isFailure.<get-isFailure>|<get-isFailure>(){}[0]
+    open val isSuccess // net.thunderbird.components.core.outcome/Outcome.isSuccess|{}isSuccess[0]
+        open fun <get-isSuccess>(): kotlin/Boolean // net.thunderbird.components.core.outcome/Outcome.isSuccess.<get-isSuccess>|<get-isSuccess>(){}[0]
+
+    final class <#A1: out kotlin/Any?> Failure : net.thunderbird.components.core.outcome/Outcome<kotlin/Nothing, #A1> { // net.thunderbird.components.core.outcome/Outcome.Failure|null[0]
+        constructor <init>(#A1, kotlin/Any? = ...) // net.thunderbird.components.core.outcome/Outcome.Failure.<init>|<init>(1:0;kotlin.Any?){}[0]
+
+        final val cause // net.thunderbird.components.core.outcome/Outcome.Failure.cause|{}cause[0]
+            final fun <get-cause>(): kotlin/Any? // net.thunderbird.components.core.outcome/Outcome.Failure.cause.<get-cause>|<get-cause>(){}[0]
+        final val error // net.thunderbird.components.core.outcome/Outcome.Failure.error|{}error[0]
+            final fun <get-error>(): #A1 // net.thunderbird.components.core.outcome/Outcome.Failure.error.<get-error>|<get-error>(){}[0]
+
+        final fun component1(): #A1 // net.thunderbird.components.core.outcome/Outcome.Failure.component1|component1(){}[0]
+        final fun component2(): kotlin/Any? // net.thunderbird.components.core.outcome/Outcome.Failure.component2|component2(){}[0]
+        final fun copy(#A1 = ..., kotlin/Any? = ...): net.thunderbird.components.core.outcome/Outcome.Failure<#A1> // net.thunderbird.components.core.outcome/Outcome.Failure.copy|copy(1:0;kotlin.Any?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // net.thunderbird.components.core.outcome/Outcome.Failure.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // net.thunderbird.components.core.outcome/Outcome.Failure.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // net.thunderbird.components.core.outcome/Outcome.Failure.toString|toString(){}[0]
+    }
+
+    final class <#A1: out kotlin/Any?> Success : net.thunderbird.components.core.outcome/Outcome<#A1, kotlin/Nothing> { // net.thunderbird.components.core.outcome/Outcome.Success|null[0]
+        constructor <init>(#A1) // net.thunderbird.components.core.outcome/Outcome.Success.<init>|<init>(1:0){}[0]
+
+        final val data // net.thunderbird.components.core.outcome/Outcome.Success.data|{}data[0]
+            final fun <get-data>(): #A1 // net.thunderbird.components.core.outcome/Outcome.Success.data.<get-data>|<get-data>(){}[0]
+
+        final fun component1(): #A1 // net.thunderbird.components.core.outcome/Outcome.Success.component1|component1(){}[0]
+        final fun copy(#A1 = ...): net.thunderbird.components.core.outcome/Outcome.Success<#A1> // net.thunderbird.components.core.outcome/Outcome.Success.copy|copy(1:0){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // net.thunderbird.components.core.outcome/Outcome.Success.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // net.thunderbird.components.core.outcome/Outcome.Success.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // net.thunderbird.components.core.outcome/Outcome.Success.toString|toString(){}[0]
+    }
+
+    final object Companion { // net.thunderbird.components.core.outcome/Outcome.Companion|null[0]
+        final fun <#A2: kotlin/Any?> failure(#A2): net.thunderbird.components.core.outcome/Outcome<kotlin/Nothing, #A2> // net.thunderbird.components.core.outcome/Outcome.Companion.failure|failure(0:0){0§<kotlin.Any?>}[0]
+        final fun <#A2: kotlin/Any?> success(#A2): net.thunderbird.components.core.outcome/Outcome<#A2, kotlin/Nothing> // net.thunderbird.components.core.outcome/Outcome.Companion.success|success(0:0){0§<kotlin.Any?>}[0]
+    }
+}
+
+final fun <#A: kotlin/Any?, #B: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/handle(kotlin/Function1<#A, kotlin/Unit>, kotlin/Function1<#B, kotlin/Unit>) // net.thunderbird.components.core.outcome/handle|handle@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.Function1<0:0,kotlin.Unit>;kotlin.Function1<0:1,kotlin.Unit>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?, #D: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/map(kotlin/Function1<#A, #C>, kotlin/Function2<#B, kotlin/Any?, #D>): net.thunderbird.components.core.outcome/Outcome<#C, #D> // net.thunderbird.components.core.outcome/map|map@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.Function1<0:0,0:2>;kotlin.Function2<0:1,kotlin.Any?,0:3>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>;3§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/flatMapSuccess(kotlin/Function1<#A, net.thunderbird.components.core.outcome/Outcome<#C, #B>>): net.thunderbird.components.core.outcome/Outcome<#C, #B> // net.thunderbird.components.core.outcome/flatMapSuccess|flatMapSuccess@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.Function1<0:0,net.thunderbird.components.core.outcome.Outcome<0:2,0:1>>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/fold(kotlin/Function1<#A, #C>, kotlin/Function1<#B, #C>): #C // net.thunderbird.components.core.outcome/fold|fold@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.Function1<0:0,0:2>;kotlin.Function1<0:1,0:2>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/mapFailure(kotlin/Function2<#B, kotlin/Any?, #C>): net.thunderbird.components.core.outcome/Outcome<#A, #C> // net.thunderbird.components.core.outcome/mapFailure|mapFailure@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.Function2<0:1,kotlin.Any?,0:2>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #C>).net.thunderbird.components.core.outcome/mapSuccess(kotlin/Function1<#A, #B>): net.thunderbird.components.core.outcome/Outcome<#B, #C> // net.thunderbird.components.core.outcome/mapSuccess|mapSuccess@net.thunderbird.components.core.outcome.Outcome<0:0,0:2>(kotlin.Function1<0:0,0:1>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>}[0]
+final suspend fun <#A: kotlin/Any?, #B: kotlin/Any?> (net.thunderbird.components.core.outcome/Outcome<#A, #B>).net.thunderbird.components.core.outcome/handleAsync(kotlin.coroutines/SuspendFunction1<#A, kotlin/Unit>, kotlin.coroutines/SuspendFunction1<#B, kotlin/Unit>) // net.thunderbird.components.core.outcome/handleAsync|handleAsync@net.thunderbird.components.core.outcome.Outcome<0:0,0:1>(kotlin.coroutines.SuspendFunction1<0:0,kotlin.Unit>;kotlin.coroutines.SuspendFunction1<0:1,kotlin.Unit>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]

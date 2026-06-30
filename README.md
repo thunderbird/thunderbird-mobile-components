@@ -19,6 +19,12 @@ The components are in different stages of development, and some may not be fully
 - 🧪 Testing: The component is being tested and may have known issues.
 - ✅ Stable: The component is stable and ready for production use.
 
+### [Core Components](components/core/README.md)
+
+|                  Component                   |      Status       |           Module           |             Maven Coordinate              |                               Description                               |
+|----------------------------------------------|-------------------|----------------------------|-------------------------------------------|-------------------------------------------------------------------------|
+| [Outcome](components/core/outcome/README.md) | 🛠 In development | `:components:core:outcome` | `net.thunderbird.components.core:outcome` | Small result type with a flexible failure type, unlike Kotlin `Result`. |
+
 ## Contributing
 
 We welcome contributions to this repository! If you would like to contribute, please read our
