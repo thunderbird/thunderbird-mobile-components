@@ -63,6 +63,7 @@ include(":cli:import-code")
 include(
     ":components:core:outcome",
     ":components:core:logging:core",
+    ":components:core:logging:file",
     ":components:core:logging:testing",
     ":components:core:testing",
 )
