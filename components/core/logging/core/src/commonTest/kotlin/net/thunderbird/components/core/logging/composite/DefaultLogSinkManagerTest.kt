@@ -9,13 +9,12 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import net.thunderbird.components.core.logging.LogLevel
 
-class DefaultLogSinkManagerTest {
+val defaultLogSinkManagerTest by testSuite("DefaultLogSinkManager") {
 
-    @Test
-    fun `should have no sinks initially`() {
+    test("should have no sinks initially") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
 
@@ -26,8 +25,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks).isEmpty()
     }
 
-    @Test
-    fun `should add and retrieve sinks`() {
+    test("should add and retrieve sinks") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink = FakeLogSink(LogLevel.INFO)
@@ -40,8 +38,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks.contains(sink))
     }
 
-    @Test
-    fun `should add multiple sinks`() {
+    test("should add multiple sinks") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink1 = FakeLogSink(LogLevel.INFO)
@@ -57,8 +54,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks).contains(sink2)
     }
 
-    @Test
-    fun `should remove sink`() {
+    test("should remove sink") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink = FakeLogSink(LogLevel.INFO)
@@ -72,8 +68,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks).isEmpty()
     }
 
-    @Test
-    fun `should clear all sinks`() {
+    test("should clear all sinks") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink1 = FakeLogSink(LogLevel.INFO)
@@ -89,8 +84,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks).isEmpty()
     }
 
-    @Test
-    fun `should not add duplicate sinks`() {
+    test("should not add duplicate sinks") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink = FakeLogSink(LogLevel.INFO)
@@ -104,8 +98,7 @@ class DefaultLogSinkManagerTest {
         assertThat(sinks).hasSize(1)
     }
 
-    @Test
-    fun `should not remove non-existent sinks`() {
+    test("should not remove non-existent sinks") {
         // Arrange
         val sinkManager = DefaultLogSinkManager()
         val sink = FakeLogSink(LogLevel.INFO)

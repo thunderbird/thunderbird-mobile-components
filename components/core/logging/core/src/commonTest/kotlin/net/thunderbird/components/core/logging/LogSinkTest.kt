@@ -5,14 +5,13 @@
  */
 package net.thunderbird.components.core.logging
 
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class LogSinkTest {
+val logSinkTest by testSuite("LogSink") {
 
-    @Test
-    fun `canLog should return true for same level`() {
+    test("canLog should return true for same level") {
         // Arrange
         val testSubject = TestLogSink(LogLevel.INFO)
 
@@ -20,8 +19,7 @@ class LogSinkTest {
         assertTrue { testSubject.canLog(LogLevel.INFO) }
     }
 
-    @Test
-    fun `canLog should return false for level below sink level`() {
+    test("canLog should return false for level below sink level") {
         // Arrange
         val testSubject = TestLogSink(LogLevel.INFO)
 
@@ -29,18 +27,17 @@ class LogSinkTest {
         assertFalse { testSubject.canLog(LogLevel.DEBUG) }
     }
 
-    @Test
-    fun `canLog should return true for level above sink level`() {
+    test("canLog should return true for level above sink level") {
         // Arrange
         val testSubject = TestLogSink(LogLevel.INFO)
 
         // Act && Assert
         assertTrue { testSubject.canLog(LogLevel.WARN) }
     }
+}
 
-    private class TestLogSink(
-        override val level: LogLevel,
-    ) : LogSink {
-        override fun log(event: LogEvent) = Unit
-    }
+private class TestLogSink(
+    override val level: LogLevel,
+) : LogSink {
+    override fun log(event: LogEvent) = Unit
 }
