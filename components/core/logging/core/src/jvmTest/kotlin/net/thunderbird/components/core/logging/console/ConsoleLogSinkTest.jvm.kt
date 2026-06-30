@@ -72,4 +72,19 @@ class ConsoleLogSinkTest {
             ),
         )
     }
+
+    @Test
+    fun standardOutputSinkLogsTaggedAndUntaggedEvents() {
+        val sink = StandardOutputConsoleLogSink(LogLevel.INFO)
+
+        sink.log(LogEvent(level = LogLevel.INFO, tag = "tag", message = "tagged", timestamp = 0L))
+        sink.log(
+            LogEvent(
+                level = LogLevel.ERROR,
+                message = "untagged",
+                throwable = IllegalStateException("failure"),
+                timestamp = 0L,
+            ),
+        )
+    }
 }
