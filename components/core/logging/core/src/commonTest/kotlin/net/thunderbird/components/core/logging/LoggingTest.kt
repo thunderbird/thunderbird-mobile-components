@@ -5,12 +5,11 @@
  */
 package net.thunderbird.components.core.logging
 
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.test.assertIs
 
-class LoggingTest {
-    @Test
-    fun `create returns a default logger`() {
+val loggingTest by testSuite("Logging") {
+    test("create returns a default logger") {
         assertIs<DefaultLogger>(Logging.create())
     }
 }

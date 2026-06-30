@@ -8,7 +8,7 @@ package net.thunderbird.components.core.logging
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -16,10 +16,9 @@ import net.thunderbird.components.core.testing.TestClock
 
 @Suppress("LongMethod")
 @OptIn(ExperimentalTime::class)
-class DefaultLoggerTest {
+val defaultLoggerTest by testSuite("DefaultLogger") {
 
-    @Test
-    fun `log should add all event to the sink`() {
+    test("log should add all event to the sink") {
         // Arrange
         val sink = FakeLogSink(LogLevel.VERBOSE)
         val exceptionVerbose = Exception("Verbose exception")
@@ -121,8 +120,7 @@ class DefaultLoggerTest {
         )
     }
 
-    @Test
-    fun `log should not add event to the sink if the level is not allowed for the sink`() {
+    test("log should not add event to the sink if the level is not allowed for the sink") {
         // Arrange
         val sink = FakeLogSink(LogLevel.INFO)
         val exceptionVerbose = Exception("Verbose exception")

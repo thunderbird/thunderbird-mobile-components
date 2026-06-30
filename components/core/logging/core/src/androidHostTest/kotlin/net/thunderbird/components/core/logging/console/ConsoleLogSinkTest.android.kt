@@ -9,15 +9,14 @@ import android.util.Log
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 import timber.log.Timber
 
-class ConsoleLogSinkTest {
+val consoleLogSinkTest by testSuite("ConsoleLogSink") {
 
-    @Test
-    fun shouldHaveCorrectLogLevel() {
+    test("shouldHaveCorrectLogLevel") {
         // Arrange
         val testSubject = ConsoleLogSink(LogLevel.INFO)
 
@@ -25,8 +24,7 @@ class ConsoleLogSinkTest {
         assertThat(testSubject.level).isEqualTo(LogLevel.INFO)
     }
 
-    @Test
-    fun shouldLogMessages() {
+    test("shouldLogMessages") {
         // Arrange
         val testTree = TestTree()
         Timber.plant(testTree)
@@ -83,32 +81,31 @@ class ConsoleLogSinkTest {
         assertThat(testTree.events[3]).isEqualTo(eventWarn)
         assertThat(testTree.events[4]).isEqualTo(eventError)
     }
+}
 
-    class TestTree : Timber.DebugTree() {
+private class TestTree : Timber.DebugTree() {
+    val events = mutableListOf<LogEvent>()
 
-        val events = mutableListOf<LogEvent>()
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        events.add(
+            LogEvent(
+                level = mapPriorityToLogLevel(priority),
+                tag = tag,
+                message = message,
+                throwable = t,
+                timestamp = 0L,
+            ),
+        )
+    }
 
-        override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-            events.add(
-                LogEvent(
-                    level = mapPriorityToLogLevel(priority),
-                    tag = tag,
-                    message = message,
-                    throwable = t,
-                    timestamp = 0L,
-                ),
-            )
-        }
-
-        private fun mapPriorityToLogLevel(priority: Int): LogLevel {
-            return when (priority) {
-                Log.VERBOSE -> LogLevel.VERBOSE
-                Log.DEBUG -> LogLevel.DEBUG
-                Log.INFO -> LogLevel.INFO
-                Log.WARN -> LogLevel.WARN
-                Log.ERROR -> LogLevel.ERROR
-                else -> throw IllegalArgumentException("Unknown log priority: $priority")
-            }
+    private fun mapPriorityToLogLevel(priority: Int): LogLevel {
+        return when (priority) {
+            Log.VERBOSE -> LogLevel.VERBOSE
+            Log.DEBUG -> LogLevel.DEBUG
+            Log.INFO -> LogLevel.INFO
+            Log.WARN -> LogLevel.WARN
+            Log.ERROR -> LogLevel.ERROR
+            else -> throw IllegalArgumentException("Unknown log priority: $priority")
         }
     }
 }

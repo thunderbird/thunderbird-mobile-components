@@ -5,15 +5,14 @@
  */
 package net.thunderbird.components.core.logging.console
 
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 
-class ComposeLogTagTest {
-    @Test
-    fun `uses an explicit tag`() {
+val composeLogTagTest by testSuite("ComposeLogTag") {
+    test("uses an explicit tag") {
         val tag = LogEvent(
             level = LogLevel.INFO,
             tag = "explicit",
@@ -24,8 +23,7 @@ class ComposeLogTagTest {
         assertEquals(expected = "explicit", actual = tag)
     }
 
-    @Test
-    fun `creates a tag from an anonymous caller`() {
+    test("creates a tag from an anonymous caller") {
         val tag = object {
             fun composeTag(): String? = LogEvent(
                 level = LogLevel.INFO,

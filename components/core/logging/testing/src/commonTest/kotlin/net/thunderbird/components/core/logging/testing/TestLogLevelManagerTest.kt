@@ -5,13 +5,12 @@
  */
 package net.thunderbird.components.core.logging.testing
 
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogLevel
 
-class TestLogLevelManagerTest {
-    @Test
-    fun `overrides and restores the log level`() {
+val testLogLevelManagerTest by testSuite("TestLogLevelManager") {
+    test("overrides and restores the log level") {
         val manager = TestLogLevelManager()
 
         manager.override(LogLevel.ERROR)

@@ -9,14 +9,13 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 
-class DefaultCompositeLogSinkTest {
+val defaultCompositeLogSinkTest by testSuite("DefaultCompositeLogSink") {
 
-    @Test
-    fun `init should set initial sinks`() {
+    test("init should set initial sinks") {
         // Arrange
         val sink1 = FakeLogSink(LogLevel.INFO)
         val sink2 = FakeLogSink(LogLevel.INFO)
@@ -35,8 +34,7 @@ class DefaultCompositeLogSinkTest {
         assertThat(sinkManager.sinks[1]).isEqualTo(sink2)
     }
 
-    @Test
-    fun `log should log to all sinks`() {
+    test("log should log to all sinks") {
         // Arrange
         val sink1 = FakeLogSink(LogLevel.INFO)
         val sink2 = FakeLogSink(LogLevel.INFO)
@@ -57,8 +55,7 @@ class DefaultCompositeLogSinkTest {
         assertThat(sink2.events[0]).isEqualTo(LOG_EVENT)
     }
 
-    @Test
-    fun `log should not log if level is below threshold`() {
+    test("log should not log if level is below threshold") {
         // Arrange
         val sink1 = FakeLogSink(LogLevel.INFO)
         val sink2 = FakeLogSink(LogLevel.INFO)
@@ -77,8 +74,7 @@ class DefaultCompositeLogSinkTest {
         assertThat(sink2.events).isEmpty()
     }
 
-    @Test
-    fun `log should not log if sink level is below threshold`() {
+    test("log should not log if sink level is below threshold") {
         // Arrange
         val sink1 = FakeLogSink(LogLevel.WARN)
         val sink2 = FakeLogSink(LogLevel.INFO)
@@ -97,15 +93,11 @@ class DefaultCompositeLogSinkTest {
         assertThat(sink2.events).hasSize(1)
         assertThat(sink2.events[0]).isEqualTo(LOG_EVENT)
     }
-
-    private companion object Companion {
-        const val TIMESTAMP = 0L
-
-        val LOG_EVENT = LogEvent(
-            level = LogLevel.INFO,
-            tag = "TestTag",
-            message = "Test message",
-            timestamp = TIMESTAMP,
-        )
-    }
 }
+
+private val LOG_EVENT = LogEvent(
+    level = LogLevel.INFO,
+    tag = "TestTag",
+    message = "Test message",
+    timestamp = 0L,
+)

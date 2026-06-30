@@ -5,13 +5,12 @@
  */
 package net.thunderbird.components.core.logging.testing
 
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogLevel
 
-class TestLoggerTest {
-    @Test
-    fun `records every log level`() {
+val testLoggerTest by testSuite("TestLogger") {
+    test("records every log level") {
         val logger = TestLogger()
 
         logger.verbose { "verbose" }
@@ -26,8 +25,7 @@ class TestLoggerTest {
         )
     }
 
-    @Test
-    fun `dumps messages with and without a throwable`() {
+    test("dumps messages with and without a throwable") {
         val logger = TestLogger()
         logger.info { "first line\nsecond line" }
         logger.error(throwable = IllegalStateException("failure")) { "failed" }

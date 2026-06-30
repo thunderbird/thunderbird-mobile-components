@@ -5,17 +5,16 @@
  */
 package net.thunderbird.components.core.logging.console
 
+import de.infix.testBalloon.framework.core.testSuite
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 
-class ConsoleLogSinkTest {
+val consoleLogSinkTest by testSuite("ConsoleLogSink") {
 
-    @Test
-    fun shouldHaveCorrectLogLevel() {
+    test("shouldHaveCorrectLogLevel") {
         // Arrange
         val testSubject = ConsoleLogSink(LogLevel.INFO)
 
@@ -23,8 +22,7 @@ class ConsoleLogSinkTest {
         assertEquals(expected = LogLevel.INFO, actual = testSubject.level)
     }
 
-    @Test
-    fun shouldLogMessages() {
+    test("shouldLogMessages") {
         // Arrange
         val originalOut = System.out
         val outContent = ByteArrayOutputStream()
@@ -59,8 +57,7 @@ class ConsoleLogSinkTest {
         }
     }
 
-    @Test
-    fun shouldLogMessagesWithoutTagAndWithThrowable() {
+    test("shouldLogMessagesWithoutTagAndWithThrowable") {
         val sink = ConsoleLogSink(LogLevel.INFO)
 
         sink.log(
@@ -73,8 +70,7 @@ class ConsoleLogSinkTest {
         )
     }
 
-    @Test
-    fun standardOutputSinkLogsTaggedAndUntaggedEvents() {
+    test("standardOutputSinkLogsTaggedAndUntaggedEvents") {
         val sink = StandardOutputConsoleLogSink(LogLevel.INFO)
 
         sink.log(LogEvent(level = LogLevel.INFO, tag = "tag", message = "tagged", timestamp = 0L))
