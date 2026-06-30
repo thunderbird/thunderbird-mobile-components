@@ -1,0 +1,38 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <net.thunderbird.components.core.logging:testing>
+final class net.thunderbird.components.core.logging.testing/TestLogLevelManager : net.thunderbird.components.core.logging/LogLevelManager { // net.thunderbird.components.core.logging.testing/TestLogLevelManager|null[0]
+    constructor <init>() // net.thunderbird.components.core.logging.testing/TestLogLevelManager.<init>|<init>(){}[0]
+
+    final var logLevel // net.thunderbird.components.core.logging.testing/TestLogLevelManager.logLevel|{}logLevel[0]
+        final fun <get-logLevel>(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging.testing/TestLogLevelManager.logLevel.<get-logLevel>|<get-logLevel>(){}[0]
+        final fun <set-logLevel>(net.thunderbird.components.core.logging/LogLevel) // net.thunderbird.components.core.logging.testing/TestLogLevelManager.logLevel.<set-logLevel>|<set-logLevel>(net.thunderbird.components.core.logging.LogLevel){}[0]
+
+    final fun current(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging.testing/TestLogLevelManager.current|current(){}[0]
+    final fun override(net.thunderbird.components.core.logging/LogLevel) // net.thunderbird.components.core.logging.testing/TestLogLevelManager.override|override(net.thunderbird.components.core.logging.LogLevel){}[0]
+    final fun restoreDefault() // net.thunderbird.components.core.logging.testing/TestLogLevelManager.restoreDefault|restoreDefault(){}[0]
+}
+
+final class net.thunderbird.components.core.logging.testing/TestLogger : net.thunderbird.components.core.logging/Logger { // net.thunderbird.components.core.logging.testing/TestLogger|null[0]
+    constructor <init>() // net.thunderbird.components.core.logging.testing/TestLogger.<init>|<init>(){}[0]
+
+    final val events // net.thunderbird.components.core.logging.testing/TestLogger.events|{}events[0]
+        final fun <get-events>(): kotlin.collections/MutableList<net.thunderbird.components.core.logging/LogEvent> // net.thunderbird.components.core.logging.testing/TestLogger.events.<get-events>|<get-events>(){}[0]
+
+    final fun debug(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging.testing/TestLogger.debug|debug(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun dump() // net.thunderbird.components.core.logging.testing/TestLogger.dump|dump(){}[0]
+    final fun error(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging.testing/TestLogger.error|error(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun info(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging.testing/TestLogger.info|info(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun verbose(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging.testing/TestLogger.verbose|verbose(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun warn(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging.testing/TestLogger.warn|warn(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+
+    final object Companion { // net.thunderbird.components.core.logging.testing/TestLogger.Companion|null[0]
+        final const val TIMESTAMP // net.thunderbird.components.core.logging.testing/TestLogger.Companion.TIMESTAMP|{}TIMESTAMP[0]
+            final fun <get-TIMESTAMP>(): kotlin/Long // net.thunderbird.components.core.logging.testing/TestLogger.Companion.TIMESTAMP.<get-TIMESTAMP>|<get-TIMESTAMP>(){}[0]
+    }
+}

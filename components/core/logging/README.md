@@ -1,249 +1,183 @@
-# Thunderbird Core Logging Module
+# Logging
 
-This module provides a flexible and extensible logging system for Thunderbird for Android.
+Logging library for Thunderbird mobile applications.
 
-## Architecture
+## Modules
 
-The logging system is organized into several modules:
+- `net.thunderbird.components.core.logging:core` provides the logging API, composite sink, and platform console sink.
+- `net.thunderbird.components.core.logging:file` adds FileKit-backed file logging.
+- `net.thunderbird.components.core.logging:testing` provides `TestLogger` and `TestLogLevelManager` for application tests.
 
-- **api**: Core interfaces and classes
-- **impl-console**: Console logging implementation
-- **impl-composite**: Composite logging (multiple sinks)
-- **impl-legacy**: Legacy logging system compatibility
-- **pii:compiler-plugin:{api,internal}**: A compiler plugin to automatically hide any PII data
-- **testing**: Testing utilities
+### Dependency setup
 
-### Core Components
-
-```mermaid
-classDiagram
-    class Logger {
-        +verbose(tag, throwable, message: () -> LogMessage)
-        +debug(tag, throwable, message: () -> LogMessage)
-        +info(tag, throwable, message: () -> LogMessage)
-        +warn(tag, throwable, message: () -> LogMessage)
-        +error(tag, throwable, message: () -> LogMessage)
-    }
-
-    class DefaultLogger {
-        -sink: LogSink
-        -clock: Clock
-    }
-
-    class LogSink {
-        +level: LogLevel
-        +canLog(level): boolean
-        +log(event: LogEvent)
-    }
-
-    class LogEvent {
-        +level: LogLevel
-        +tag: LogTag?
-        +message: LogMessage
-        +throwable: Throwable?
-        +timestamp: Long
-    }
-
-    class LogLevel {
-        VERBOSE
-        DEBUG
-        INFO
-        WARN
-        ERROR
-    }
-
-    Logger <|-- DefaultLogger
-    DefaultLogger --> LogSink
-    LogSink --> LogEvent
-    LogSink --> LogLevel
-    LogEvent --> LogLevel
-```
-
-### Implementation Modules
-
-```mermaid
-classDiagram
-    class LogSink {
-        +level: LogLevel
-        +canLog(level): boolean
-        +log(event: LogEvent)
-    }
-
-    class ConsoleLogSink {
-        +level: LogLevel
-    }
-
-    class CompositeLogSink {
-        +level: LogLevel
-        -manager: LogSinkManager
-    }
-
-    LogSink <|-- ConsoleLogSink
-    LogSink <|-- CompositeLogSink
-    CompositeLogSink --> LogSinkManager
-
-    class LogSinkManager {
-        +getAll(): List<LogSink>
-        +add(sink: LogSink)
-        +addAll(sinks: List<LogSink>)
-        +remove(sink: LogSink)
-        +removeAll()
-    }
-
-    class DefaultLogSinkManager {
-        -sinks: MutableList<LogSink>
-    }
-
-    LogSinkManager <|-- DefaultLogSinkManager
-```
-
-## Getting Started
-
-### Basic Setup
-
-To start using the logging system, you need to:
-
-1. Add the necessary dependencies to your module's build.gradle.kts file
-2. Create a LogSink
-3. Create a Logger
-4. Start logging!
-
-### Basic Logging
+Using the Thunderbird Mobile Components BOM (recommended):
 
 ```kotlin
-// Create a log sink
-val sink = ConsoleLogSink(LogLevel.DEBUG)
-
-// Create a logger
-val logger = DefaultLogger(sink)
-
-// Log messages
-logger.debug(tag = "MyTag") { "Debug message" }
-logger.info { "Info message" }
-logger.warn { "Warning message" }
-logger.error(throwable = exception) { "Error message with exception" }
+// build.gradle.kts
+dependencies {
+    implementation(platform("net.thunderbird.components:bom:<version>"))
+    implementation("net.thunderbird.components.core.logging:core")
+    implementation("net.thunderbird.components.core.logging:file")
+    testImplementation("net.thunderbird.components.core.logging:testing")
+}
 ```
 
-Note that the message parameter is a lambda that returns a String. This allows for lazy evaluation of the message, which
-can improve performance when the log level is set to filter out certain messages.
-
-### Composite Logging (Multiple Sinks)
-
-If you want to send logs to multiple destinations, use the CompositeLogSink:
+Or declaring individual artifact versions:
 
 ```kotlin
-// Create log sinks
-val consoleSink = ConsoleLogSink(LogLevel.INFO)
-val otherSink = YourCustomLogSink(LogLevel.DEBUG)
+// build.gradle.kts
+dependencies {
+    implementation("net.thunderbird.components.core.logging:core:<version>")
+    implementation("net.thunderbird.components.core.logging:file:<version>")
+    testImplementation("net.thunderbird.components.core.logging:testing:<version>")
+}
+```
 
-// Create a composite sink
+## Basic logging
+
+Create a default console logger instance using `Logging.create()` and log messages using standard severity methods (`verbose`, `debug`, `info`, `warn`, `error`). The `tag` parameter is optional; when omitted, `ConsoleLogSink` automatically infers the tag from the calling class stack trace.
+
+```kotlin
+import net.thunderbird.components.core.logging.Logging
+
+val logger = Logging.create()
+
+logger.info { "Application started" }
+logger.info(tag = "Startup") { "Application initialized" }
+logger.error(throwable = error) { "Unable to load account" }
+```
+
+`DefaultLogger` evaluates a message lambda only when its sink accepts that level.
+
+### Log levels
+
+Log levels are ordered by priority. Sinks process events at or above their configured level threshold:
+
+| Level | Priority | Description & Typical Usage |
+|---|---|---|
+| `VERBOSE` | 1 | Fine-grained trace logs and low-level diagnostic details. |
+| `DEBUG` | 2 | Detailed information useful for development and troubleshooting. |
+| `INFO` | 3 | General operational messages about normal application flow and lifecycle events. |
+| `WARN` | 4 | Unexpected occurrences or recoverable conditions that do not halt functionality. |
+| `ERROR` | 5 | Errors, exceptions, or critical failures requiring investigation. |
+
+## Composing and managing sinks
+
+```kotlin
+import net.thunderbird.components.core.logging.DefaultLogger
+import net.thunderbird.components.core.logging.LogLevel
+import net.thunderbird.components.core.logging.composite.CompositeLogSink
+import net.thunderbird.components.core.logging.console.ConsoleLogSink
+
 val compositeSink = CompositeLogSink(
-    level = LogLevel.DEBUG,
-    sinks = listOf(
-        consoleSink,
-        otherSink
-    )
+    logLevelProvider = { LogLevel.DEBUG },
+    sinks = listOf(ConsoleLogSink(LogLevel.DEBUG)),
 )
 
-// Create a logger
 val logger = DefaultLogger(compositeSink)
-
-// Log messages (will go to both sinks if level is appropriate)
-logger.debug { "This goes only to otherSink if its level is DEBUG or lower" }
-logger.info { "This goes to both sinks if their levels are INFO or lower" }
 ```
 
-## Creating Custom Log Sinks
+The composite accepts events at or above its `logLevelProvider` threshold. It forwards each accepted event only to sinks whose own level accepts it.
 
-You can create your own log sink by implementing the LogSink interface:
+```mermaid
+flowchart TD
+    App["Application Code\nlogger.info { ... }"] --> Logger["DefaultLogger"]
+    Logger --> CompCheck{"CompositeLogSink\nlevel >= provider?"}
+
+    CompCheck -- No --> Drop1["Dropped"]
+    CompCheck -- Yes --> Manager["CompositeLogSinkManager"]
+
+    Manager --> SinkACheck{"ConsoleLogSink\nlevel >= sink.level?"}
+    Manager --> SinkBCheck{"FileLogSink\nlevel >= sink.level?"}
+
+    SinkACheck -- Yes --> Console["Console Output"]
+    SinkACheck -- No --> Drop2["Dropped"]
+
+    SinkBCheck -- Yes --> File["File Output"]
+    SinkBCheck -- No --> Drop3["Dropped"]
+```
+
+Implement `LogSink` to send events to another destination.
+
+### Dynamic sink management
+
+Use `CompositeLogSink.manager` to add or remove log sinks dynamically at runtime:
 
 ```kotlin
-class MyCustomLogSink(
-    override val level: LogLevel,
-    // Add any other parameters you need
-) : LogSink {
-    override fun log(event: LogEvent) {
-        // Implement your custom logging logic here
-        // For example, send logs to a remote server, write to a database, etc.
-        val formattedMessage = "${event.timestamp} [${event.level}] ${event.tag ?: ""}: ${event.message}"
+// Dynamically attach or detach a sink (e.g., when enabling file logging or remote telemetry)
+compositeSink.manager.add(fileSink)
+compositeSink.manager.remove(fileSink)
+```
 
-        // Handle the throwable if present
-        event.throwable?.let {
-            // Process the throwable
-        }
+### Dynamic log levels
 
-        // Send or store the log message
+Implement `LogLevelProvider` or use `LogLevelManager` to dynamically control log thresholds at runtime (e.g., via developer settings):
+
+```kotlin
+val levelManager: LogLevelManager = ... // e.g., TestLogLevelManager or custom implementation
+
+// Override log level dynamically
+levelManager.override(LogLevel.VERBOSE)
+
+// Restore default level
+levelManager.restoreDefault()
+```
+
+## File logging
+
+The `file` artifact uses FileKit's `PlatformFile` directly. Obtain a writable `PlatformFile` in your application's platform-specific storage code, then pass it to the sink:
+
+```kotlin
+import io.github.vinceglb.filekit.PlatformFile
+import net.thunderbird.components.core.logging.LogLevel
+import net.thunderbird.components.core.logging.file.FileLogSink
+
+fun createFileSink(logFile: PlatformFile): FileLogSink = FileLogSink(
+    level = LogLevel.DEBUG,
+    file = logFile,
+)
+```
+
+Initialize FileKit first on platforms that require it, and create the file's parent directory before constructing the sink.
+
+Call `flush()` before shutdown. `export(destination)` preserves the log; `exportAndClear(destination)` clears it only after a successful copy. Provide a `LoggingErrorReporter` to observe asynchronous write failures.
+
+File logging is supported on Android, JVM, and iOS. FileKit does not provide file writing on WebAssembly, so creating `FileLogSink` there throws an `UnsupportedOperationException`.
+
+## Testing
+
+Depend on the `testing` artifact in test configurations and use `TestLogger` to record emitted events.
+
+```kotlin
+import net.thunderbird.components.core.logging.testing.TestLogger
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class MyComponentTest {
+    @Test
+    fun `logs state change`() {
+        val testLogger = TestLogger()
+
+        testLogger.info { "Processing item" }
+
+        // Inspect captured events
+        assertEquals(1, testLogger.events.size)
+        assertEquals("Processing item", testLogger.events.first().message)
+
+        // Print formatted logs to stdout for debugging
+        testLogger.dump()
     }
 }
 ```
 
-## PII Logging
-
-Data classes that contain PII (Personal Identifiable Information) must be annotated with the `@LoggingPii.HasPii`.
-
-This will allow our Kotlin compiler plugin (`net.thunderbird.logging.pii`) to automatically override the `toString()`
-method of this class and automatically mask/hide any sensitive data that we should not log.
-
-### Basic setup
-
-1. If yet not applied, apply the K2 compiler plugin `net.thunderbird.logging.pii` into the module that contains the PII
-   data
-2. Annotated the data class which contains the PII data with `@LoggingPii.HasPii`; this will make the K2 compiler plugin
-   to auto-generate a `toString()` masking or hiding the properties you want
-3. Annotate any PII data with either `@get:LoggingPii.Mask` or `@get:LoggingPii.Hide`
-    - When annotated with `@get:LoggingPii.Mask`, the property value will be replaced with `<sensitive>`
-    - When annotated with `@get:LoggingPii.Hide`, the property name and value will be removed from the `toString`
-      implementation and a `+x hidden properties` will appear at the end of the `toString`
-
-### Enabling IDE support
-
-When using a custom K2 compiler plugin, we can make our codebase generate compilation errors, via FIR checkers.
-
-FIR checkers deliver the errors reported before the code is built, meaning you would be able to see them while you are
-still code, before triggering the build. However, if IDE support isn't enabled, we'll only see those errors when
-actually building the project.
-
-Additionally, any synthetic method we generate via FIR/IR won't be visible, and will be presented as an error by the
-IDE, unless we enable the IDE to use our custom plugin.
-
-To enable the K2 custom plugins, you must:
-
-1. Open the IDE Registry (Shift + Shift + Search by "Registry")
-2. Disable the `kotlin.k2.only.bundled.compiler.plugins.enabled` flag.
-
-After that, any class that is annotated with the `@LoggingPii.HasPii` will start showing the synthetic `toString()`
-method override, and will be elegible to show errors in case they are present.
-
-## Best Practices
-
-### Log Levels
-
-Use appropriate log levels for different types of messages:
-
-- **VERBOSE**: Detailed information, typically useful only for debugging
-- **DEBUG**: Debugging information, useful during development
-- **INFO**: General information about application operation
-- **WARN**: Potential issues that aren't errors but might need attention
-- **ERROR**: Errors and exceptions that should be investigated
+Use `net.thunderbird.components.core.testing.TestClock` when deterministic timestamps are needed. `TestLogLevelManager` is also available for testing log level override behaviors.
 
 ## Troubleshooting
 
-### Common Issues
-
-1. **No logs appearing**:
-    - Check that the log level of your sink is appropriate for the messages you're logging
-    - Verify that your logger is properly initialized
-
-### Debugging the Logging System
-
-To debug issues with the logging system itself:
-
-1. Create a simple ConsoleLogSink with VERBOSE level
-2. Log test messages at different levels
-3. Check if messages appear as expected
+If no messages appear, check the configured levels. With a composite sink, both the provider and each destination sink must accept the event's level. To inspect filtered messages, temporarily set the relevant levels to `VERBOSE`.
 
 ## Provenance & Authorship
 
-Extracted from https://github.com/thunderbird/thunderbird-android.
+Extracted and adapted from [thunderbird-android](https://github.com/thunderbird/thunderbird-android).
 Authorship matches configured safe author rules for imported files. Files that did not pass the authorship check were excluded.
 Source: https://github.com/thunderbird/thunderbird-android/tree/b0e24c8fc34db63d8e4ec118f77132ba5f6cd083/core/logging
