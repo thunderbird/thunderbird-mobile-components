@@ -1,0 +1,125 @@
+public final class net/thunderbird/components/core/logging/DefaultLogger : net/thunderbird/components/core/logging/Logger {
+	public fun <init> (Lnet/thunderbird/components/core/logging/LogSink;Lkotlin/time/Clock;)V
+	public synthetic fun <init> (Lnet/thunderbird/components/core/logging/LogSink;Lkotlin/time/Clock;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun debug (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun error (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun info (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun verbose (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class net/thunderbird/components/core/logging/LogEvent {
+	public fun <init> (Lnet/thunderbird/components/core/logging/LogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;J)V
+	public synthetic fun <init> (Lnet/thunderbird/components/core/logging/LogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lnet/thunderbird/components/core/logging/LogLevel;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/Throwable;
+	public final fun component5 ()J
+	public final fun copy (Lnet/thunderbird/components/core/logging/LogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;J)Lnet/thunderbird/components/core/logging/LogEvent;
+	public static synthetic fun copy$default (Lnet/thunderbird/components/core/logging/LogEvent;Lnet/thunderbird/components/core/logging/LogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;JILjava/lang/Object;)Lnet/thunderbird/components/core/logging/LogEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel ()Lnet/thunderbird/components/core/logging/LogLevel;
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getTag ()Ljava/lang/String;
+	public final fun getThrowable ()Ljava/lang/Throwable;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class net/thunderbird/components/core/logging/LogLevel : java/lang/Enum {
+	public static final field DEBUG Lnet/thunderbird/components/core/logging/LogLevel;
+	public static final field ERROR Lnet/thunderbird/components/core/logging/LogLevel;
+	public static final field INFO Lnet/thunderbird/components/core/logging/LogLevel;
+	public static final field VERBOSE Lnet/thunderbird/components/core/logging/LogLevel;
+	public static final field WARN Lnet/thunderbird/components/core/logging/LogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getPriority ()I
+	public static fun valueOf (Ljava/lang/String;)Lnet/thunderbird/components/core/logging/LogLevel;
+	public static fun values ()[Lnet/thunderbird/components/core/logging/LogLevel;
+}
+
+public abstract interface class net/thunderbird/components/core/logging/LogLevelManager : net/thunderbird/components/core/logging/LogLevelProvider {
+	public abstract fun override (Lnet/thunderbird/components/core/logging/LogLevel;)V
+	public abstract fun restoreDefault ()V
+}
+
+public abstract interface class net/thunderbird/components/core/logging/LogLevelProvider {
+	public abstract fun current ()Lnet/thunderbird/components/core/logging/LogLevel;
+}
+
+public abstract interface class net/thunderbird/components/core/logging/LogSink {
+	public fun canLog (Lnet/thunderbird/components/core/logging/LogLevel;)Z
+	public abstract fun getLevel ()Lnet/thunderbird/components/core/logging/LogLevel;
+	public abstract fun log (Lnet/thunderbird/components/core/logging/LogEvent;)V
+}
+
+public final class net/thunderbird/components/core/logging/LogSink$DefaultImpls {
+	public static fun canLog (Lnet/thunderbird/components/core/logging/LogSink;Lnet/thunderbird/components/core/logging/LogLevel;)Z
+}
+
+public abstract interface class net/thunderbird/components/core/logging/Logger {
+	public abstract fun debug (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun debug$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun error (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun error$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun info (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun info$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun verbose (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun verbose$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public abstract fun warn (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static synthetic fun warn$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+}
+
+public final class net/thunderbird/components/core/logging/Logger$DefaultImpls {
+	public static synthetic fun debug$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun error$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun info$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun verbose$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun warn$default (Lnet/thunderbird/components/core/logging/Logger;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+}
+
+public final class net/thunderbird/components/core/logging/Logging {
+	public static final field INSTANCE Lnet/thunderbird/components/core/logging/Logging;
+	public final fun create (Lnet/thunderbird/components/core/logging/LogLevel;)Lnet/thunderbird/components/core/logging/Logger;
+	public static synthetic fun create$default (Lnet/thunderbird/components/core/logging/Logging;Lnet/thunderbird/components/core/logging/LogLevel;ILjava/lang/Object;)Lnet/thunderbird/components/core/logging/Logger;
+}
+
+public abstract interface class net/thunderbird/components/core/logging/LoggingErrorReporter {
+	public abstract fun report (Ljava/lang/Throwable;)V
+}
+
+public abstract interface class net/thunderbird/components/core/logging/composite/CompositeLogSink : net/thunderbird/components/core/logging/LogSink {
+	public abstract fun getManager ()Lnet/thunderbird/components/core/logging/composite/CompositeLogSinkManager;
+}
+
+public final class net/thunderbird/components/core/logging/composite/CompositeLogSink$DefaultImpls {
+	public static fun canLog (Lnet/thunderbird/components/core/logging/composite/CompositeLogSink;Lnet/thunderbird/components/core/logging/LogLevel;)Z
+}
+
+public final class net/thunderbird/components/core/logging/composite/CompositeLogSinkKt {
+	public static final fun CompositeLogSink (Lnet/thunderbird/components/core/logging/LogLevelProvider;Lnet/thunderbird/components/core/logging/composite/CompositeLogSinkManager;Ljava/util/List;)Lnet/thunderbird/components/core/logging/composite/CompositeLogSink;
+	public static synthetic fun CompositeLogSink$default (Lnet/thunderbird/components/core/logging/LogLevelProvider;Lnet/thunderbird/components/core/logging/composite/CompositeLogSinkManager;Ljava/util/List;ILjava/lang/Object;)Lnet/thunderbird/components/core/logging/composite/CompositeLogSink;
+}
+
+public abstract interface class net/thunderbird/components/core/logging/composite/CompositeLogSinkManager {
+	public abstract fun add (Lnet/thunderbird/components/core/logging/LogSink;)V
+	public abstract fun addAll (Ljava/util/List;)V
+	public abstract fun getAll ()Ljava/util/List;
+	public abstract fun remove (Lnet/thunderbird/components/core/logging/LogSink;)V
+	public abstract fun removeAll ()V
+}
+
+public abstract interface class net/thunderbird/components/core/logging/console/ConsoleLogSink : net/thunderbird/components/core/logging/LogSink {
+}
+
+public final class net/thunderbird/components/core/logging/console/ConsoleLogSink$DefaultImpls {
+	public static fun canLog (Lnet/thunderbird/components/core/logging/console/ConsoleLogSink;Lnet/thunderbird/components/core/logging/LogLevel;)Z
+}
+
+public final class net/thunderbird/components/core/logging/console/ConsoleLogSink_androidKt {
+	public static final fun ConsoleLogSink (Lnet/thunderbird/components/core/logging/LogLevel;)Lnet/thunderbird/components/core/logging/console/ConsoleLogSink;
+	public static synthetic fun ConsoleLogSink$default (Lnet/thunderbird/components/core/logging/LogLevel;ILjava/lang/Object;)Lnet/thunderbird/components/core/logging/console/ConsoleLogSink;
+}
+
