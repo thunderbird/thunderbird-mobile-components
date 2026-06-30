@@ -36,6 +36,7 @@ mavenPublish = "0.37.0"
 robolectric = "4.17"
 spotlessPlugin = "8.10.2"
 testBalloon = "1.0.1-K2.4.0"
+timber = "5.0.1"
 turbine = "1.2.1"
 
 [plugins]
@@ -100,6 +101,7 @@ kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.re
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 testBalloon-framework-core = { module = "de.infix.testBalloon:testBalloon-framework-core", version.ref = "testBalloon" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [bundles]
