@@ -1,0 +1,17 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <net.thunderbird.components.core:testing>
+final class net.thunderbird.components.core.testing/TestClock : kotlin.time/Clock { // net.thunderbird.components.core.testing/TestClock|null[0]
+    constructor <init>(kotlin.time/Instant = ...) // net.thunderbird.components.core.testing/TestClock.<init>|<init>(kotlin.time.Instant){}[0]
+
+    final fun advanceTimeBy(kotlin.time/Duration) // net.thunderbird.components.core.testing/TestClock.advanceTimeBy|advanceTimeBy(kotlin.time.Duration){}[0]
+    final fun changeTimeTo(kotlin.time/Instant) // net.thunderbird.components.core.testing/TestClock.changeTimeTo|changeTimeTo(kotlin.time.Instant){}[0]
+    final fun now(): kotlin.time/Instant // net.thunderbird.components.core.testing/TestClock.now|now(){}[0]
+}
+
+final fun (de.infix.testBalloon.framework.core/TestSuiteScope).net.thunderbird.components.core.testing/temporaryDirectoryFixture(kotlin/String = ...): de.infix.testBalloon.framework.core/TestFixture<kotlinx.io.files/Path> // net.thunderbird.components.core.testing/temporaryDirectoryFixture|temporaryDirectoryFixture@de.infix.testBalloon.framework.core.TestSuiteScope(kotlin.String){}[0]
