@@ -5,5 +5,6 @@ plugins {
 dependencies {
     constraints {
         api(projects.components.core.outcome)
+        api(projects.components.core.testing)
     }
 }
