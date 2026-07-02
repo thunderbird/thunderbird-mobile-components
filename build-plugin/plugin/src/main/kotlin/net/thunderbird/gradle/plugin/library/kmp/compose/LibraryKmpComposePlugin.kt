@@ -5,17 +5,19 @@ import net.thunderbird.gradle.plugin.library.kmp.android
 import net.thunderbird.gradle.plugin.library.kmp.androidHostTest
 import net.thunderbird.gradle.plugin.library.kmp.namespaceByPath
 import net.thunderbird.gradle.plugin.libs
+import net.thunderbird.gradle.plugin.wasm.useSettingsRepositoryForWasmNodeJsDistribution
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.invoke
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * A Gradle plugin to configure a Kotlin Multiplatform Compose Library project.
  *
- * Supported platforms include Android, iOS (x64, Arm64, Simulator Arm64), and JVM.
+ * Supported platforms include Android, iOS (Arm64, Simulator Arm64), JVM, and WebAssembly.
  *
  * It sets up the necessary plugins, targets, source sets, dependencies, and Compose settings.
  */
@@ -39,7 +41,7 @@ class LibraryKmpComposePlugin : Plugin<Project> {
                 apply("net.thunderbird.gradle.plugin.quality.spotless")
             }
 
-            @OptIn(ExperimentalAbiValidation::class)
+            @OptIn(ExperimentalAbiValidation::class, ExperimentalWasmDsl::class)
             extensions.configure<KotlinMultiplatformExtension> {
                 explicitApi()
                 abiValidation()
@@ -72,6 +74,11 @@ class LibraryKmpComposePlugin : Plugin<Project> {
                         jvmTarget.set(ProjectConfig.Compiler.jvmTarget)
                     }
                 }
+
+                wasmJs {
+                    nodejs()
+                }
+                useSettingsRepositoryForWasmNodeJsDistribution()
 
                 sourceSets {
                     commonMain.dependencies {
@@ -109,6 +116,15 @@ class LibraryKmpComposePlugin : Plugin<Project> {
                     nativeTest.dependencies {
                         implementation(libs.bundles.shared.kmp.native.test)
                         implementation(libs.bundles.shared.kmp.compose.native.test)
+                    }
+
+                    wasmJsMain.dependencies {
+                        implementation(libs.bundles.shared.kmp.wasm)
+                        implementation(libs.bundles.shared.kmp.compose.wasm)
+                    }
+                    wasmJsTest.dependencies {
+                        implementation(libs.bundles.shared.kmp.wasm.test)
+                        implementation(libs.bundles.shared.kmp.compose.wasm.test)
                     }
                 }
             }

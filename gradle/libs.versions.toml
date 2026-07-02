@@ -65,6 +65,7 @@ tb-quality-code-coverage = { id = "net.thunderbird.gradle.plugin.quality.coverag
 tb-quality-detekt = { id = "net.thunderbird.gradle.plugin.quality.detekt" }
 tb-quality-spotless = { id = "net.thunderbird.gradle.plugin.quality.spotless" }
 tb-versioning = { id = "net.thunderbird.gradle.plugin.versioning" }
+tb-wasm-repositories = { id = "net.thunderbird.gradle.plugin.wasm.repositories" }
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
@@ -110,6 +111,8 @@ shared-kmp-jvm = [
 ]
 shared-kmp-native = [
 ]
+shared-kmp-wasm = [
+]
 
 shared-kmp-common-test = [
   "assertk",
@@ -123,6 +126,8 @@ shared-kmp-android-test = [
 shared-kmp-jvm-test = [
 ]
 shared-kmp-native-test = [
+]
+shared-kmp-wasm-test = [
 ]
 
 shared-kmp-compose-commmon = [
@@ -145,6 +150,8 @@ shared-kmp-compose-jvm = [
 ]
 shared-kmp-compose-native = [
 ]
+shared-kmp-compose-wasm = [
+]
 
 shared-kmp-compose-common-test = [
   "jetbrains-compose-ui-test"
@@ -152,6 +159,8 @@ shared-kmp-compose-common-test = [
 shared-kmp-compose-android-test = [
   "androidx-compose-ui-test-manifest",
   "robolectric",
+]
+shared-kmp-compose-wasm-test = [
 ]
 shared-kmp-compose-jvm-test = [
 ]

@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.tb.quality.code.coverage)
     alias(libs.plugins.tb.quality.detekt)
     alias(libs.plugins.tb.quality.spotless)
+    alias(libs.plugins.tb.wasm.repositories)
 }
 
 tasks.named<Wrapper>("wrapper") {

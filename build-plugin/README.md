@@ -109,6 +109,29 @@ plugins {
 }
 ```
 
+### Gradle project isolation and Wasm
+
+Gradle isolated projects are enabled, but configuration cache problems are currently reported as warnings:
+
+```properties
+org.gradle.unsafe.isolated-projects=true
+org.gradle.configuration-cache.problems=warn
+```
+
+This is intentional while the Kotlin Wasm `nodejs()` target is experimental. Enabling the Wasm Node/NPM tooling makes
+`wasmJsNodeTest` execute real tests, but the Kotlin Gradle plugin currently configures Wasm Node, NPM, and Binaryen
+through cross-project access patterns that are not compatible with isolated-project enforcement.
+
+Do not change `org.gradle.configuration-cache.problems` from `warn` to `fail` while the Wasm target is enabled. The
+expected migration path is to keep the warnings visible, track the Kotlin Gradle plugin fixes, and only enforce `fail`
+once the upstream Wasm tooling is isolated-project compatible.
+
+Wasm Node tooling also needs centralized repository handling because this build uses
+`RepositoriesMode.FAIL_ON_PROJECT_REPOS`. The Node distribution repository is declared in `settings.gradle.kts`, and
+the Wasm convention plugins unset Kotlin's default Node download base URL so Kotlin resolves Node through the settings
+repository instead of adding a project repository. `kotlin.js.yarn=false` is intentional because Kotlin's Yarn setup
+adds a project repository for the Yarn distribution.
+
 ### Code coverage configuration
 
 When using `net.thunderbird.gradle.plugin.quality.coverage` you can tune or disable coverage checks:

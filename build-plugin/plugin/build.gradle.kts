@@ -48,6 +48,10 @@ gradlePlugin {
             id = "net.thunderbird.gradle.plugin.bom"
             implementationClass = "net.thunderbird.gradle.plugin.bom.BomPlugin"
         }
+        register("WasmRepositories") {
+            id = "net.thunderbird.gradle.plugin.wasm.repositories"
+            implementationClass = "net.thunderbird.gradle.plugin.wasm.WasmRepositoriesPlugin"
+        }
 
         register("DependencyCheck") {
             id = "net.thunderbird.gradle.plugin.dependency.check"

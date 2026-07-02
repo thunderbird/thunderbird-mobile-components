@@ -2,17 +2,19 @@ package net.thunderbird.gradle.plugin.library.kmp
 
 import net.thunderbird.gradle.plugin.ProjectConfig
 import net.thunderbird.gradle.plugin.libs
+import net.thunderbird.gradle.plugin.wasm.useSettingsRepositoryForWasmNodeJsDistribution
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.invoke
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 /**
  * A Gradle plugin to configure a Kotlin Multiplatform Library project.
  *
- * Supported platforms include Android, iOS (x64, Arm64, Simulator Arm64), and JVM.
+ * Supported platforms include Android, iOS (Arm64, Simulator Arm64), JVM, and WebAssembly.
  *
  * It sets up the necessary plugins, targets, source sets, and dependencies.
  */
@@ -34,7 +36,7 @@ class LibraryKmpPlugin : Plugin<Project> {
                 apply("net.thunderbird.gradle.plugin.quality.spotless")
             }
 
-            @OptIn(ExperimentalAbiValidation::class)
+            @OptIn(ExperimentalAbiValidation::class, ExperimentalWasmDsl::class)
             extensions.configure<KotlinMultiplatformExtension> {
                 explicitApi()
                 abiValidation()
@@ -64,6 +66,11 @@ class LibraryKmpPlugin : Plugin<Project> {
                     }
                 }
 
+                wasmJs {
+                    nodejs()
+                }
+                useSettingsRepositoryForWasmNodeJsDistribution()
+
                 sourceSets {
                     commonMain.dependencies {
                         implementation(project.dependencies.platform(libs.kotlin.bom))
@@ -92,6 +99,13 @@ class LibraryKmpPlugin : Plugin<Project> {
                     }
                     nativeTest.dependencies {
                         implementation(libs.bundles.shared.kmp.native.test)
+                    }
+
+                    wasmJsMain.dependencies {
+                        implementation(libs.bundles.shared.kmp.wasm)
+                    }
+                    wasmJsTest.dependencies {
+                        implementation(libs.bundles.shared.kmp.wasm.test)
                     }
                 }
             }
