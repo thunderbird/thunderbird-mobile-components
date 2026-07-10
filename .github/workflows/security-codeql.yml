@@ -24,10 +24,12 @@ jobs:
         include:
           - language: 'actions'
             build-mode: 'none'
+            runner: 'ubuntu-latest'
           - language: 'java-kotlin'
             build-mode: 'manual'
+            runner: 'macos-26'
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout repository

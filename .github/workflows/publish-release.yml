@@ -18,7 +18,7 @@ concurrency:
 jobs:
   publish-release:
     name: Publish release
-    runs-on: ubuntu-latest
+    runs-on: macos-26
     timeout-minutes: 60
 
     env:
