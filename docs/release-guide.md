@@ -197,6 +197,16 @@ The `Publish Snapshot` workflow is triggered manually from `main` and publishes 
 The workflow skips publishing when the mutable `snapshot/latest` marker tag already points at the current `main`
 commit. After a successful publish, the workflow moves `snapshot/latest` to the published commit.
 
+The `snapshot/latest` marker is an annotated tag. Its tag message contains the published snapshot manifest, including
+the commit, snapshot repository URL, and the Gradle path plus Maven coordinates for each published component. The same
+manifest is written to the workflow step summary.
+
+To preview the manifest locally:
+
+```bash
+scripts/ci/write-snapshot-manifest.sh
+```
+
 The workflow performs these Gradle steps:
 
 ```bash
