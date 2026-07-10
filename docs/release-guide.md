@@ -6,13 +6,41 @@ This guide is for maintainers preparing and publishing Thunderbird Mobile Compon
 
 - Maven Central credentials and signing properties are available to the publishing environment.
 
-The publishing workflows expect these repository secrets:
+## Publishing Secrets
 
-- `MAVEN_CENTRAL_USERNAME`
-- `MAVEN_CENTRAL_PASSWORD`
-- `SIGNING_IN_MEMORY_KEY`
-- `SIGNING_IN_MEMORY_KEY_ID`
-- `SIGNING_IN_MEMORY_KEY_PASSWORD`
+The publishing workflows use the `maven-central` GitHub Actions environment. Store publishing credentials as environment
+secrets, not repository secrets, so the publish jobs can be protected by environment approval rules before the secrets
+are made available to the runner.
+
+Create the environment:
+
+1. Open `Settings` > `Environments`.
+2. Create an environment named `maven-central`.
+3. Add required reviewers for the environment.
+4. Enable `Prevent self-review` if the repository plan supports it.
+5. Add the environment secrets listed below.
+
+Create these environment secrets in `maven-central`:
+
+|              Secret              |       Gradle property        |                          Value                           |
+|----------------------------------|------------------------------|----------------------------------------------------------|
+| `MAVEN_CENTRAL_USERNAME`         | `mavenCentralUsername`       | Maven Central Portal user token username.                |
+| `MAVEN_CENTRAL_PASSWORD`         | `mavenCentralPassword`       | Maven Central Portal user token password.                |
+| `SIGNING_IN_MEMORY_KEY`          | `signingInMemoryKey`         | ASCII-armored GPG private key used to sign publications. |
+| `SIGNING_IN_MEMORY_KEY_ID`       | `signingInMemoryKeyId`       | GPG key ID for the signing key.                          |
+| `SIGNING_IN_MEMORY_KEY_PASSWORD` | `signingInMemoryKeyPassword` | Passphrase for the signing key.                          |
+
+Export the signing key in ASCII-armored form before storing it in `SIGNING_IN_MEMORY_KEY`:
+
+```bash
+gpg --armor --export-secret-keys <key-id>
+```
+
+Use a Maven Central Portal user token for `MAVEN_CENTRAL_USERNAME` and `MAVEN_CENTRAL_PASSWORD`, not a personal
+account password.
+
+The publish workflows pass these secrets to Gradle as environment-backed project properties through
+`ORG_GRADLE_PROJECT_*` environment variables.
 
 ## Release
 
