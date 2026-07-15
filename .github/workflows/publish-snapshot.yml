@@ -63,11 +63,22 @@ jobs:
           ./gradlew validateSnapshotVersionForPublishing
           ./gradlew publishToMavenCentral
 
+      - name: Write snapshot manifest
+        if: steps.snapshot-marker.outputs.publish == 'true'
+        run: |
+          set -euo pipefail
+
+          manifest="${RUNNER_TEMP}/snapshot-manifest.md"
+          scripts/ci/write-snapshot-manifest.sh "${manifest}"
+          cat "${manifest}" >> "${GITHUB_STEP_SUMMARY}"
+
       - name: Update snapshot marker
         if: steps.snapshot-marker.outputs.publish == 'true'
         run: |
           set -euo pipefail
 
           marker="snapshot/latest"
-          git tag --force "${marker}" HEAD
+          git config user.name "TMC Snapshot Bot"
+          git config user.email "tmc-snapshot-bot@thunderbird.net"
+          git tag --annotate --force "${marker}" --file "${RUNNER_TEMP}/snapshot-manifest.md" HEAD
           git push --force origin "refs/tags/${marker}"
