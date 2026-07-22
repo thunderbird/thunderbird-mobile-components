@@ -6,6 +6,7 @@ public abstract interface class net/thunderbird/components/core/outcome/Outcome 
 
 public final class net/thunderbird/components/core/outcome/Outcome$Companion {
 	public final fun failure (Ljava/lang/Object;)Lnet/thunderbird/components/core/outcome/Outcome;
+	public final fun success ()Lnet/thunderbird/components/core/outcome/Outcome;
 	public final fun success (Ljava/lang/Object;)Lnet/thunderbird/components/core/outcome/Outcome;
 }
 

@@ -44,6 +44,7 @@ sealed interface <#A: out kotlin/Any?, #B: out kotlin/Any?> net.thunderbird.comp
     final object Companion { // net.thunderbird.components.core.outcome/Outcome.Companion|null[0]
         final fun <#A2: kotlin/Any?> failure(#A2): net.thunderbird.components.core.outcome/Outcome<kotlin/Nothing, #A2> // net.thunderbird.components.core.outcome/Outcome.Companion.failure|failure(0:0){0§<kotlin.Any?>}[0]
         final fun <#A2: kotlin/Any?> success(#A2): net.thunderbird.components.core.outcome/Outcome<#A2, kotlin/Nothing> // net.thunderbird.components.core.outcome/Outcome.Companion.success|success(0:0){0§<kotlin.Any?>}[0]
+        final fun success(): net.thunderbird.components.core.outcome/Outcome<kotlin/Unit, kotlin/Nothing> // net.thunderbird.components.core.outcome/Outcome.Companion.success|success(){}[0]
     }
 }
 
