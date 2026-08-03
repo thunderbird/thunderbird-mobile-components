@@ -32,7 +32,7 @@ kotlinxSerialization = "1.11.0"
 kover = "0.9.9"
 mavenPublish = "0.37.0"
 robolectric = "4.16.1"
-spotlessPlugin = "8.8.0"
+spotlessPlugin = "8.9.0"
 testBalloon = "1.0.1-K2.4.0"
 turbine = "1.2.1"
 
