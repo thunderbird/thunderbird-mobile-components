@@ -1,7 +1,6 @@
 package net.thunderbird.gradle.plugin.quality.spotless
 
 import com.diffplug.gradle.spotless.SpotlessExtension
-import kotlinEditorConfigOverride
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -34,6 +33,8 @@ class SpotlessPlugin : Plugin<Project> {
                     "src/*/kotlin/**/*.kt",
                 )
 
+                licenseHeader(licenseHeaderMpl2)
+
                 ktlint()
                     .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(kotlinEditorConfigOverride)
@@ -43,6 +44,8 @@ class SpotlessPlugin : Plugin<Project> {
                 target(
                     "*.gradle.kts",
                 )
+
+                licenseHeader(licenseHeaderMpl2, "(^(?![\\/ ]\\*).*$)")
 
                 ktlint()
                     .setEditorConfigPath(editorConfigPath)
@@ -79,6 +82,9 @@ class SpotlessPlugin : Plugin<Project> {
                     "build-logic/plugin/src/*/kotlin/*.kt",
                     "build-logic/plugin/src/*/kotlin/**/*.kt",
                 )
+
+                licenseHeader(licenseHeaderMpl2)
+
                 ktlint()
                     .setEditorConfigPath(editorConfigPath)
                     .editorConfigOverride(kotlinEditorConfigOverride)
@@ -90,6 +96,8 @@ class SpotlessPlugin : Plugin<Project> {
                     "build-logic/*.gradle.kts",
                     "build-logic/plugin/*.gradle.kts",
                 )
+
+                licenseHeader(licenseHeaderMpl2, "(^(?![\\/ ]\\*).*$)")
 
                 ktlint()
                     .setEditorConfigPath(editorConfigPath)

@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.tb.quality.spotless)
 }
 
 kotlin {
