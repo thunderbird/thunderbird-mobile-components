@@ -114,13 +114,18 @@ plugins {
 Gradle isolated projects are enabled, but configuration cache problems are currently reported as warnings:
 
 ```properties
-org.gradle.unsafe.isolated-projects=true
+org.gradle.isolated-projects=true
+org.gradle.isolated-projects.dangerously-ignore-problems=true
 org.gradle.configuration-cache.problems=warn
 ```
 
 This is intentional while the Kotlin Wasm `nodejs()` target is experimental. Enabling the Wasm Node/NPM tooling makes
 `wasmJsNodeTest` execute real tests, but the Kotlin Gradle plugin currently configures Wasm Node, NPM, and Binaryen
 through cross-project access patterns that are not compatible with isolated-project enforcement.
+
+The `dangerously-ignore-problems` escape hatch temporarily permits those upstream violations on Gradle 9.7. It must
+be removed once Kotlin's Wasm tooling supports isolated projects. Gradle warns that builds using this option may have
+incorrect outputs, so release artifacts should not be produced with it enabled.
 
 Do not change `org.gradle.configuration-cache.problems` from `warn` to `fail` while the Wasm target is enabled. The
 expected migration path is to keep the warnings visible, track the Kotlin Gradle plugin fixes, and only enforce `fail`
