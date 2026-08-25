@@ -76,8 +76,8 @@ class SpotlessPlugin : Plugin<Project> {
 
             kotlin {
                 target(
-                    "build-plugin/plugin/src/*/kotlin/*.kt",
-                    "build-plugin/plugin/src/*/kotlin/**/*.kt",
+                    "build-logic/plugin/src/*/kotlin/*.kt",
+                    "build-logic/plugin/src/*/kotlin/**/*.kt",
                 )
                 ktlint()
                     .setEditorConfigPath(editorConfigPath)
@@ -87,8 +87,8 @@ class SpotlessPlugin : Plugin<Project> {
             kotlinGradle {
                 target(
                     "*.gradle.kts",
-                    "build-plugin/*.gradle.kts",
-                    "build-plugin/plugin/*.gradle.kts",
+                    "build-logic/*.gradle.kts",
+                    "build-logic/plugin/*.gradle.kts",
                 )
 
                 ktlint()

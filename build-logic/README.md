@@ -1,13 +1,13 @@
-# Build plugins
+# Build logic
 
-The `build-plugin` project provides a set of Gradle plugins that act as the single source of truth for
+The `build-logic` project provides a set of Gradle plugins that act as the single source of truth for
 project-wide build configuration. This avoids duplicated build script setups and centralizes common build logic.
 
 ## Background
 
 We use an included build to host our build logic as real Gradle plugins (written in Kotlin), not as legacy
-`*.gradle.kts` convention scripts. The included build is located at `build-plugin/plugin` and registers plugins
-via the Gradle `gradlePlugin` block in `build-plugin/plugin/build.gradle.kts`.
+`*.gradle.kts` convention scripts. The included build is located at `build-logic/plugin` and registers plugins
+via the Gradle `gradlePlugin` block in `build-logic/plugin/build.gradle.kts`.
 
 You apply these plugins in modules using their fully-qualified plugin IDs. Each plugin focuses on a single
 responsibility; one-off configuration should stay in the module’s own `build.gradle.kts`.
@@ -184,17 +184,17 @@ Alternatively, you may provide equivalent Gradle properties via other supported 
 These plugins are provided by an included build. The root `settings.gradle.kts` contains:
 
 ```
-includeBuild("build-plugin")
+includeBuild("build-logic")
 ```
 
 ## Creating a new build plugin
 
-1. Create a Kotlin plugin class under `build-plugin/plugin/src/main/kotlin/...`, implementing `Plugin<Project>`.
-2. Register it in `build-plugin/plugin/build.gradle.kts` inside the `gradlePlugin { plugins { ... } }` block with a
+1. Create a Kotlin plugin class under `build-logic/plugin/src/main/kotlin/...`, implementing `Plugin<Project>`.
+2. Register it in `build-logic/plugin/build.gradle.kts` inside the `gradlePlugin { plugins { ... } }` block with a
    unique ID and the `implementationClass` pointing to your class.
 3. Dependencies:
    - Add versions and aliases to the version catalog `gradle/libs.versions.toml` (if not present yet).
-   - Add the dependency to `build-plugin/plugin/build.gradle.kts`.
+   - Add the dependency to `build-logic/plugin/build.gradle.kts`.
      - Plugin dependency: `implementation(plugin(libs.plugins.YOUR_PLUGIN))`
      - Library dependency: `implementation(libs.YOUR_LIBRARY)`
 
