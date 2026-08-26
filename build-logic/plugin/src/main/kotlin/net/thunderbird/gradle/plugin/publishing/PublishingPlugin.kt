@@ -1,0 +1,135 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+package net.thunderbird.gradle.plugin.publishing
+
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import java.util.Properties
+import net.thunderbird.gradle.plugin.ProjectConfig
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
+
+/**
+ * Publishing plugin configuration.
+ *
+ * Applies the Maven Publish plugin, sets up publishing repositories,
+ * and configures POM metadata for publishing artifacts.
+ *
+ * It adds a local Maven repository and a build directory repository for local builds.
+ * Also configures publishing to Maven Central with signing.
+ *
+ * Requires signing properties to be provided in a `.signing/signing.properties` file
+ * at the root of the project with following keys:
+ *
+ * - signing.keyId - ID of the signing key
+ * - signing.password - Password for the signing key
+ * - signing.secretKeyRingFile - Path to the secret key ring file
+ */
+class PublishingPlugin : Plugin<Project> {
+
+    override fun apply(target: Project) {
+        with(target) {
+            configurePublishedGroup()
+            loadSigningProperties()
+
+            pluginManager.apply("com.vanniktech.maven.publish")
+
+            configurePublishing()
+            configurePublish()
+            registerReleasePublishingTasks()
+        }
+    }
+
+    @Suppress("UnstableApiUsage")
+    private fun Project.loadSigningProperties() {
+        val signingPropsFile = isolated.rootProject.projectDirectory.file(".signing/signing.properties").asFile
+        if (signingPropsFile.exists()) {
+            val properties = Properties()
+            signingPropsFile.inputStream().use { properties.load(it) }
+            properties.forEach { (key, value) ->
+                project.extensions.extraProperties[key.toString()] = value
+            }
+            logger.lifecycle("[publishing] Loaded signing properties from ${signingPropsFile.path}")
+        } else {
+            logger.lifecycle("[publishing] No signing properties file found at ${signingPropsFile.path}")
+        }
+    }
+
+    private fun Project.configurePublishing() {
+        extensions.configure<PublishingExtension>("publishing") {
+            repositories {
+                mavenLocal()
+
+                maven {
+                    name = "localBuild"
+                    @Suppress("UnstableApiUsage")
+                    url = isolated.rootProject.projectDirectory.dir("build/maven-repo").asFile.toURI()
+                }
+            }
+        }
+    }
+
+    private fun Project.configurePublish() {
+        extensions.configure<MavenPublishBaseExtension> {
+            coordinates(
+                groupId = project.group.toString(),
+                artifactId = project.name,
+                version = version.toString(),
+            )
+
+            pom {
+                inceptionYear.set(ProjectConfig.Publishing.year)
+                url.set(ProjectConfig.Publishing.url)
+
+                licenses {
+                    license {
+                        name.set(ProjectConfig.Publishing.licenseName)
+                        url.set(ProjectConfig.Publishing.licenseUrl)
+                        distribution.set(ProjectConfig.Publishing.licenseDistribution)
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set(ProjectConfig.Publishing.developerId)
+                        name.set(ProjectConfig.Publishing.developerName)
+                        email.set(ProjectConfig.Publishing.developerEmail)
+                    }
+                }
+
+                scm {
+                    url.set(ProjectConfig.Publishing.scmUrl)
+                    connection.set(ProjectConfig.Publishing.scmConnection)
+                    developerConnection.set(ProjectConfig.Publishing.scmDeveloperConnection)
+                }
+            }
+
+            publishToMavenCentral()
+
+            signAllPublications()
+        }
+    }
+
+    private fun Project.registerReleasePublishingTasks() {
+        val currentProjectPath = path
+        tasks.register<ValidatePublicationVersionTask>("validateStableVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a release version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(false)
+        }
+        tasks.register<ValidatePublicationVersionTask>("validateSnapshotVersionForPublishing") {
+            group = "publishing"
+            description = "Validate that this project resolves to a snapshot version."
+            version.set(project.version.toString())
+            projectPath.set(currentProjectPath)
+            snapshotRequired.set(true)
+        }
+    }
+}
