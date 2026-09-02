@@ -28,6 +28,19 @@ val outcomeTest by testSuite("Outcome") {
             assertThat(success.data).isEqualTo(42)
         }
 
+        test("success convenience function creates a Outcome.Success of Unit") {
+            // Arrange
+            val outcome: Outcome<*, *> = Outcome.success()
+
+            // Act
+            val testSubject = outcome as Outcome.Success
+
+            // Assert
+            assertThat(testSubject.isSuccess).isTrue()
+            assertThat(testSubject.isFailure).isFalse()
+            assertThat(testSubject.data).isEqualTo(Unit)
+        }
+
         test("failure creates a failed outcome") {
             // Arrange
             val outcome: Outcome<Int, String> = Outcome.failure("error")
