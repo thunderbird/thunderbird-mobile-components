@@ -6,3 +6,12 @@
 plugins {
     alias(libs.plugins.tb.library.kmp)
 }
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.testBalloon.framework.core)
+            implementation(libs.kotlinx.io.core)
+        }
+    }
+}

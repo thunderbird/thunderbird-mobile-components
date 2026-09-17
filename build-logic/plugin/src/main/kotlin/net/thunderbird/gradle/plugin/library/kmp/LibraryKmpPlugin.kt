@@ -31,6 +31,7 @@ class LibraryKmpPlugin : Plugin<Project> {
                 apply("org.jetbrains.dokka")
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("org.jetbrains.kotlin.plugin.serialization")
+                apply("de.infix.testBalloon")
 
                 apply("net.thunderbird.gradle.plugin.changelog")
                 apply("net.thunderbird.gradle.plugin.versioning")

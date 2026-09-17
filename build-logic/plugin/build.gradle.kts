@@ -16,6 +16,7 @@ dependencies {
 
     compileOnly(plugin(libs.plugins.kotlin.multiplatform))
     compileOnly(plugin(libs.plugins.kotlin.serialization))
+    implementation(plugin(libs.plugins.testBalloon))
 
     compileOnly(plugin(libs.plugins.compose.compiler))
     compileOnly(plugin(libs.plugins.compose.multiplatform))

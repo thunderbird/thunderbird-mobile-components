@@ -28,6 +28,7 @@ kotlinKsp = "2.3.12"
 kotlinxCoroutines = "1.11.0"
 kotlinxCollectionsImmutable = "0.5.2"
 kotlinxDateTime = "0.8.0"
+kotlinxIo = "0.9.1"
 kotlinxSerialization = "1.11.0"
 kover = "0.9.9"
 mavenPublish = "0.37.0"
@@ -92,6 +93,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDateTime" }
+kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIo" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 testBalloon-framework-core = { module = "de.infix.testBalloon:testBalloon-framework-core", version.ref = "testBalloon" }

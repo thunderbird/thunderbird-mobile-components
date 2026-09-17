@@ -58,6 +58,7 @@ include(":components:bom")
 // Core
 include(
     ":components:core:outcome",
+    ":components:core:testing",
 )
 
 include(":quality:konsist")
