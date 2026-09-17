@@ -7,30 +7,27 @@ package net.thunderbird.components.core.testing
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
-internal class TestClockTest {
-    @Test
-    fun `returns the current time`() {
+val testClockTest by testSuite("TestClock") {
+    test("returns the current time") {
         val clock = TestClock(Instant.DISTANT_PAST)
 
         assertThat(clock.now()).isEqualTo(Instant.DISTANT_PAST)
     }
 
-    @Test
-    fun `changes the current time`() {
+    test("changes the current time") {
         val clock = TestClock(Instant.DISTANT_PAST)
         clock.changeTimeTo(Instant.DISTANT_FUTURE)
 
         assertThat(clock.now()).isEqualTo(Instant.DISTANT_FUTURE)
     }
 
-    @Test
-    fun `advances the current time`() {
+    test("advances the current time") {
         val clock = TestClock(Instant.DISTANT_PAST)
         clock.advanceTimeBy(1.milliseconds)
 
