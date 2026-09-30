@@ -8,9 +8,11 @@ package net.thunderbird.gradle.plugin.wasm
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.targets.js.npm.LockFileMismatchReport
 import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsPlugin
 import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.wasm.npm.WasmNpmExtension
 
 /**
  * Routes the Wasm Node.js distribution download through the repository declared in `settings.gradle.kts`.
@@ -32,6 +34,7 @@ class WasmRepositoriesPlugin : Plugin<Project> {
         target.plugins.apply(WasmNodeJsRootPlugin::class.java)
         target.plugins.withType(WasmNodeJsRootPlugin::class.java).configureEach {
             target.configureWasmNodeJsSpec()
+            target.extensions.configure(WasmNpmExtension.EXTENSION_NAME, disableWasmLockVerification)
         }
     }
 }
@@ -54,4 +57,9 @@ private fun Project.configureWasmNodeJsSpec() {
 
 private val useSettingsRepositoryForWasmNodeJsDistribution = Action<WasmNodeJsEnvSpec> {
     downloadBaseUrl.unset()
+}
+
+// The Wasm lockfile is generated and ignored; Kotlin's lockfile mismatch check is unreliable here.
+private val disableWasmLockVerification = Action<WasmNpmExtension> {
+    packageLockMismatchReport.set(LockFileMismatchReport.NONE)
 }
