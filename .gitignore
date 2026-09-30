@@ -4,6 +4,7 @@ local.properties
 
 # Kotlin
 .kotlin/
+kotlin-js-store/
 
 # mdBook
 book/
