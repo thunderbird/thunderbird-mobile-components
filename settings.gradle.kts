@@ -55,6 +55,9 @@ plugins {
 
 include(":components:bom")
 
+// CLI
+include(":cli:authorship")
+
 // Core
 include(
     ":components:core:outcome",

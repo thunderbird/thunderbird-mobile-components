@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./gradlew --quiet ":cli:authorship:installDist" < /dev/null && ./cli/authorship/build/install/authorship/bin/authorship "$@"
