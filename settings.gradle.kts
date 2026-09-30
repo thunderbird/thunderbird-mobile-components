@@ -57,6 +57,7 @@ include(":components:bom")
 
 // CLI
 include(":cli:authorship")
+include(":cli:import-code")
 
 // Core
 include(
