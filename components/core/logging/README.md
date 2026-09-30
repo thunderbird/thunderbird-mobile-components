@@ -241,3 +241,9 @@ To debug issues with the logging system itself:
 1. Create a simple ConsoleLogSink with VERBOSE level
 2. Log test messages at different levels
 3. Check if messages appear as expected
+
+## Provenance & Authorship
+
+Extracted from https://github.com/thunderbird/thunderbird-android.
+Authorship matches configured safe author rules for imported files. Files that did not pass the authorship check were excluded.
+Source: https://github.com/thunderbird/thunderbird-android/tree/b0e24c8fc34db63d8e4ec118f77132ba5f6cd083/core/logging
