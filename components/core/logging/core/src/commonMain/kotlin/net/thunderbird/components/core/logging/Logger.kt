@@ -12,12 +12,12 @@ public interface Logger {
     /**
      * Logs a message at the verbose log level.
      *
-     * @param tag An optional [LogTag] to categorize the log message.
+     * @param tag The [LogTag] identifying the log source.
      * @param throwable An optional throwable to log.
      * @param message Lambda that returns the [LogMessage] to log.
      */
     public fun verbose(
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     )
@@ -25,12 +25,12 @@ public interface Logger {
     /**
      * Logs a message at the debug log level.
      *
-     * @param tag An optional [LogTag] to categorize the log message.
+     * @param tag The [LogTag] identifying the log source.
      * @param throwable An optional throwable to log.
      * @param message Lambda that returns the [LogMessage] to log.
      */
     public fun debug(
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     )
@@ -38,12 +38,12 @@ public interface Logger {
     /**
      * Logs a message at the info log level.
      *
-     * @param tag An optional [LogTag] to categorize the log message.
+     * @param tag The [LogTag] identifying the log source.
      * @param throwable An optional throwable to log.
      * @param message Lambda that returns the [LogMessage] to log.
      */
     public fun info(
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     )
@@ -51,12 +51,12 @@ public interface Logger {
     /**
      * Logs a message at the warn log level.
      *
-     * @param tag An optional [LogTag] to categorize the log message.
+     * @param tag The [LogTag] identifying the log source.
      * @param throwable An optional throwable to log.
      * @param message Lambda that returns the [LogMessage] to log.
      */
     public fun warn(
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     )
@@ -64,12 +64,12 @@ public interface Logger {
     /**
      * Logs a message at the error log level.
      *
-     * @param tag An optional [LogTag] to categorize the log message.
+     * @param tag The [LogTag] identifying the log source.
      * @param throwable An optional throwable to log.
      * @param message Lambda that returns the [LogMessage] to log.
      */
     public fun error(
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     )

@@ -18,6 +18,8 @@ import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 import net.thunderbird.components.core.testing.temporaryDirectoryFixture
 
+private const val TAG = "BufferedFileLogSinkTest"
+
 @Suppress("InjectDispatcher", "UnnamedParameterUse")
 val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
     temporaryDirectoryFixture(prefix = "file-log-sink-test-").asParameterForEach {
@@ -32,7 +34,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             sink.log(
                 LogEvent(
                     level = LogLevel.INFO,
-                    tag = "Test",
+                    tag = TAG,
                     message = "First event",
                     timestamp = 0,
                 ),
@@ -76,7 +78,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             )
 
             repeat(5) { index ->
-                sink.log(LogEvent(level = LogLevel.INFO, message = "event $index", timestamp = 0))
+                sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event $index", timestamp = 0))
             }
 
             assertEquals(expected = 1, actual = appendedContent.size)
@@ -94,7 +96,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
                 coroutineContext = Dispatchers.Unconfined + CoroutineExceptionHandler { _, _ -> },
             )
 
-            repeat(5) { sink.log(LogEvent(level = LogLevel.INFO, message = "event", timestamp = 0)) }
+            repeat(5) { sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event", timestamp = 0)) }
 
             assertTrue(reportedErrors.single() is IllegalStateException)
         }

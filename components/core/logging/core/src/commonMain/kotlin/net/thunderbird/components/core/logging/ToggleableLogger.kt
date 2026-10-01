@@ -16,23 +16,23 @@ public class ToggleableLogger(
         isEnabled = enabled
     }
 
-    override fun verbose(tag: LogTag?, throwable: Throwable?, message: () -> LogMessage) {
+    override fun verbose(tag: LogTag, throwable: Throwable?, message: () -> LogMessage) {
         if (isEnabled) delegate.verbose(tag, throwable, message)
     }
 
-    override fun debug(tag: LogTag?, throwable: Throwable?, message: () -> LogMessage) {
+    override fun debug(tag: LogTag, throwable: Throwable?, message: () -> LogMessage) {
         if (isEnabled) delegate.debug(tag, throwable, message)
     }
 
-    override fun info(tag: LogTag?, throwable: Throwable?, message: () -> LogMessage) {
+    override fun info(tag: LogTag, throwable: Throwable?, message: () -> LogMessage) {
         if (isEnabled) delegate.info(tag, throwable, message)
     }
 
-    override fun warn(tag: LogTag?, throwable: Throwable?, message: () -> LogMessage) {
+    override fun warn(tag: LogTag, throwable: Throwable?, message: () -> LogMessage) {
         if (isEnabled) delegate.warn(tag, throwable, message)
     }
 
-    override fun error(tag: LogTag?, throwable: Throwable?, message: () -> LogMessage) {
+    override fun error(tag: LogTag, throwable: Throwable?, message: () -> LogMessage) {
         if (isEnabled) delegate.error(tag, throwable, message)
     }
 }

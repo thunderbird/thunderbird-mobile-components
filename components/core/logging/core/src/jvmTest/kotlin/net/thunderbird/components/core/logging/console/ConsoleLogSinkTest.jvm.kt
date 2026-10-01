@@ -12,6 +12,8 @@ import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 
+private const val TAG = "TestTag"
+
 val consoleLogSinkTest by testSuite("ConsoleLogSink") {
 
     test("shouldHaveCorrectLogLevel") {
@@ -32,7 +34,7 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
             try {
                 val eventInfo = LogEvent(
                     level = LogLevel.INFO,
-                    tag = "TestTag",
+                    tag = TAG,
                     message = "This is an info message",
                     throwable = null,
                     timestamp = 0L,
@@ -47,7 +49,7 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
                 val output = outContent.toString().trim()
                 println("[DEBUG_LOG] Actual output: '$output'")
 
-                val expectedOutput = "[INFO] [TestTag] This is an info message"
+                val expectedOutput = "[INFO] [$TAG] This is an info message"
                 println("[DEBUG_LOG] Expected output: '$expectedOutput'")
 
                 assertEquals(expected = expectedOutput, actual = output)
@@ -57,27 +59,29 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
         }
     }
 
-    test("shouldLogMessagesWithoutTagAndWithThrowable") {
+    test("shouldLogMessagesWithThrowable") {
         val sink = ConsoleLogSink(LogLevel.INFO)
 
         sink.log(
             LogEvent(
                 level = LogLevel.INFO,
-                message = "message without an explicit tag",
+                tag = TAG,
+                message = "message with a throwable",
                 throwable = IllegalStateException("failure"),
                 timestamp = 0L,
             ),
         )
     }
 
-    test("standardOutputSinkLogsTaggedAndUntaggedEvents") {
+    test("standardOutputSinkLogsTaggedEvents") {
         val sink = StandardOutputConsoleLogSink(LogLevel.INFO)
 
-        sink.log(LogEvent(level = LogLevel.INFO, tag = "tag", message = "tagged", timestamp = 0L))
+        sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "tagged", timestamp = 0L))
         sink.log(
             LogEvent(
                 level = LogLevel.ERROR,
-                message = "untagged",
+                tag = TAG,
+                message = "error",
                 throwable = IllegalStateException("failure"),
                 timestamp = 0L,
             ),

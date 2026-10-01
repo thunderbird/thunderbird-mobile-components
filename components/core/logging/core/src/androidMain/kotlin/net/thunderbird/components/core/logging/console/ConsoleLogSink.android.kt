@@ -20,11 +20,9 @@ private class AndroidConsoleLogSink(
 ) : ConsoleLogSink {
 
     override fun log(event: LogEvent) {
-        val tag = event.composeTag(ignoredClasses = setOf(AndroidConsoleLogSink::class.java.name))
-            ?: this::class.java.simpleName
         val formatted = formatAndroidLog(
             event = event,
-            tag = tag,
+            tag = event.tag,
             legacyTagLimit = Build.VERSION.SDK_INT < Build.VERSION_CODES.O,
         )
         formatted.chunks.forEach { chunk -> Log.println(formatted.priority, formatted.tag, chunk) }

@@ -106,8 +106,7 @@ internal class BufferedFileLogSink(
     private fun LogEvent.format(): String {
         val instant = Instant.fromEpochMilliseconds(timestamp)
         val dateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        val tagPrefix = tag?.let { "[$it] " }.orEmpty()
         val throwableText = throwable?.let { "\n${it.stackTraceToString()}" }.orEmpty()
-        return "${LocalDateTime.Formats.ISO.format(dateTime)} [$level] $tagPrefix$message$throwableText"
+        return "${LocalDateTime.Formats.ISO.format(dateTime)} [$level] [$tag] $message$throwableText"
     }
 }

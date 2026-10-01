@@ -19,7 +19,7 @@ public class TestLogger : Logger {
     public val events: MutableList<LogEvent> = mutableListOf()
 
     override fun verbose(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -35,7 +35,7 @@ public class TestLogger : Logger {
     }
 
     override fun debug(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -51,7 +51,7 @@ public class TestLogger : Logger {
     }
 
     override fun info(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -67,7 +67,7 @@ public class TestLogger : Logger {
     }
 
     override fun warn(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -83,7 +83,7 @@ public class TestLogger : Logger {
     }
 
     override fun error(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -107,21 +107,19 @@ public class TestLogger : Logger {
      * Stack traces are indented twice the length of the log level prefix.
      */
     public fun dump() {
-        events.forEach { event ->
-            val composedLog = buildString {
-                val logLevel = "${event.level.toString().take(1).uppercase()}: "
-                append(logLevel)
-                val firstLine = event.message.takeWhile { it != '\n' }
-                val rest = event.message.drop(firstLine.length)
-                append(firstLine)
-                appendLine(rest.prependIndent(" ".repeat(logLevel.length)))
+        events.forEach { event -> print(formatForDump(event)) }
+    }
 
-                event.throwable?.let {
-                    appendLine(it.stackTraceToString().prependIndent(" ".repeat(logLevel.length * 2)))
-                }
-            }
+    internal fun formatForDump(event: LogEvent): String = buildString {
+        val logLevel = "${event.level.toString().take(1).uppercase()}: "
+        append(logLevel)
+        val firstLine = event.message.takeWhile { it != '\n' }
+        val rest = event.message.drop(firstLine.length)
+        append(firstLine)
+        appendLine(rest.prependIndent(" ".repeat(logLevel.length)))
 
-            print(composedLog)
+        event.throwable?.let {
+            appendLine(it.stackTraceToString().prependIndent(" ".repeat(logLevel.length * 2)))
         }
     }
 

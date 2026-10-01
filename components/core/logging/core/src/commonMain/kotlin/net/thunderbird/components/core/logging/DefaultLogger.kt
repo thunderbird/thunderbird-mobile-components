@@ -23,7 +23,7 @@ constructor(
 
     private fun log(
         level: LogLevel,
-        tag: LogTag? = null,
+        tag: LogTag,
         throwable: Throwable? = null,
         message: () -> LogMessage,
     ) {
@@ -45,7 +45,7 @@ constructor(
     }
 
     override fun verbose(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -58,7 +58,7 @@ constructor(
     }
 
     override fun debug(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -71,7 +71,7 @@ constructor(
     }
 
     override fun info(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -84,7 +84,7 @@ constructor(
     }
 
     override fun warn(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {
@@ -97,7 +97,7 @@ constructor(
     }
 
     override fun error(
-        tag: LogTag?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> LogMessage,
     ) {

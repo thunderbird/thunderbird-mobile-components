@@ -61,7 +61,7 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
 
 private fun event(
     level: LogLevel = LogLevel.INFO,
-    tag: String? = "TestTag",
+    tag: String = "TestTag",
     message: String = "message",
     throwable: Throwable? = null,
 ) = LogEvent(level = level, tag = tag, message = message, throwable = throwable, timestamp = 0L)
