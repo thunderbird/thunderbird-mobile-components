@@ -86,8 +86,23 @@ public final class net/thunderbird/components/core/logging/Logging {
 	public static synthetic fun create$default (Lnet/thunderbird/components/core/logging/Logging;Lnet/thunderbird/components/core/logging/LogLevel;ILjava/lang/Object;)Lnet/thunderbird/components/core/logging/Logger;
 }
 
+public abstract interface class net/thunderbird/components/core/logging/LoggingControl {
+	public abstract fun setEnabled (Z)V
+}
+
 public abstract interface class net/thunderbird/components/core/logging/LoggingErrorReporter {
 	public abstract fun report (Ljava/lang/Throwable;)V
+}
+
+public final class net/thunderbird/components/core/logging/ToggleableLogger : net/thunderbird/components/core/logging/Logger, net/thunderbird/components/core/logging/LoggingControl {
+	public fun <init> (Lnet/thunderbird/components/core/logging/Logger;Z)V
+	public synthetic fun <init> (Lnet/thunderbird/components/core/logging/Logger;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun debug (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun error (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun info (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun setEnabled (Z)V
+	public fun verbose (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 }
 
 public abstract interface class net/thunderbird/components/core/logging/composite/CompositeLogSink : net/thunderbird/components/core/logging/LogSink {

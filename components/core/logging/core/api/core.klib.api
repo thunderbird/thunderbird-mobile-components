@@ -26,6 +26,10 @@ abstract fun interface net.thunderbird.components.core.logging/LogLevelProvider 
     abstract fun current(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogLevelProvider.current|current(){}[0]
 }
 
+abstract fun interface net.thunderbird.components.core.logging/LoggingControl { // net.thunderbird.components.core.logging/LoggingControl|null[0]
+    abstract fun setEnabled(kotlin/Boolean) // net.thunderbird.components.core.logging/LoggingControl.setEnabled|setEnabled(kotlin.Boolean){}[0]
+}
+
 abstract fun interface net.thunderbird.components.core.logging/LoggingErrorReporter { // net.thunderbird.components.core.logging/LoggingErrorReporter|null[0]
     abstract fun report(kotlin/Throwable) // net.thunderbird.components.core.logging/LoggingErrorReporter.report|report(kotlin.Throwable){}[0]
 }
@@ -99,6 +103,17 @@ final class net.thunderbird.components.core.logging/LogEvent { // net.thunderbir
     final fun equals(kotlin/Any?): kotlin/Boolean // net.thunderbird.components.core.logging/LogEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // net.thunderbird.components.core.logging/LogEvent.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.toString|toString(){}[0]
+}
+
+final class net.thunderbird.components.core.logging/ToggleableLogger : net.thunderbird.components.core.logging/Logger, net.thunderbird.components.core.logging/LoggingControl { // net.thunderbird.components.core.logging/ToggleableLogger|null[0]
+    constructor <init>(net.thunderbird.components.core.logging/Logger, kotlin/Boolean = ...) // net.thunderbird.components.core.logging/ToggleableLogger.<init>|<init>(net.thunderbird.components.core.logging.Logger;kotlin.Boolean){}[0]
+
+    final fun debug(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.debug|debug(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun error(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.error|error(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun info(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.info|info(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun setEnabled(kotlin/Boolean) // net.thunderbird.components.core.logging/ToggleableLogger.setEnabled|setEnabled(kotlin.Boolean){}[0]
+    final fun verbose(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.verbose|verbose(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun warn(kotlin/String?, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.warn|warn(kotlin.String?;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
 }
 
 final object net.thunderbird.components.core.logging/Logging { // net.thunderbird.components.core.logging/Logging|null[0]
