@@ -99,6 +99,16 @@ flowchart TD
 
 Implement `LogSink` to send events to another destination.
 
+### Enabling and disabling a logger
+
+Use `ToggleableLogger` when an application needs to disable a logger without changing its log level or sinks.
+Disabling it drops events before message lambdas are evaluated without affecting other logger instances.
+
+```kotlin
+val mainLogger = ToggleableLogger(DefaultLogger(compositeSink), enabled = false)
+mainLogger.setEnabled(true)
+```
+
 ### Dynamic sink management
 
 Use `CompositeLogSink.manager` to add or remove log sinks dynamically at runtime:
