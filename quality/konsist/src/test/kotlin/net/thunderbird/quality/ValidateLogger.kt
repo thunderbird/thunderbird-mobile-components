@@ -22,7 +22,11 @@ class ValidateLogger {
     @Test
     fun `no class should use Android util logging`() {
         projectScope.files
-            .filterNot { it.hasNameMatching("ConsoleLogSinkTest.android".toRegex()) }
+            .filterNot {
+                it.hasNameMatching(
+                    "ConsoleLogSink.android|ConsoleLogSinkTest.android".toRegex(),
+                )
+            }
             .assertFalse(
                 additionalMessage = "No class should use android.util.Log import, " +
                     "use net.thunderbird.components.core.logging.Logger instead.",
