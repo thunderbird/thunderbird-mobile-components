@@ -29,10 +29,6 @@ kotlin {
             implementation(projects.components.core.testing)
         }
 
-        androidMain.dependencies {
-            implementation(libs.timber)
-        }
-
         androidHostTest.dependencies {
             implementation(libs.robolectric)
         }

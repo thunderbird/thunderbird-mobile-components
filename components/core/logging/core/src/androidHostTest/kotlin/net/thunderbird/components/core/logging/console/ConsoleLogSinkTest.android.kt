@@ -12,100 +12,56 @@ import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
-import timber.log.Timber
 
 val consoleLogSinkTest by testSuite("ConsoleLogSink") {
-
-    test("shouldHaveCorrectLogLevel") {
-        // Arrange
-        val testSubject = ConsoleLogSink(LogLevel.INFO)
-
-        // Act & Assert
-        assertThat(testSubject.level).isEqualTo(LogLevel.INFO)
+    test("retains its level") {
+        assertThat(ConsoleLogSink(LogLevel.INFO).level).isEqualTo(LogLevel.INFO)
     }
 
-    test("shouldLogMessages") {
-        // Arrange
-        val testTree = TestTree()
-        Timber.plant(testTree)
-        val eventVerbose = LogEvent(
-            level = LogLevel.VERBOSE,
-            tag = "TestTag",
-            message = "This is a verbose message",
-            throwable = null,
-            timestamp = 0L,
-        )
-        val eventDebug = LogEvent(
-            level = LogLevel.DEBUG,
-            tag = "TestTag",
-            message = "This is a debug message",
-            throwable = null,
-            timestamp = 0L,
-        )
-        val eventInfo = LogEvent(
-            level = LogLevel.INFO,
-            tag = "TestTag",
-            message = "This is a info message",
-            throwable = null,
-            timestamp = 0L,
-        )
-        val eventWarn = LogEvent(
-            level = LogLevel.WARN,
-            tag = "TestTag",
-            message = "This is a warning message",
-            throwable = null,
-            timestamp = 0L,
-        )
-        val eventError = LogEvent(
-            level = LogLevel.ERROR,
-            tag = "TestTag",
-            message = "This is an error message",
-            throwable = null,
-            timestamp = 0L,
-        )
+    test("maps levels to Android priorities") {
+        val levels = listOf(LogLevel.VERBOSE, LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR)
 
-        val testSubject = ConsoleLogSink(LogLevel.VERBOSE)
+        assertThat(levels.map { formatAndroidLog(event(level = it), "TestTag", false).priority })
+            .isEqualTo(listOf(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR))
+    }
 
-        // Act
-        testSubject.log(eventVerbose)
-        testSubject.log(eventDebug)
-        testSubject.log(eventInfo)
-        testSubject.log(eventWarn)
-        testSubject.log(eventError)
+    test("includes throwable stack trace") {
+        val error = IllegalStateException("failure")
 
-        // Assert
-        assertThat(testTree.events).hasSize(5)
-        assertThat(testTree.events[0]).isEqualTo(eventVerbose)
-        assertThat(testTree.events[1]).isEqualTo(eventDebug)
-        assertThat(testTree.events[2]).isEqualTo(eventInfo)
-        assertThat(testTree.events[3]).isEqualTo(eventWarn)
-        assertThat(testTree.events[4]).isEqualTo(eventError)
+        val formatted = formatAndroidLog(event(message = "Unable to continue", throwable = error), "TestTag", false)
+
+        assertThat(formatted.chunks.first()).isEqualTo("Unable to continue")
+        assertThat(formatted.chunks.any { it.contains("IllegalStateException: failure") }).isEqualTo(true)
+    }
+
+    test("splits long messages without dropping their contents") {
+        val message = "a".repeat(9000)
+
+        val chunks = formatAndroidLog(event(message = message), "TestTag", false).chunks
+
+        assertThat(chunks).hasSize(3)
+        assertThat(chunks.joinToString("")).isEqualTo(message)
+        assertThat(chunks.all { it.length <= 4000 }).isEqualTo(true)
+    }
+
+    test("preserves line breaks as separate logcat entries") {
+        val formatted = formatAndroidLog(event(message = "first\nsecond"), "TestTag", false)
+
+        assertThat(formatted.chunks).isEqualTo(listOf("first", "second"))
+    }
+
+    test("truncates tags only for older Android versions") {
+        val longTag = "abcdefghijklmnopqrstuvwxyz"
+        val logEvent = event(tag = longTag)
+
+        assertThat(formatAndroidLog(logEvent, longTag, true).tag).isEqualTo(longTag.take(23))
+        assertThat(formatAndroidLog(logEvent, longTag, false).tag).isEqualTo(longTag)
     }
 }
 
-private class TestTree : Timber.DebugTree() {
-    val events = mutableListOf<LogEvent>()
-
-    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        events.add(
-            LogEvent(
-                level = mapPriorityToLogLevel(priority),
-                tag = tag,
-                message = message,
-                throwable = t,
-                timestamp = 0L,
-            ),
-        )
-    }
-
-    private fun mapPriorityToLogLevel(priority: Int): LogLevel {
-        return when (priority) {
-            Log.VERBOSE -> LogLevel.VERBOSE
-            Log.DEBUG -> LogLevel.DEBUG
-            Log.INFO -> LogLevel.INFO
-            Log.WARN -> LogLevel.WARN
-            Log.ERROR -> LogLevel.ERROR
-            else -> throw IllegalArgumentException("Unknown log priority: $priority")
-        }
-    }
-}
+private fun event(
+    level: LogLevel = LogLevel.INFO,
+    tag: String? = "TestTag",
+    message: String = "message",
+    throwable: Throwable? = null,
+) = LogEvent(level = level, tag = tag, message = message, throwable = throwable, timestamp = 0L)
