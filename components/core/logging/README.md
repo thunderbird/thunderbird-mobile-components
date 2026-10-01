@@ -35,16 +35,17 @@ dependencies {
 
 ## Basic logging
 
-Create a default console logger instance using `Logging.create()` and log messages using standard severity methods (`verbose`, `debug`, `info`, `warn`, `error`). The `tag` parameter is optional; when omitted, `ConsoleLogSink` automatically infers the tag from the calling class stack trace.
+Create a default console logger instance using `Logging.create()` and log messages using standard severity methods (`verbose`, `debug`, `info`, `warn`, `error`). Every log call requires an explicit tag. Console sinks use that tag without inspecting the stack trace.
 
 ```kotlin
 import net.thunderbird.components.core.logging.Logging
 
+const val TAG = "Application"
 val logger = Logging.create()
 
-logger.info { "Application started" }
-logger.info(tag = "Startup") { "Application initialized" }
-logger.error(throwable = error) { "Unable to load account" }
+logger.info(tag = TAG) { "Application started" }
+logger.info(tag = TAG) { "Application initialized" }
+logger.error(tag = TAG, throwable = error) { "Unable to load account" }
 ```
 
 `DefaultLogger` evaluates a message lambda only when its sink accepts that level.
@@ -81,7 +82,7 @@ The composite accepts events at or above its `logLevelProvider` threshold. It fo
 
 ```mermaid
 flowchart TD
-    App["Application Code\nlogger.info { ... }"] --> Logger["DefaultLogger"]
+    App["Application Code\nlogger.info(tag = TAG) { ... }"] --> Logger["DefaultLogger"]
     Logger --> CompCheck{"CompositeLogSink\nlevel >= provider?"}
 
     CompCheck -- No --> Drop1["Dropped"]
@@ -164,11 +165,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MyComponentTest {
+
     @Test
     fun `logs state change`() {
         val testLogger = TestLogger()
 
-        testLogger.info { "Processing item" }
+        testLogger.info(tag = TAG) { "Processing item" }
 
         // Inspect captured events
         assertEquals(1, testLogger.events.size)
@@ -176,6 +178,10 @@ class MyComponentTest {
 
         // Print formatted logs to stdout for debugging
         testLogger.dump()
+    }
+
+    private companion object {
+        const val TAG = "MyComponentTest"
     }
 }
 ```

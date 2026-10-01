@@ -11,6 +11,8 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
 
+private const val TAG = "ToggleableLoggerTest"
+
 val toggleableLoggerTest by testSuite("ToggleableLogger") {
     test("disabled logger drops all levels without evaluating messages") {
         val sink = FakeLogSink(LogLevel.VERBOSE)
@@ -21,11 +23,11 @@ val toggleableLoggerTest by testSuite("ToggleableLogger") {
             "private message"
         }
 
-        logger.verbose(message = message)
-        logger.debug(message = message)
-        logger.info(message = message)
-        logger.warn(message = message)
-        logger.error(message = message)
+        logger.verbose(tag = TAG, message = message)
+        logger.debug(tag = TAG, message = message)
+        logger.info(tag = TAG, message = message)
+        logger.warn(tag = TAG, message = message)
+        logger.error(tag = TAG, message = message)
 
         assertThat(evaluated).isEqualTo(false)
         assertThat(sink.events).isEmpty()
@@ -37,11 +39,12 @@ val toggleableLoggerTest by testSuite("ToggleableLogger") {
         val otherLogger = DefaultLogger(sink)
 
         logger.setEnabled(true)
-        logger.info { "enabled" }
+        logger.info(tag = TAG) { "enabled" }
         logger.setEnabled(false)
-        logger.info { "disabled" }
-        otherLogger.info { "other" }
+        logger.info(tag = TAG) { "disabled" }
+        otherLogger.info(tag = TAG) { "other" }
 
         assertThat(sink.events).hasSize(2)
+        assertThat(sink.events.map { it.tag }).isEqualTo(listOf(TAG, TAG))
     }
 }

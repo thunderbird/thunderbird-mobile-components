@@ -12,8 +12,7 @@ internal class StandardOutputConsoleLogSink(
     override val level: LogLevel,
 ) : ConsoleLogSink {
     override fun log(event: LogEvent) {
-        val tagPrefix = event.tag?.let { "[$it] " }.orEmpty()
-        println("[${event.level}] $tagPrefix${event.message}")
+        println("[${event.level}] [${event.tag}] ${event.message}")
         event.throwable?.printStackTrace()
     }
 }

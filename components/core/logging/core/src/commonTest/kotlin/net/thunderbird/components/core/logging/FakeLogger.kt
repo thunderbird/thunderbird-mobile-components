@@ -9,7 +9,7 @@ class FakeLogger : Logger {
     val events = mutableListOf<LogEvent>()
 
     override fun verbose(
-        tag: String?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> String,
     ) {
@@ -25,7 +25,7 @@ class FakeLogger : Logger {
     }
 
     override fun debug(
-        tag: String?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> String,
     ) {
@@ -41,7 +41,7 @@ class FakeLogger : Logger {
     }
 
     override fun info(
-        tag: String?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> String,
     ) {
@@ -57,7 +57,7 @@ class FakeLogger : Logger {
     }
 
     override fun warn(
-        tag: String?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> String,
     ) {
@@ -73,7 +73,7 @@ class FakeLogger : Logger {
     }
 
     override fun error(
-        tag: String?,
+        tag: LogTag,
         throwable: Throwable?,
         message: () -> String,
     ) {

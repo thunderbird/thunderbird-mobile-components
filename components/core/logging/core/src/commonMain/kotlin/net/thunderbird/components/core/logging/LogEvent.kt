@@ -12,14 +12,14 @@ public typealias LogMessage = String
  * Represents a single log event
  *
  * @property level The [LogLevel] of the log event.
- * @property tag An optional [LogTag] to categorize the log event.
+ * @property tag The [LogTag] identifying the log source.
  * @property message The [LogMessage] associated with the log event.
  * @property throwable An optional [Throwable] associated with the log event.
  * @property timestamp The timestamp of the log event in milliseconds.
  */
 public data class LogEvent(
     public val level: LogLevel,
-    public val tag: LogTag? = null,
+    public val tag: LogTag,
     public val message: LogMessage,
     public val throwable: Throwable? = null,
     public val timestamp: Long,
