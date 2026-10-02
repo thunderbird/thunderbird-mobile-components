@@ -1,0 +1,40 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+package net.thunderbird.components.core.logging
+
+/**
+ * A sink that receives and processes log events.
+ *
+ * A `LogSink` determines whether to handle a log event based on its log level.
+ * Log events with a level lower than the sink's configured level will be ignored.
+ */
+public interface LogSink {
+
+    /**
+     * The minimum log level this sink will process.
+     * Log events with a lower priority than this level will be ignored.
+     */
+    public val level: LogLevel
+
+    /**
+     * Checks whether the sink is enabled for the given log level.
+     *
+     * @param level The log level to check.
+     * @return `true` if this sink will process log events at this level or higher.
+     */
+    public fun canLog(level: LogLevel): Boolean {
+        return this.level <= level
+    }
+
+    /**
+     * Logs a [LogEvent].
+     *
+     * @param event The [LogEvent] to log.
+     */
+    public fun log(
+        event: LogEvent,
+    )
+}

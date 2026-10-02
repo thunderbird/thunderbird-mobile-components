@@ -1,0 +1,15 @@
+public abstract interface class net/thunderbird/components/core/logging/file/FileLogSink : net/thunderbird/components/core/logging/LogSink {
+	public abstract fun export (Lio/github/vinceglb/filekit/PlatformFile;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun exportAndClear (Lio/github/vinceglb/filekit/PlatformFile;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun flush (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class net/thunderbird/components/core/logging/file/FileLogSink$DefaultImpls {
+	public static fun canLog (Lnet/thunderbird/components/core/logging/file/FileLogSink;Lnet/thunderbird/components/core/logging/LogLevel;)Z
+}
+
+public final class net/thunderbird/components/core/logging/file/FileLogSink_jvmAndAndroidKt {
+	public static final fun FileLogSink (Lnet/thunderbird/components/core/logging/LogLevel;Lio/github/vinceglb/filekit/PlatformFile;Lnet/thunderbird/components/core/logging/LoggingErrorReporter;)Lnet/thunderbird/components/core/logging/file/FileLogSink;
+	public static synthetic fun FileLogSink$default (Lnet/thunderbird/components/core/logging/LogLevel;Lio/github/vinceglb/filekit/PlatformFile;Lnet/thunderbird/components/core/logging/LoggingErrorReporter;ILjava/lang/Object;)Lnet/thunderbird/components/core/logging/file/FileLogSink;
+}
+

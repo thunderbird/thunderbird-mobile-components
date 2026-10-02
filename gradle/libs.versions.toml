@@ -14,10 +14,12 @@ androidGradlePlugin = "9.2.1"
 androidXActivity = "1.13.0"
 androidXCompose = "1.11.3"
 assertk = "0.28.1"
+clikt = "5.1.0"
 dependencyCheckPlugin = "0.64.0"
 detektPlugin = "2.0.0-alpha.6"
 detektPluginCompose = "0.6.7"
 dokkaPlugin = "2.2.0"
+fileKit = "0.14.2"
 gradle = "9.7.1"
 gradleSha256 = "92c1a136d76b5017732a66d2e0a648ebff00dd3687d8bff0d0047a1bd904fdf2"
 composeMultiplatform = "1.12.1"
@@ -58,6 +60,7 @@ testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 # Build plugins
 tb-app-kmp-compose = { id = "net.thunderbird.gradle.plugin.app.kmp.compose" }
 tb-changelog = { id = "net.thunderbird.gradle.plugin.changelog" }
+tb-cli = { id = "net.thunderbird.gradle.plugin.cli" }
 tb-dependency-check = { id = "net.thunderbird.gradle.plugin.dependency.check" }
 tb-library-kmp = { id = "net.thunderbird.gradle.plugin.library.kmp" }
 tb-library-kmp-compose = { id = "net.thunderbird.gradle.plugin.library.kmp.compose" }
@@ -72,7 +75,9 @@ tb-wasm-repositories = { id = "net.thunderbird.gradle.plugin.wasm.repositories" 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidXActivity" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidXCompose" }
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
+clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "fileKit" }
 jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 jetbrains-compose-components-ui-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }

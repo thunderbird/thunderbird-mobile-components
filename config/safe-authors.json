@@ -1,0 +1,76 @@
+{
+  "description": "List of approved authors and email domains safe for code migration to MPL-2.0",
+  "safe_domains": [
+    "@mozilla.com",
+    "@mozilla.org",
+    "@mozillafoundation.org",
+    "@thunderbird.net"
+  ],
+  "safe_authors": [
+    {
+      "name": "Wolf-Martell Montwé",
+      "emails": [
+        "wolf@thunderbird.net",
+        "code@wolfmontwe.com",
+        "hi@wolfmontwe.com"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "Rafael Tonholo",
+      "emails": [
+        "rafael@tonholo.dev",
+        "rafael.tonholo@thunderbird.net"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "Ashley Soucar",
+      "aliases": [
+        "Ashley"
+      ],
+      "emails": [
+        "ashley.soucar@gmail.com",
+        "ashley@thunderbird.net"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "Danielle Golinsky",
+      "emails": [
+        "dgolinsky@thunderbird.net"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "cketti",
+      "aliases": [
+        "Christian Ketterer"
+      ],
+      "emails": [
+        "cketti@thunderbird.net",
+        "cketti@gmail.com",
+        "cketti@googlemail.com",
+        "cketti@virtru.com"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "Ryan Sipes",
+      "emails": [
+        "ryan@thunderbird.net",
+        "ryan@sipes.us"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    },
+    {
+      "name": "Philipp Kewisch",
+      "emails": [
+        "hello@kewis.ch",
+        "mozilla@kewis.ch",
+        "philipp@thunderbird.net"
+      ],
+      "affiliation": "Thunderbird Technologies Corporation / Mozilla Staff"
+    }
+  ]
+}

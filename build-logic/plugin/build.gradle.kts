@@ -91,6 +91,11 @@ gradlePlugin {
             id = "net.thunderbird.gradle.plugin.changelog"
             implementationClass = "net.thunderbird.gradle.plugin.changelog.ChangelogPlugin"
         }
+
+        register("Cli") {
+            id = "net.thunderbird.gradle.plugin.cli"
+            implementationClass = "net.thunderbird.gradle.plugin.cli.CliPlugin"
+        }
     }
 }
 

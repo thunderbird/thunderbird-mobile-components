@@ -1,0 +1,14 @@
+public final class net/thunderbird/components/core/testing/TemporaryDirectoryFixtureKt {
+	public static final fun temporaryDirectoryFixture (Lde/infix/testBalloon/framework/core/TestSuiteScope;Ljava/lang/String;)Lde/infix/testBalloon/framework/core/TestFixture;
+	public static synthetic fun temporaryDirectoryFixture$default (Lde/infix/testBalloon/framework/core/TestSuiteScope;Ljava/lang/String;ILjava/lang/Object;)Lde/infix/testBalloon/framework/core/TestFixture;
+}
+
+public final class net/thunderbird/components/core/testing/TestClock : kotlin/time/Clock {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/time/Instant;)V
+	public synthetic fun <init> (Lkotlin/time/Instant;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun advanceTimeBy-LRDsOJo (J)V
+	public final fun changeTimeTo (Lkotlin/time/Instant;)V
+	public fun now ()Lkotlin/time/Instant;
+}
+
