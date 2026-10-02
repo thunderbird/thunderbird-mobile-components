@@ -31,7 +31,7 @@ private fun runGit(workingDir: File, vararg args: String): String {
 
 private fun initGitRepo(repoDir: File) {
     repoDir.mkdirs()
-    runGit(repoDir, "init")
+    runGit(repoDir, "init", "--initial-branch=main")
     runGit(repoDir, "config", "user.name", "Test User")
     runGit(repoDir, "config", "user.email", "test@thunderbird.net")
 }
