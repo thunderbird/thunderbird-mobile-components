@@ -36,3 +36,6 @@ out/
 
 # Signing
 .signing/
+
+# Private migration approvals; supply with --safe-authors-file.
+/config/safe-authors.json
