@@ -4,6 +4,7 @@ local.properties
 
 # Kotlin
 .kotlin/
+kotlin-js-store/
 
 # mdBook
 book/
@@ -35,3 +36,6 @@ out/
 
 # Signing
 .signing/
+
+# Private migration approvals; supply with --safe-authors-file.
+/config/safe-authors.json

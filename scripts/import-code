@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./gradlew --quiet ":cli:import-code:installDist" < /dev/null && ./cli/import-code/build/install/import-code/bin/import-code "$@"
