@@ -86,8 +86,8 @@ public class ImportCodeCommand : CliktCommand(
     private val safeAuthorsFile: File by option(
         "-s",
         "--safe-authors-file",
-        help = "Path to safe authors JSON configuration file (defaults to config/safe-authors.json).",
-    ).file(mustExist = true, canBeDir = false).default(File("config/safe-authors.json"))
+        help = "Path to approval reference JSON (default: config/safe-authors-reference.json).",
+    ).file(mustExist = true, canBeDir = false).default(File("config/safe-authors-reference.json"))
 
     private val cleanupTmp: Boolean by option(
         "--cleanup-tmp",

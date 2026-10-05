@@ -11,6 +11,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import de.infix.testBalloon.framework.core.testSuite
 import java.io.File
+import java.io.IOException
 import kotlin.test.assertFailsWith
 import kotlinx.serialization.SerializationException
 import net.thunderbird.components.core.testing.temporaryDirectoryFixture
@@ -76,6 +77,48 @@ val safeAuthorsConfigTest by testSuite("SafeAuthorsConfig") {
     }
 
     temporaryDirectoryFixture().asParameterForEach {
+        test("loads approved authors from a pinned local git revision") { tmpPath ->
+            val dir = File(tmpPath.toString())
+            val repo = File(dir, "private-config").apply { mkdirs() }
+            fun git(vararg args: String): String {
+                val process = ProcessBuilder(listOf("git") + args).directory(repo).redirectErrorStream(true).start()
+                val output = process.inputStream.bufferedReader().use { it.readText() }
+                check(process.waitFor() == 0) { output }
+                return output.trim()
+            }
+            git("init")
+            git("config", "user.name", "Test")
+            git("config", "user.email", "test@example.invalid")
+            val approved = File(repo, "safe-authors.json")
+            approved.writeText("""{"safe_domains":["@example.org"]}""")
+            git("add", "safe-authors.json")
+            git("commit", "-m", "approvals")
+            val revision = git("rev-parse", "HEAD")
+            approved.writeText("""{"safe_domains":["@changed.example"]}""")
+
+            val reference = File(dir, "reference.json")
+            reference.writeText("""{"repoUrl":"${repo.absolutePath}","revision":"$revision"}""")
+            val loaded = SafeAuthorsConfig.load(reference)
+
+            assertThat(loaded.safeDomains).isEqualTo(listOf("@example.org"))
+        }
+
+        test("rejects an invalid pinned revision") { tmpPath ->
+            val reference = File(tmpPath.toString(), "reference.json")
+            reference.writeText("""{"repoUrl":"/tmp/nonexistent","revision":"HEAD"}""")
+
+            assertFailsWith<IllegalArgumentException> { SafeAuthorsConfig.load(reference) }
+        }
+
+        test("fails closed if the pinned repository is unavailable") { tmpPath ->
+            val reference = File(tmpPath.toString(), "reference.json")
+            reference.writeText(
+                """{"repoUrl":"/nonexistent/repository", "revision":"${"0".repeat(40)}"}""",
+            )
+
+            assertFailsWith<IOException> { SafeAuthorsConfig.load(reference) }
+        }
+
         test("loads valid configuration file with snake_case keys") { tmpPath ->
             val dir = File(tmpPath.toString())
             val configFile = File(dir, "safe-authors.json")

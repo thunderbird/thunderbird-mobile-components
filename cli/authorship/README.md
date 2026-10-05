@@ -8,7 +8,7 @@ A command-line tool to verify git code authorship against configured approval ru
 - **Excluded Files**: Build configuration files (`build.gradle.kts` at any directory depth) are excluded from file enumeration and history analysis, as they represent project-specific build configurations. Excluded configuration files are not audited.
 - **Deletions**: Files deleted prior to the inspected revision and historical contributions removed before that revision are not in scope.
 - **Renames**: Historical commit contributions for audited files are tracked across renames.
-- **Approval Matching**: Contributor matching is based on configured approval rules in `config/safe-authors.json` and represents configured approvals.
+- **Approval Matching**: Contributor matching uses the pinned approval rules referenced by `config/safe-authors-reference.json` and represents configured approvals.
 
 ## Workflow & Usage
 
@@ -49,22 +49,21 @@ Source: https://github.com/thunderbird/thunderbird-android/tree/071fa9962c/core/
 
 ## Options
 
-|              Option              |                                                  Description                                                   |
-|----------------------------------|----------------------------------------------------------------------------------------------------------------|
-| `-p, --source-path <path>`       | Subdirectory or file path(s) within the repository to inspect (can be specified multiple times).               |
-| `-c, --source-commit <sha>`      | Source commit SHA or ref to inspect (if not specified, auto-detected from repository HEAD/main).               |
-| `--source-repo-url <url>`        | URL of the upstream source git repository (default: `https://github.com/thunderbird/thunderbird-android.git`). |
-| `-s, --safe-authors-file <file>` | Path to safe authors JSON configuration file (default: `config/safe-authors.json`).                            |
-| `-o, --output <file>`            | Output file path to save the generated Markdown report.                                                        |
-| `--commit-msg-only`              | Print only the git commit message snippet.                                                                     |
-| `--json`                         | Output the analysis as JSON.                                                                                   |
-| `--cleanup-tmp`                  | Remove the cloned repository from `build/tmp/` after execution.                                                |
-| `-h, --help`                     | Show the help message and exit.                                                                                |
+|              Option              |                                                      Description                                                      |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `-p, --source-path <path>`       | Subdirectory or file path(s) within the repository to inspect (can be specified multiple times).                      |
+| `-c, --source-commit <sha>`      | Source commit SHA or ref to inspect (if not specified, auto-detected from repository HEAD/main).                      |
+| `--source-repo-url <url>`        | URL of the upstream source git repository (default: `https://github.com/thunderbird/thunderbird-android.git`).        |
+| `-s, --safe-authors-file <file>` | Path to a pinned private-repository reference or local approval JSON (default: `config/safe-authors-reference.json`). |
+| `-o, --output <file>`            | Output file path to save the generated Markdown report.                                                               |
+| `--commit-msg-only`              | Print only the git commit message snippet.                                                                            |
+| `--json`                         | Output the analysis as JSON.                                                                                          |
+| `--cleanup-tmp`                  | Remove the cloned repository from `build/tmp/` after execution.                                                       |
+| `-h, --help`                     | Show the help message and exit.                                                                                       |
 
 ## Safe Authors Configuration
 
-The list of approved contributors is configured in `config/safe-authors.json`:
+The committed `config/safe-authors-reference.json` contains `repoUrl` and a full, pinned Git commit `revision`. The tool fetches that revision and reads `safe-authors.json` from the private repository. Access requires Git credentials; if fetching fails, authorship checking fails rather than approving any contributors. Update the pinned revision when the private approvals change.
 
-- `safeDomains`: Approved corporate email domains (e.g. `@thunderbird.net`, `@mozilla.com`, `@mozillafoundation.org`).
-- `safeAuthors`: Approved staff contributors with their full names, email aliases, and corporate affiliations.
+The private `safe-authors.json` contains `safe_domains` (approved email domains) and `safe_authors` (approved names, aliases, emails and affiliations). You can alternatively supply a local approval JSON with `--safe-authors-file`. Do not commit that file or expose approval details in logs or reports unintentionally.
 

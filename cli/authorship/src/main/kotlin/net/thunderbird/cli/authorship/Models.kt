@@ -6,11 +6,15 @@
 package net.thunderbird.cli.authorship
 
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 import java.text.Normalizer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 
 internal fun String.normalizeText(): String = Normalizer.normalize(this.trim(), Normalizer.Form.NFC)
 
@@ -80,10 +84,70 @@ public data class SafeAuthorsConfig(
                 "Safe authors configuration file does not exist: ${configFile.absolutePath}"
             }
             val content = configFile.readText(Charsets.UTF_8)
-            return json.decodeFromString<SafeAuthorsConfig>(content)
+            val document = json.parseToJsonElement(content).jsonObject
+            return if ("repoUrl" in document || "revision" in document) {
+                val reference = json.decodeFromJsonElement<SafeAuthorsReference>(document)
+                loadFromRepository(reference)
+            } else {
+                json.decodeFromJsonElement<SafeAuthorsConfig>(document)
+            }
+        }
+
+        private fun loadFromRepository(reference: SafeAuthorsReference): SafeAuthorsConfig {
+            require(Regex("[0-9a-fA-F]{40}").matches(reference.revision)) {
+                "Safe authors revision must be a full Git commit SHA"
+            }
+            require(reference.repoUrl.isNotBlank()) { "Safe authors repository URL must not be blank" }
+            require(reference.path == "safe-authors.json") {
+                "Only safe-authors.json is supported in the private repository"
+            }
+
+            val directory = Files.createTempDirectory("tmc-safe-authors-").toFile()
+            try {
+                runGit(directory, "init")
+                runGit(
+                    directory,
+                    "-c",
+                    "credential.helper=",
+                    "fetch",
+                    "--depth=1",
+                    reference.repoUrl,
+                    reference.revision,
+                )
+                val fetchedCommit = runGit(directory, "rev-parse", "FETCH_HEAD").trim()
+                if (!fetchedCommit.equals(reference.revision, ignoreCase = true)) {
+                    throw IOException("Fetched safe authors revision differs from the pinned commit")
+                }
+                val blob = runGit(directory, "show", "FETCH_HEAD:${reference.path}")
+                return json.decodeFromString<SafeAuthorsConfig>(blob)
+            } finally {
+                directory.deleteRecursively()
+            }
+        }
+
+        private fun runGit(directory: File, vararg args: String): String {
+            val process = ProcessBuilder(listOf("git") + args)
+                .directory(directory)
+                .redirectErrorStream(true)
+                .apply { environment()["GIT_TERMINAL_PROMPT"] = "0" }
+                .start()
+            val output = process.inputStream.bufferedReader().use { it.readText() }
+            if (process.waitFor() !=
+                0
+            ) {
+                throw IOException("Unable to load safe authors configuration from private repository")
+            }
+            return output
         }
     }
 }
+
+@Serializable
+internal data class SafeAuthorsReference(
+    val repoUrl: String,
+    val revision: String,
+    val path: String = "safe-authors.json",
+)
 
 @Serializable
 public data class ContributorStats(
