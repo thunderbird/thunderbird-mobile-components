@@ -5,14 +5,19 @@
  */
 package net.thunderbird.cli.authorship
 
+import assertk.all
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
+import assertk.assertions.doesNotContain
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
+import assertk.assertions.key
+import assertk.assertions.messageContains
 import de.infix.testBalloon.framework.core.testSuite
 import java.io.File
-import kotlin.test.assertFailsWith
 import net.thunderbird.components.core.testing.temporaryDirectoryFixture
 
 val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
@@ -36,7 +41,7 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
 
         assertThat(linesCount).isEqualTo(1)
         assertThat(isSafe).isFalse()
-        assertThat(authorsBlame.containsKey("Missing Attribution <unattributed@git.internal>")).isTrue()
+        assertThat(authorsBlame).key("Missing Attribution <unattributed@git.internal>").isEqualTo(1)
     }
 
     test("two-header blame with missing author on second header fails closed and does not inherit previous author") {
@@ -64,8 +69,10 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
 
         assertThat(linesCount).isEqualTo(2)
         assertThat(isSafe).isFalse()
-        assertThat(authorsBlame["Safe Dev <safe@thunderbird.net>"]).isEqualTo(1)
-        assertThat(authorsBlame["Missing Attribution <unattributed@git.internal>"]).isEqualTo(1)
+        assertThat(authorsBlame).all {
+            key("Safe Dev <safe@thunderbird.net>").isEqualTo(1)
+            key("Missing Attribution <unattributed@git.internal>").isEqualTo(1)
+        }
     }
 
     test("empty or unparseable git log history is marked unsafe with unverified contributor") {
@@ -80,7 +87,7 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
         )
 
         assertThat(isSafe).isFalse()
-        assertThat(authorsCommits.contains("Missing Attribution <unattributed@git.internal>")).isTrue()
+        assertThat(authorsCommits).contains("Missing Attribution <unattributed@git.internal>")
     }
 
     test("rename-only R100 commit is ignored in favor of code authors") {
@@ -108,8 +115,10 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
         )
 
         assertThat(isSafe).isTrue()
-        assertThat(authorsCommits.contains("Safe Dev <safe@thunderbird.net>")).isTrue()
-        assertThat(authorsCommits.contains("Build Tooling Dev <tooling@external.org>")).isFalse()
+        assertThat(authorsCommits).all {
+            contains("Safe Dev <safe@thunderbird.net>")
+            doesNotContain("Build Tooling Dev <tooling@external.org>")
+        }
     }
 
     test("copy commit C100 is retained as content author even when later edited") {
@@ -137,8 +146,10 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
         )
 
         assertThat(isSafe).isFalse()
-        assertThat(authorsCommits.contains("Editor Dev <safe@thunderbird.net>")).isTrue()
-        assertThat(authorsCommits.contains("Copier Dev <copier@external.org>")).isTrue()
+        assertThat(authorsCommits).all {
+            contains("Editor Dev <safe@thunderbird.net>")
+            contains("Copier Dev <copier@external.org>")
+        }
     }
 
     test("rename with edits R090 is retained as content author") {
@@ -166,8 +177,10 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
         )
 
         assertThat(isSafe).isFalse()
-        assertThat(authorsCommits.contains("Safe Dev <safe@thunderbird.net>")).isTrue()
-        assertThat(authorsCommits.contains("Renamer With Edits <unsafe@external.org>")).isTrue()
+        assertThat(authorsCommits).all {
+            contains("Safe Dev <safe@thunderbird.net>")
+            contains("Renamer With Edits <unsafe@external.org>")
+        }
     }
 
     test("commit with ambiguous or missing status is conservatively retained") {
@@ -194,7 +207,7 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
         )
 
         assertThat(isSafe).isFalse()
-        assertThat(authorsCommits.contains("Ambiguous Dev <ambiguous@external.org>")).isTrue()
+        assertThat(authorsCommits).contains("Ambiguous Dev <ambiguous@external.org>")
     }
 
     temporaryDirectoryFixture().asParameterForEach {
@@ -209,9 +222,9 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
             val analyzer = GitAuthorshipAnalyzer(repoDir)
             val config = SafeAuthorsConfig(safeDomains = listOf("@thunderbird.net"))
 
-            assertFailsWith<IllegalStateException> {
+            assertFailure {
                 analyzer.analyze(listOf("nonexistent/path"), config)
-            }
+            }.isInstanceOf<IllegalStateException>()
         }
 
         test("git failure fails closed reporting command and error details") { tmpPath ->
@@ -223,11 +236,13 @@ val gitAuthorshipAnalyzerTest by testSuite("GitAuthorshipAnalyzer") {
             runGit(repoDir, "commit", "-m", "init")
 
             val analyzer = GitAuthorshipAnalyzer(repoDir)
-            val exception = assertFailsWith<IllegalStateException> {
+            val failure = assertFailure {
                 analyzer.runRequiredGitCommand(listOf("invalid-git-subcommand"))
+            }.isInstanceOf<IllegalStateException>()
+            failure.all {
+                messageContains("Git command failed")
+                messageContains("invalid-git-subcommand")
             }
-            assertThat(exception.message.orEmpty()).contains("Git command failed")
-            assertThat(exception.message.orEmpty()).contains("invalid-git-subcommand")
         }
 
         test("configuration-only commits on build gradle are excluded from authorship report") { tmpPath ->

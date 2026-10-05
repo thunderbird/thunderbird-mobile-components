@@ -56,16 +56,11 @@ public class GitRepoManager(
             }
         }
 
-        runRequiredGit(targetRepoDir, listOf("reset", "--hard", "HEAD"))
-        runRequiredGit(targetRepoDir, listOf("clean", "-fdx"))
-
         if (sourceCommit.isNotBlank()) {
             checkoutCommit(targetRepoDir, sourceCommit, onProgress)
         } else {
             checkoutDefaultBranch(targetRepoDir)
         }
-        runRequiredGit(targetRepoDir, listOf("reset", "--hard", "HEAD"))
-        runRequiredGit(targetRepoDir, listOf("clean", "-fdx"))
 
         return targetRepoDir
     }

@@ -8,38 +8,12 @@ package net.thunderbird.cli.authorship
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
-import java.text.Normalizer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
-
-internal fun String.normalizeText(): String = Normalizer.normalize(this.trim(), Normalizer.Form.NFC)
-
-@OptIn(ExperimentalSerializationApi::class)
-@Serializable
-public data class SafeAuthor(
-    val name: String,
-    val aliases: List<String> = emptyList(),
-    val emails: List<String> = emptyList(),
-    val affiliation: String = "Approved Contributor",
-) {
-    public fun matches(authorName: String, authorEmail: String): Boolean {
-        val normEmail = authorEmail.normalizeText().lowercase()
-        val normName = authorName.normalizeText().lowercase()
-        val primaryName = name.normalizeText().lowercase()
-        val allNames = listOf(primaryName) + aliases.map { it.normalizeText().lowercase() }
-        val allEmails = emails.map { it.normalizeText().lowercase() }
-
-        return if (allEmails.isNotEmpty()) {
-            allEmails.contains(normEmail) && (allNames.contains(normName) || normName.isBlank())
-        } else {
-            allNames.contains(normName)
-        }
-    }
-}
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -141,50 +115,3 @@ public data class SafeAuthorsConfig(
         }
     }
 }
-
-@Serializable
-internal data class SafeAuthorsReference(
-    val repoUrl: String,
-    val revision: String,
-    val path: String = "safe-authors.json",
-)
-
-@Serializable
-public data class ContributorStats(
-    val name: String,
-    val email: String,
-    val isSafe: Boolean,
-    val affiliation: String,
-    val commitCount: Int = 0,
-    val blameLines: Int = 0,
-    val commits: Set<String> = emptySet(),
-) {
-    public fun withIncrementedBlame(): ContributorStats = copy(blameLines = blameLines + 1)
-
-    public fun withAddedCommit(commitHash: String): ContributorStats {
-        val updatedCommits = commits + commitHash
-        return copy(commits = updatedCommits, commitCount = updatedCommits.size)
-    }
-}
-
-@Serializable
-public data class FileStats(
-    val path: String,
-    val isSafe: Boolean,
-    val totalLines: Int = 0,
-    val isBinary: Boolean = false,
-    val authorsBlame: Map<String, Int> = emptyMap(),
-    val authorsCommits: Set<String> = emptySet(),
-    val unsafeContributors: Set<String> = emptySet(),
-)
-
-@Serializable
-public data class AuthorshipReport(
-    val allSafe: Boolean,
-    val sourceRepoUrl: String,
-    val sourceCommit: String,
-    val targetPaths: List<String>,
-    val contributors: List<ContributorStats>,
-    val filesStats: Map<String, FileStats>,
-    val commitMessage: String,
-)

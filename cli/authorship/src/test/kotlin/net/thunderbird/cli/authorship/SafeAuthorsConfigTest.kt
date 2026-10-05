@@ -5,14 +5,15 @@
  */
 package net.thunderbird.cli.authorship
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import de.infix.testBalloon.framework.core.testSuite
 import java.io.File
 import java.io.IOException
-import kotlin.test.assertFailsWith
 import kotlinx.serialization.SerializationException
 import net.thunderbird.components.core.testing.temporaryDirectoryFixture
 
@@ -107,7 +108,7 @@ val safeAuthorsConfigTest by testSuite("SafeAuthorsConfig") {
             val reference = File(tmpPath.toString(), "reference.json")
             reference.writeText("""{"repoUrl":"/tmp/nonexistent","revision":"HEAD"}""")
 
-            assertFailsWith<IllegalArgumentException> { SafeAuthorsConfig.load(reference) }
+            assertFailure { SafeAuthorsConfig.load(reference) }.isInstanceOf<IllegalArgumentException>()
         }
 
         test("fails closed if the pinned repository is unavailable") { tmpPath ->
@@ -116,7 +117,7 @@ val safeAuthorsConfigTest by testSuite("SafeAuthorsConfig") {
                 """{"repoUrl":"/nonexistent/repository", "revision":"${"0".repeat(40)}"}""",
             )
 
-            assertFailsWith<IOException> { SafeAuthorsConfig.load(reference) }
+            assertFailure { SafeAuthorsConfig.load(reference) }.isInstanceOf<IOException>()
         }
 
         test("loads valid configuration file with snake_case keys") { tmpPath ->
@@ -174,9 +175,7 @@ val safeAuthorsConfigTest by testSuite("SafeAuthorsConfig") {
             val configFile = File(dir, "invalid.json")
             configFile.writeText("{ invalid json }")
 
-            assertFailsWith<SerializationException> {
-                SafeAuthorsConfig.load(configFile)
-            }
+            assertFailure { SafeAuthorsConfig.load(configFile) }.isInstanceOf<SerializationException>()
         }
     }
 }

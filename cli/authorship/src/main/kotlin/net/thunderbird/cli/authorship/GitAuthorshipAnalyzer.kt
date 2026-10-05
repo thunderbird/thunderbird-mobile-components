@@ -337,46 +337,54 @@ internal fun parseBlameOutput(
 
     for (bLine in stdout.lines()) {
         val firstToken = bLine.substringBefore(' ')
-        if (isShaHash(firstToken)) {
-            currentCommit = firstToken
-            currentAuthor = ""
-            currentMail = ""
-            commitAuthors[currentCommit]?.let { (cachedAuthor, cachedMail) ->
-                currentAuthor = cachedAuthor
-                currentMail = cachedMail
+        when {
+            isShaHash(firstToken) -> {
+                currentCommit = firstToken
+                currentAuthor = ""
+                currentMail = ""
+                commitAuthors[currentCommit]?.let { (cachedAuthor, cachedMail) ->
+                    currentAuthor = cachedAuthor
+                    currentMail = cachedMail
+                }
             }
-        } else if (bLine.startsWith("author ")) {
-            currentAuthor = bLine.substring(AUTHOR_PREFIX_LEN).trim()
-            updateCachedAuthor(
-                commitAuthors = commitAuthors,
-                commit = currentCommit,
-                author = currentAuthor,
-                mail = currentMail,
-            )
-        } else if (bLine.startsWith("author-mail ")) {
-            val rawMail = bLine.substring(AUTHOR_MAIL_PREFIX_LEN).trim()
-            currentMail = rawMail.removeSurrounding(prefix = "<", suffix = ">").lowercase()
-            updateCachedAuthor(
-                commitAuthors = commitAuthors,
-                commit = currentCommit,
-                author = currentAuthor,
-                mail = currentMail,
-            )
-        } else if (bLine.startsWith("\t")) {
-            linesCount++
-            val lineSafe = processBlameCodeLine(
-                currentAuthor = currentAuthor,
-                currentMail = currentMail,
-                currentCommit = currentCommit,
-                commitAuthors = commitAuthors,
-                authorsBlame = authorsBlame,
-                unsafeContributors = unsafeContributors,
-                onContributorBlame = onContributorBlame,
-            )
-            if (!lineSafe) isSafe = false
-            currentAuthor = ""
-            currentMail = ""
-            currentCommit = ""
+
+            bLine.startsWith("author ") -> {
+                currentAuthor = bLine.substring(AUTHOR_PREFIX_LEN).trim()
+                updateCachedAuthor(
+                    commitAuthors = commitAuthors,
+                    commit = currentCommit,
+                    author = currentAuthor,
+                    mail = currentMail,
+                )
+            }
+
+            bLine.startsWith("author-mail ") -> {
+                val rawMail = bLine.substring(AUTHOR_MAIL_PREFIX_LEN).trim()
+                currentMail = rawMail.removeSurrounding(prefix = "<", suffix = ">").lowercase()
+                updateCachedAuthor(
+                    commitAuthors = commitAuthors,
+                    commit = currentCommit,
+                    author = currentAuthor,
+                    mail = currentMail,
+                )
+            }
+
+            bLine.startsWith("\t") -> {
+                linesCount++
+                val lineSafe = processBlameCodeLine(
+                    currentAuthor = currentAuthor,
+                    currentMail = currentMail,
+                    currentCommit = currentCommit,
+                    commitAuthors = commitAuthors,
+                    authorsBlame = authorsBlame,
+                    unsafeContributors = unsafeContributors,
+                    onContributorBlame = onContributorBlame,
+                )
+                if (!lineSafe) isSafe = false
+                currentAuthor = ""
+                currentMail = ""
+                currentCommit = ""
+            }
         }
     }
 

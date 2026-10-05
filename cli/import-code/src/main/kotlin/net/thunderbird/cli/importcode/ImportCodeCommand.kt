@@ -192,11 +192,7 @@ public class ImportCodeCommand : CliktCommand(
             !it.reason.startsWith("Excluded build configuration")
         }
 
-        val allImportedSafe = if (skipAuthorshipCheck || result.importedFiles.isEmpty()) {
-            false
-        } else {
-            true
-        }
+        val allImportedSafe = !skipAuthorshipCheck && result.importedFiles.isNotEmpty()
 
         val commitSnippet = ReportRenderer.generateCommitSnippet(
             sourceCommit = resolvedCommit,
@@ -277,35 +273,20 @@ private fun importSingleFile(
     leftOut: MutableList<LeftOutFile>,
 ) {
     val repoRel = sourceFile.relativeTo(context.targetRepo).path.replace(oldChar = '\\', newChar = '/')
-    val isBuildGradle = isBuildGradleFile(repoRel)
-
-    if (isBuildGradle && !context.includeBuildGradle) {
-        leftOut.add(LeftOutFile(path = repoRel, reason = "Excluded build configuration (${sourceFile.name})"))
-        return
-    }
-
-    val fileStat = context.filesStats[repoRel]
-    val isSafe = if (context.skipAuthorshipCheck) {
-        true
+    val destination = context.destination
+    val target = if (destination.isDirectory || destination.path.endsWith("/")) {
+        File(destination, sourceFile.name)
     } else {
-        fileStat?.isSafe == true
+        destination
     }
-
-    if (!isSafe && !context.skipAuthorshipCheck) {
-        leftOut.add(LeftOutFile(path = repoRel, reason = extractUnsafeReason(fileStat, context.contributors)))
-    } else {
-        val destination = context.destination
-        val target = if (destination.isDirectory || destination.path.endsWith("/")) {
-            File(destination, sourceFile.name)
-        } else {
-            destination
-        }
-        if (!context.isDryRun) {
-            target.parentFile?.mkdirs()
-            sourceFile.copyTo(target, overwrite = true)
-        }
-        imported.add(target)
-    }
+    importFile(
+        file = sourceFile,
+        repoRel = repoRel,
+        target = target,
+        context = context,
+        imported = imported,
+        leftOut = leftOut,
+    )
 }
 
 private fun processDirectoryFile(
@@ -317,30 +298,41 @@ private fun processDirectoryFile(
 ) {
     val relFromSource = file.relativeTo(sourceFile).path.replace(oldChar = '\\', newChar = '/')
     val repoRel = file.relativeTo(context.targetRepo).path.replace(oldChar = '\\', newChar = '/')
-    val isBuildGradle = isBuildGradleFile(repoRel)
+    val target = File(context.destination, relFromSource)
+    importFile(
+        file = file,
+        repoRel = repoRel,
+        target = target,
+        context = context,
+        imported = imported,
+        leftOut = leftOut,
+    )
+}
 
-    if (isBuildGradle && !context.includeBuildGradle) {
+private fun importFile(
+    file: File,
+    repoRel: String,
+    target: File,
+    context: ImportContext,
+    imported: MutableList<File>,
+    leftOut: MutableList<LeftOutFile>,
+) {
+    if (isBuildGradleFile(repoRel) && !context.includeBuildGradle) {
         leftOut.add(LeftOutFile(path = repoRel, reason = "Excluded build configuration (${file.name})"))
         return
     }
 
     val fileStat = context.filesStats[repoRel]
-    val isSafe = if (context.skipAuthorshipCheck) {
-        true
-    } else {
-        fileStat?.isSafe == true
+    if (!context.skipAuthorshipCheck && fileStat?.isSafe != true) {
+        leftOut.add(LeftOutFile(path = repoRel, reason = extractUnsafeReason(fileStat, context.contributors)))
+        return
     }
 
-    if (!isSafe && !context.skipAuthorshipCheck) {
-        leftOut.add(LeftOutFile(path = repoRel, reason = extractUnsafeReason(fileStat, context.contributors)))
-    } else {
-        val targetFile = File(context.destination, relFromSource)
-        if (!context.isDryRun) {
-            targetFile.parentFile?.mkdirs()
-            file.copyTo(targetFile, overwrite = true)
-        }
-        imported.add(targetFile)
+    if (!context.isDryRun) {
+        target.parentFile?.mkdirs()
+        file.copyTo(target, overwrite = true)
     }
+    imported.add(target)
 }
 
 private fun isBuildGradleFile(repoRel: String): Boolean {
