@@ -7,11 +7,9 @@ package net.thunderbird.components.core.testing
 
 import kotlin.time.Clock
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /** A mutable [Clock] for deterministic tests. */
-@OptIn(ExperimentalTime::class)
 public class TestClock(
     private var currentTime: Instant = Clock.System.now(),
 ) : Clock {

@@ -6,7 +6,6 @@
 package net.thunderbird.components.core.logging
 
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 /**
  * Default implementation of [Logger] that logs messages to a [LogSink].
@@ -14,9 +13,7 @@ import kotlin.time.ExperimentalTime
  * @param sink The [LogSink] to which log events will be sent.
  * @param clock The [Clock] used to get the current time for log events. Defaults to the system clock.
  */
-public class DefaultLogger
-@OptIn(ExperimentalTime::class)
-constructor(
+public class DefaultLogger(
     private val sink: LogSink,
     private val clock: Clock = Clock.System,
 ) : Logger {
@@ -29,7 +26,6 @@ constructor(
     ) {
         sink.let { currentSink ->
             if (currentSink.canLog(level)) {
-                @OptIn(ExperimentalTime::class)
                 val timestamp = clock.now().toEpochMilliseconds()
                 currentSink.log(
                     event = LogEvent(
