@@ -1,0 +1,105 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+package net.thunderbird.components.core.logging
+
+import kotlin.time.Clock
+
+/**
+ * Default implementation of [Logger] that logs messages to a [LogSink].
+ *
+ * @param sink The [LogSink] to which log events will be sent.
+ * @param clock The [Clock] used to get the current time for log events. Defaults to the system clock.
+ */
+public class DefaultLogger(
+    private val sink: LogSink,
+    private val clock: Clock = Clock.System,
+) : Logger {
+
+    private fun log(
+        level: LogLevel,
+        tag: LogTag,
+        throwable: Throwable? = null,
+        message: () -> LogMessage,
+    ) {
+        if (sink.canLog(level)) {
+            val timestamp = clock.now().toEpochMilliseconds()
+            sink.log(
+                event = LogEvent(
+                    level = level,
+                    tag = tag,
+                    message = message(),
+                    throwable = throwable,
+                    timestamp = timestamp,
+                ),
+            )
+        }
+    }
+
+    override fun verbose(
+        tag: LogTag,
+        throwable: Throwable?,
+        message: () -> LogMessage,
+    ) {
+        log(
+            level = LogLevel.VERBOSE,
+            tag = tag,
+            throwable = throwable,
+            message = message,
+        )
+    }
+
+    override fun debug(
+        tag: LogTag,
+        throwable: Throwable?,
+        message: () -> LogMessage,
+    ) {
+        log(
+            level = LogLevel.DEBUG,
+            tag = tag,
+            throwable = throwable,
+            message = message,
+        )
+    }
+
+    override fun info(
+        tag: LogTag,
+        throwable: Throwable?,
+        message: () -> LogMessage,
+    ) {
+        log(
+            level = LogLevel.INFO,
+            tag = tag,
+            throwable = throwable,
+            message = message,
+        )
+    }
+
+    override fun warn(
+        tag: LogTag,
+        throwable: Throwable?,
+        message: () -> LogMessage,
+    ) {
+        log(
+            level = LogLevel.WARN,
+            tag = tag,
+            throwable = throwable,
+            message = message,
+        )
+    }
+
+    override fun error(
+        tag: LogTag,
+        throwable: Throwable?,
+        message: () -> LogMessage,
+    ) {
+        log(
+            level = LogLevel.ERROR,
+            tag = tag,
+            throwable = throwable,
+            message = message,
+        )
+    }
+}

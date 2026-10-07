@@ -23,6 +23,7 @@ The components are in different stages of development, and some may not be fully
 
 |                  Component                   |      Status       |           Module           |             Maven Coordinate              |                               Description                               |
 |----------------------------------------------|-------------------|----------------------------|-------------------------------------------|-------------------------------------------------------------------------|
+| [Logging](components/core/logging/README.md) | 🛠 In development | `:components:core:logging` | `net.thunderbird.components.core.logging` | Logging API with composite, console, and file logging.                  |
 | [Outcome](components/core/outcome/README.md) | 🛠 In development | `:components:core:outcome` | `net.thunderbird.components.core:outcome` | Small result type with a flexible failure type, unlike Kotlin `Result`. |
 
 ## Contributing

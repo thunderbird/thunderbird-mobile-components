@@ -1,0 +1,25 @@
+public final class net/thunderbird/components/core/logging/testing/TestLogLevelManager : net/thunderbird/components/core/logging/LogLevelManager {
+	public fun <init> ()V
+	public fun current ()Lnet/thunderbird/components/core/logging/LogLevel;
+	public final fun getLogLevel ()Lnet/thunderbird/components/core/logging/LogLevel;
+	public fun override (Lnet/thunderbird/components/core/logging/LogLevel;)V
+	public fun restoreDefault ()V
+	public final fun setLogLevel (Lnet/thunderbird/components/core/logging/LogLevel;)V
+}
+
+public final class net/thunderbird/components/core/logging/testing/TestLogger : net/thunderbird/components/core/logging/Logger {
+	public static final field Companion Lnet/thunderbird/components/core/logging/testing/TestLogger$Companion;
+	public static final field TIMESTAMP J
+	public fun <init> ()V
+	public fun debug (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public final fun dump ()V
+	public fun error (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public final fun getEvents ()Ljava/util/List;
+	public fun info (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun verbose (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public fun warn (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class net/thunderbird/components/core/logging/testing/TestLogger$Companion {
+}
+

@@ -9,10 +9,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-@OptIn(ExperimentalTime::class)
 val testClockTest by testSuite("TestClock") {
     test("returns the current time") {
         val clock = TestClock(Instant.DISTANT_PAST)

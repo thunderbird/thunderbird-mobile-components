@@ -1,0 +1,15 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <net.thunderbird.components.core.logging:file>
+abstract interface net.thunderbird.components.core.logging.file/FileLogSink : net.thunderbird.components.core.logging/LogSink { // net.thunderbird.components.core.logging.file/FileLogSink|null[0]
+    abstract suspend fun export(io.github.vinceglb.filekit/PlatformFile) // net.thunderbird.components.core.logging.file/FileLogSink.export|export(io.github.vinceglb.filekit.PlatformFile){}[0]
+    abstract suspend fun exportAndClear(io.github.vinceglb.filekit/PlatformFile) // net.thunderbird.components.core.logging.file/FileLogSink.exportAndClear|exportAndClear(io.github.vinceglb.filekit.PlatformFile){}[0]
+    abstract suspend fun flush() // net.thunderbird.components.core.logging.file/FileLogSink.flush|flush(){}[0]
+}
+
+final fun net.thunderbird.components.core.logging.file/FileLogSink(net.thunderbird.components.core.logging/LogLevel, io.github.vinceglb.filekit/PlatformFile, net.thunderbird.components.core.logging/LoggingErrorReporter = ..., kotlinx.coroutines/CoroutineDispatcher = ...): net.thunderbird.components.core.logging.file/FileLogSink // net.thunderbird.components.core.logging.file/FileLogSink|FileLogSink(net.thunderbird.components.core.logging.LogLevel;io.github.vinceglb.filekit.PlatformFile;net.thunderbird.components.core.logging.LoggingErrorReporter;kotlinx.coroutines.CoroutineDispatcher){}[0]

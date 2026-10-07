@@ -1,0 +1,124 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <net.thunderbird.components.core.logging:core>
+final enum class net.thunderbird.components.core.logging/LogLevel : kotlin/Enum<net.thunderbird.components.core.logging/LogLevel> { // net.thunderbird.components.core.logging/LogLevel|null[0]
+    enum entry DEBUG // net.thunderbird.components.core.logging/LogLevel.DEBUG|null[0]
+    enum entry ERROR // net.thunderbird.components.core.logging/LogLevel.ERROR|null[0]
+    enum entry INFO // net.thunderbird.components.core.logging/LogLevel.INFO|null[0]
+    enum entry VERBOSE // net.thunderbird.components.core.logging/LogLevel.VERBOSE|null[0]
+    enum entry WARN // net.thunderbird.components.core.logging/LogLevel.WARN|null[0]
+
+    final val entries // net.thunderbird.components.core.logging/LogLevel.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<net.thunderbird.components.core.logging/LogLevel> // net.thunderbird.components.core.logging/LogLevel.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val priority // net.thunderbird.components.core.logging/LogLevel.priority|{}priority[0]
+        final fun <get-priority>(): kotlin/Int // net.thunderbird.components.core.logging/LogLevel.priority.<get-priority>|<get-priority>(){}[0]
+
+    final fun valueOf(kotlin/String): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogLevel.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<net.thunderbird.components.core.logging/LogLevel> // net.thunderbird.components.core.logging/LogLevel.values|values#static(){}[0]
+}
+
+abstract fun interface net.thunderbird.components.core.logging/LogLevelProvider { // net.thunderbird.components.core.logging/LogLevelProvider|null[0]
+    abstract fun current(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogLevelProvider.current|current(){}[0]
+}
+
+abstract fun interface net.thunderbird.components.core.logging/LoggingControl { // net.thunderbird.components.core.logging/LoggingControl|null[0]
+    abstract fun setEnabled(kotlin/Boolean) // net.thunderbird.components.core.logging/LoggingControl.setEnabled|setEnabled(kotlin.Boolean){}[0]
+}
+
+abstract fun interface net.thunderbird.components.core.logging/LoggingErrorReporter { // net.thunderbird.components.core.logging/LoggingErrorReporter|null[0]
+    abstract fun report(kotlin/Throwable) // net.thunderbird.components.core.logging/LoggingErrorReporter.report|report(kotlin.Throwable){}[0]
+}
+
+abstract interface net.thunderbird.components.core.logging.composite/CompositeLogSink : net.thunderbird.components.core.logging/LogSink { // net.thunderbird.components.core.logging.composite/CompositeLogSink|null[0]
+    abstract val manager // net.thunderbird.components.core.logging.composite/CompositeLogSink.manager|{}manager[0]
+        abstract fun <get-manager>(): net.thunderbird.components.core.logging.composite/CompositeLogSinkManager // net.thunderbird.components.core.logging.composite/CompositeLogSink.manager.<get-manager>|<get-manager>(){}[0]
+}
+
+abstract interface net.thunderbird.components.core.logging.composite/CompositeLogSinkManager { // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager|null[0]
+    abstract fun add(net.thunderbird.components.core.logging/LogSink) // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager.add|add(net.thunderbird.components.core.logging.LogSink){}[0]
+    abstract fun addAll(kotlin.collections/List<net.thunderbird.components.core.logging/LogSink>) // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager.addAll|addAll(kotlin.collections.List<net.thunderbird.components.core.logging.LogSink>){}[0]
+    abstract fun getAll(): kotlin.collections/List<net.thunderbird.components.core.logging/LogSink> // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager.getAll|getAll(){}[0]
+    abstract fun remove(net.thunderbird.components.core.logging/LogSink) // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager.remove|remove(net.thunderbird.components.core.logging.LogSink){}[0]
+    abstract fun removeAll() // net.thunderbird.components.core.logging.composite/CompositeLogSinkManager.removeAll|removeAll(){}[0]
+}
+
+abstract interface net.thunderbird.components.core.logging.console/ConsoleLogSink : net.thunderbird.components.core.logging/LogSink // net.thunderbird.components.core.logging.console/ConsoleLogSink|null[0]
+
+abstract interface net.thunderbird.components.core.logging/LogLevelManager : net.thunderbird.components.core.logging/LogLevelProvider { // net.thunderbird.components.core.logging/LogLevelManager|null[0]
+    abstract fun override(net.thunderbird.components.core.logging/LogLevel) // net.thunderbird.components.core.logging/LogLevelManager.override|override(net.thunderbird.components.core.logging.LogLevel){}[0]
+    abstract fun restoreDefault() // net.thunderbird.components.core.logging/LogLevelManager.restoreDefault|restoreDefault(){}[0]
+}
+
+abstract interface net.thunderbird.components.core.logging/LogSink { // net.thunderbird.components.core.logging/LogSink|null[0]
+    abstract val level // net.thunderbird.components.core.logging/LogSink.level|{}level[0]
+        abstract fun <get-level>(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogSink.level.<get-level>|<get-level>(){}[0]
+
+    abstract fun log(net.thunderbird.components.core.logging/LogEvent) // net.thunderbird.components.core.logging/LogSink.log|log(net.thunderbird.components.core.logging.LogEvent){}[0]
+    open fun canLog(net.thunderbird.components.core.logging/LogLevel): kotlin/Boolean // net.thunderbird.components.core.logging/LogSink.canLog|canLog(net.thunderbird.components.core.logging.LogLevel){}[0]
+}
+
+abstract interface net.thunderbird.components.core.logging/Logger { // net.thunderbird.components.core.logging/Logger|null[0]
+    abstract fun debug(kotlin/String, kotlin/Throwable? = ..., kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/Logger.debug|debug(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    abstract fun error(kotlin/String, kotlin/Throwable? = ..., kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/Logger.error|error(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    abstract fun info(kotlin/String, kotlin/Throwable? = ..., kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/Logger.info|info(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    abstract fun verbose(kotlin/String, kotlin/Throwable? = ..., kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/Logger.verbose|verbose(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    abstract fun warn(kotlin/String, kotlin/Throwable? = ..., kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/Logger.warn|warn(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+}
+
+final class net.thunderbird.components.core.logging/DefaultLogger : net.thunderbird.components.core.logging/Logger { // net.thunderbird.components.core.logging/DefaultLogger|null[0]
+    constructor <init>(net.thunderbird.components.core.logging/LogSink, kotlin.time/Clock = ...) // net.thunderbird.components.core.logging/DefaultLogger.<init>|<init>(net.thunderbird.components.core.logging.LogSink;kotlin.time.Clock){}[0]
+
+    final fun debug(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/DefaultLogger.debug|debug(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun error(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/DefaultLogger.error|error(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun info(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/DefaultLogger.info|info(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun verbose(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/DefaultLogger.verbose|verbose(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun warn(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/DefaultLogger.warn|warn(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+}
+
+final class net.thunderbird.components.core.logging/LogEvent { // net.thunderbird.components.core.logging/LogEvent|null[0]
+    constructor <init>(net.thunderbird.components.core.logging/LogLevel, kotlin/String, kotlin/String, kotlin/Throwable? = ..., kotlin/Long) // net.thunderbird.components.core.logging/LogEvent.<init>|<init>(net.thunderbird.components.core.logging.LogLevel;kotlin.String;kotlin.String;kotlin.Throwable?;kotlin.Long){}[0]
+
+    final val level // net.thunderbird.components.core.logging/LogEvent.level|{}level[0]
+        final fun <get-level>(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogEvent.level.<get-level>|<get-level>(){}[0]
+    final val message // net.thunderbird.components.core.logging/LogEvent.message|{}message[0]
+        final fun <get-message>(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.message.<get-message>|<get-message>(){}[0]
+    final val tag // net.thunderbird.components.core.logging/LogEvent.tag|{}tag[0]
+        final fun <get-tag>(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.tag.<get-tag>|<get-tag>(){}[0]
+    final val throwable // net.thunderbird.components.core.logging/LogEvent.throwable|{}throwable[0]
+        final fun <get-throwable>(): kotlin/Throwable? // net.thunderbird.components.core.logging/LogEvent.throwable.<get-throwable>|<get-throwable>(){}[0]
+    final val timestamp // net.thunderbird.components.core.logging/LogEvent.timestamp|{}timestamp[0]
+        final fun <get-timestamp>(): kotlin/Long // net.thunderbird.components.core.logging/LogEvent.timestamp.<get-timestamp>|<get-timestamp>(){}[0]
+
+    final fun component1(): net.thunderbird.components.core.logging/LogLevel // net.thunderbird.components.core.logging/LogEvent.component1|component1(){}[0]
+    final fun component2(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.component2|component2(){}[0]
+    final fun component3(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.component3|component3(){}[0]
+    final fun component4(): kotlin/Throwable? // net.thunderbird.components.core.logging/LogEvent.component4|component4(){}[0]
+    final fun component5(): kotlin/Long // net.thunderbird.components.core.logging/LogEvent.component5|component5(){}[0]
+    final fun copy(net.thunderbird.components.core.logging/LogLevel = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Throwable? = ..., kotlin/Long = ...): net.thunderbird.components.core.logging/LogEvent // net.thunderbird.components.core.logging/LogEvent.copy|copy(net.thunderbird.components.core.logging.LogLevel;kotlin.String;kotlin.String;kotlin.Throwable?;kotlin.Long){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // net.thunderbird.components.core.logging/LogEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // net.thunderbird.components.core.logging/LogEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // net.thunderbird.components.core.logging/LogEvent.toString|toString(){}[0]
+}
+
+final class net.thunderbird.components.core.logging/ToggleableLogger : net.thunderbird.components.core.logging/Logger, net.thunderbird.components.core.logging/LoggingControl { // net.thunderbird.components.core.logging/ToggleableLogger|null[0]
+    constructor <init>(net.thunderbird.components.core.logging/Logger, kotlin/Boolean = ...) // net.thunderbird.components.core.logging/ToggleableLogger.<init>|<init>(net.thunderbird.components.core.logging.Logger;kotlin.Boolean){}[0]
+
+    final fun debug(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.debug|debug(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun error(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.error|error(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun info(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.info|info(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun setEnabled(kotlin/Boolean) // net.thunderbird.components.core.logging/ToggleableLogger.setEnabled|setEnabled(kotlin.Boolean){}[0]
+    final fun verbose(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.verbose|verbose(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+    final fun warn(kotlin/String, kotlin/Throwable?, kotlin/Function0<kotlin/String>) // net.thunderbird.components.core.logging/ToggleableLogger.warn|warn(kotlin.String;kotlin.Throwable?;kotlin.Function0<kotlin.String>){}[0]
+}
+
+final object net.thunderbird.components.core.logging/Logging { // net.thunderbird.components.core.logging/Logging|null[0]
+    final fun create(net.thunderbird.components.core.logging/LogLevel = ...): net.thunderbird.components.core.logging/Logger // net.thunderbird.components.core.logging/Logging.create|create(net.thunderbird.components.core.logging.LogLevel){}[0]
+}
+
+final fun net.thunderbird.components.core.logging.composite/CompositeLogSink(net.thunderbird.components.core.logging/LogLevelProvider, net.thunderbird.components.core.logging.composite/CompositeLogSinkManager = ..., kotlin.collections/List<net.thunderbird.components.core.logging/LogSink> = ...): net.thunderbird.components.core.logging.composite/CompositeLogSink // net.thunderbird.components.core.logging.composite/CompositeLogSink|CompositeLogSink(net.thunderbird.components.core.logging.LogLevelProvider;net.thunderbird.components.core.logging.composite.CompositeLogSinkManager;kotlin.collections.List<net.thunderbird.components.core.logging.LogSink>){}[0]
+final fun net.thunderbird.components.core.logging.console/ConsoleLogSink(net.thunderbird.components.core.logging/LogLevel = ...): net.thunderbird.components.core.logging.console/ConsoleLogSink // net.thunderbird.components.core.logging.console/ConsoleLogSink|ConsoleLogSink(net.thunderbird.components.core.logging.LogLevel){}[0]
