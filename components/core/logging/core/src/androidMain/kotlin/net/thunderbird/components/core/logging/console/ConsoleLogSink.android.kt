@@ -12,7 +12,7 @@ import net.thunderbird.components.core.logging.LogLevel
 
 public actual fun ConsoleLogSink(level: LogLevel): ConsoleLogSink = AndroidConsoleLogSink(level)
 
-private const val MAX_LOG_LENGTH = 4000
+private const val MAX_LOG_LINE_LENGTH = 4000
 private const val LEGACY_TAG_LENGTH = 23
 
 private class AndroidConsoleLogSink(
@@ -36,7 +36,7 @@ internal data class FormattedAndroidLog(
 )
 
 internal fun formatAndroidLog(event: LogEvent, tag: String, legacyTagLimit: Boolean): FormattedAndroidLog {
-    val message = event.message + event.throwable?.let { "\n${it.stackTraceToString()}" }.orEmpty()
+    val message = event.message + event.throwable?.let { "\n${Log.getStackTraceString(it)}" }.orEmpty()
     val priority = when (event.level) {
         LogLevel.VERBOSE -> Log.VERBOSE
         LogLevel.DEBUG -> Log.DEBUG
@@ -48,7 +48,7 @@ internal fun formatAndroidLog(event: LogEvent, tag: String, legacyTagLimit: Bool
         priority = priority,
         tag = if (legacyTagLimit) tag.take(LEGACY_TAG_LENGTH) else tag,
         chunks = message.split('\n').flatMap { line ->
-            if (line.isEmpty()) listOf("") else line.chunked(MAX_LOG_LENGTH)
+            if (line.isEmpty()) listOf("") else line.chunked(MAX_LOG_LINE_LENGTH)
         },
     )
 }
