@@ -18,7 +18,7 @@ object ProjectConfig {
         // Only needed for application
         const val sdkTarget = 35
 
-        const val sdkCompile = 36
+        const val sdkCompile = 37
     }
 
     object Compiler {
