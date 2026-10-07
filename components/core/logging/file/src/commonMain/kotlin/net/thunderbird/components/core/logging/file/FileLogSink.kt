@@ -9,6 +9,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,7 +24,11 @@ import net.thunderbird.components.core.logging.LogLevel
 import net.thunderbird.components.core.logging.LogSink
 import net.thunderbird.components.core.logging.LoggingErrorReporter
 
+@Suppress("InjectDispatcher") // Filesystem writes need a platform-appropriate dispatcher.
+internal expect val fileWriteDispatcher: CoroutineDispatcher
+
 private const val LOG_BUFFER_COUNT = 4
+private const val LOG_TAG_WIDTH = 25
 
 /** A [LogSink] that writes log events to a file. */
 public interface FileLogSink : LogSink {
@@ -47,6 +52,7 @@ public expect fun FileLogSink(
     level: LogLevel,
     file: PlatformFile,
     errorReporter: LoggingErrorReporter = LoggingErrorReporter { },
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ): FileLogSink
 
 internal class BufferedFileLogSink(
@@ -106,7 +112,11 @@ internal class BufferedFileLogSink(
     private fun LogEvent.format(): String {
         val instant = Instant.fromEpochMilliseconds(timestamp)
         val dateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        val throwableText = throwable?.let { "\n${it.stackTraceToString()}" }.orEmpty()
-        return "${LocalDateTime.Formats.ISO.format(dateTime)} [$level] [$tag] $message$throwableText"
+        val paddedLevel = level.toString().padEnd(LogLevel.VERBOSE.name.length)
+        val prefix = "${LocalDateTime.Formats.ISO.format(dateTime)} [$paddedLevel] [${tag.padEnd(LOG_TAG_WIDTH)}]"
+        val throwableText = throwable?.let {
+            "\n${it.stackTraceToString().prependIndent(" ".repeat(prefix.length + 1))}"
+        }.orEmpty()
+        return "$prefix $message$throwableText"
     }
 }

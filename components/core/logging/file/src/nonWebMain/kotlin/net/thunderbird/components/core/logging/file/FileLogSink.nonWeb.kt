@@ -7,9 +7,12 @@ package net.thunderbird.components.core.logging.file
 
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.copyTo
-import io.github.vinceglb.filekit.exists
-import io.github.vinceglb.filekit.readString
+import io.github.vinceglb.filekit.sink
 import io.github.vinceglb.filekit.writeString
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import kotlinx.io.buffered
+import kotlinx.io.writeString
 import net.thunderbird.components.core.logging.LogLevel
 import net.thunderbird.components.core.logging.LoggingErrorReporter
 
@@ -17,10 +20,16 @@ public actual fun FileLogSink(
     level: LogLevel,
     file: PlatformFile,
     errorReporter: LoggingErrorReporter,
+    defaultDispatcher: CoroutineDispatcher,
 ): FileLogSink = BufferedFileLogSink(
     level = level,
-    append = { content -> file.writeString(if (file.exists()) file.readString() + content else content) },
+    append = { content ->
+        withContext(fileWriteDispatcher) {
+            file.sink(append = true).buffered().use { it.writeString(content) }
+        }
+    },
     copyTo = { destination -> file.copyTo(destination) },
     clear = { file.writeString("") },
     errorReporter = errorReporter,
+    coroutineContext = defaultDispatcher,
 )

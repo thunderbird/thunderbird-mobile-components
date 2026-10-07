@@ -8,7 +8,7 @@ package net.thunderbird.components.core.logging.file
 import de.infix.testBalloon.framework.core.testSuite
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
-import java.io.File
+import io.github.vinceglb.filekit.writeString
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -19,16 +19,18 @@ import net.thunderbird.components.core.logging.LogLevel
 import net.thunderbird.components.core.testing.temporaryDirectoryFixture
 
 private const val TAG = "BufferedFileLogSinkTest"
+private const val EVENTS_TO_FLUSH = 5
 
 @Suppress("InjectDispatcher", "UnnamedParameterUse")
 val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
     temporaryDirectoryFixture(prefix = "file-log-sink-test-").asParameterForEach {
         test("flush writes events and export clears the log file") { directory ->
-            val logFile = PlatformFile(File(directory.toString(), "log.txt"))
-            val exportedFile = PlatformFile(File(directory.toString(), "exported.txt"))
+            val logFile = PlatformFile(PlatformFile(directory), "log.txt")
+            val exportedFile = PlatformFile(PlatformFile(directory), "exported.txt")
             val sink = FileLogSink(
                 level = LogLevel.INFO,
                 file = logFile,
+                defaultDispatcher = Dispatchers.Unconfined,
             )
 
             sink.log(
@@ -49,8 +51,49 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             assertEquals("", logFile.readString())
         }
 
+        test("flush appends to an existing file") { directory ->
+            val logFile = PlatformFile(PlatformFile(directory), "log.txt")
+            logFile.writeString("Existing content\n")
+            val sink = FileLogSink(level = LogLevel.INFO, file = logFile, defaultDispatcher = Dispatchers.Unconfined)
+
+            sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "New event", timestamp = 0))
+            sink.flush()
+
+            val content = logFile.readString()
+            assertTrue(content.startsWith("Existing content\n"))
+            assertContains(content, "New event")
+        }
+
+        test("formats aligned levels and stack traces") { _ ->
+            val appended = mutableListOf<String>()
+            val sink = BufferedFileLogSink(
+                level = LogLevel.INFO,
+                append = appended::add,
+                copyTo = {},
+                clear = {},
+                errorReporter = { throw it },
+                coroutineContext = Dispatchers.Unconfined,
+            )
+            sink.log(
+                LogEvent(
+                    level = LogLevel.ERROR,
+                    tag = "Short",
+                    message = "Failure",
+                    throwable = IllegalStateException("broken"),
+                    timestamp = 0,
+                ),
+            )
+            sink.flush()
+
+            val lines = appended.single().lines()
+            assertContains(lines.first(), "[ERROR  ] [Short")
+            assertContains(lines.first(), "] Failure")
+            assertTrue(lines[1].startsWith(" ".repeat(lines.first().indexOf("Failure"))))
+            assertContains(lines[1], "IllegalStateException: broken")
+        }
+
         test("export preserves the source log") { directory ->
-            val destination = PlatformFile(File(directory.toString(), "exported.txt"))
+            val destination = PlatformFile(PlatformFile(directory), "exported.txt")
             val copiedDestinations = mutableListOf<PlatformFile>()
             val sink = BufferedFileLogSink(
                 level = LogLevel.INFO,
@@ -77,7 +120,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
                 coroutineContext = Dispatchers.Unconfined,
             )
 
-            repeat(5) { index ->
+            repeat(EVENTS_TO_FLUSH) { index ->
                 sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event $index", timestamp = 0))
             }
 
@@ -96,7 +139,9 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
                 coroutineContext = Dispatchers.Unconfined + CoroutineExceptionHandler { _, _ -> },
             )
 
-            repeat(5) { sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event", timestamp = 0)) }
+            repeat(EVENTS_TO_FLUSH) {
+                sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event", timestamp = 0))
+            }
 
             assertTrue(reportedErrors.single() is IllegalStateException)
         }

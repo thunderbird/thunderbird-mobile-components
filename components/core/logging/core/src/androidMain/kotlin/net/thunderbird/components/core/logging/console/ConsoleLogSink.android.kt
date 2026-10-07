@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
+import org.jetbrains.annotations.VisibleForTesting
 
 public actual fun ConsoleLogSink(level: LogLevel): ConsoleLogSink = AndroidConsoleLogSink(level)
 
@@ -35,8 +36,14 @@ internal data class FormattedAndroidLog(
     val chunks: List<String>,
 )
 
-internal fun formatAndroidLog(event: LogEvent, tag: String, legacyTagLimit: Boolean): FormattedAndroidLog {
-    val message = event.message + event.throwable?.let { "\n${Log.getStackTraceString(it)}" }.orEmpty()
+@VisibleForTesting
+internal fun formatAndroidLog(
+    event: LogEvent,
+    tag: String,
+    legacyTagLimit: Boolean,
+    stackTraceString: (Throwable) -> String = Log::getStackTraceString,
+): FormattedAndroidLog {
+    val message = event.message + event.throwable?.let { "\n${stackTraceString(it)}" }.orEmpty()
     val priority = when (event.level) {
         LogLevel.VERBOSE -> Log.VERBOSE
         LogLevel.DEBUG -> Log.DEBUG

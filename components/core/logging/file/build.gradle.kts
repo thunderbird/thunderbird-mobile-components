@@ -14,9 +14,10 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
         common {
-            group("commonJvm") {
+            group("nonWeb") {
                 withCompilations { it is KotlinMultiplatformAndroidCompilation }
                 withJvm()
+                withNative()
             }
         }
     }
@@ -28,7 +29,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
         }
 
-        jvmTest.dependencies {
+        getByName("nonWebTest").dependencies {
             implementation(projects.components.core.testing)
         }
     }

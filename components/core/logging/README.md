@@ -153,7 +153,14 @@ Initialize FileKit first on platforms that require it, and create the file's par
 
 Call `flush()` before shutdown. `export(destination)` preserves the log; `exportAndClear(destination)` clears it only after a successful copy. Provide a `LoggingErrorReporter` to observe asynchronous write failures.
 
-File logging is supported on Android, JVM, and iOS. FileKit does not provide file writing on WebAssembly, so creating `FileLogSink` there throws an `UnsupportedOperationException`.
+### Platform support
+
+| Sink | Android | JVM | iOS (device and simulator) | WebAssembly (Wasm/JS) |
+|---|---|---|---|---|
+| `ConsoleLogSink` (`core`) | Supported | Supported | Supported | Supported |
+| `FileLogSink` (`file`) | Supported | Supported | Supported | Unsupported |
+
+Wasm/JS file logging is unsupported: creating `FileLogSink` throws `UnsupportedOperationException`. Supporting browser file APIs would require a separate web-specific design rather than the same filesystem behavior as the non-web sink.
 
 ## Testing
 

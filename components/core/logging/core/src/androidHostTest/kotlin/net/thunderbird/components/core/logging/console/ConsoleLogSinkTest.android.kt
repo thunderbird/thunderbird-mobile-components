@@ -28,7 +28,12 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
     test("includes throwable stack trace") {
         val error = IllegalStateException("failure")
 
-        val formatted = formatAndroidLog(event(message = "Unable to continue", throwable = error), "TestTag", false)
+        val formatted = formatAndroidLog(
+            event = event(message = "Unable to continue", throwable = error),
+            tag = "TestTag",
+            legacyTagLimit = false,
+            stackTraceString = Throwable::stackTraceToString,
+        )
 
         assertThat(formatted.chunks.first()).isEqualTo("Unable to continue")
         assertThat(formatted.chunks.any { it.contains("IllegalStateException: failure") }).isEqualTo(true)

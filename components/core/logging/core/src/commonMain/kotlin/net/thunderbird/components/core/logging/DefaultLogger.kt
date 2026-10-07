@@ -24,19 +24,17 @@ public class DefaultLogger(
         throwable: Throwable? = null,
         message: () -> LogMessage,
     ) {
-        sink.let { currentSink ->
-            if (currentSink.canLog(level)) {
-                val timestamp = clock.now().toEpochMilliseconds()
-                currentSink.log(
-                    event = LogEvent(
-                        level = level,
-                        tag = tag,
-                        message = message(),
-                        throwable = throwable,
-                        timestamp = timestamp,
-                    ),
-                )
-            }
+        if (sink.canLog(level)) {
+            val timestamp = clock.now().toEpochMilliseconds()
+            sink.log(
+                event = LogEvent(
+                    level = level,
+                    tag = tag,
+                    message = message(),
+                    throwable = throwable,
+                    timestamp = timestamp,
+                ),
+            )
         }
     }
 
