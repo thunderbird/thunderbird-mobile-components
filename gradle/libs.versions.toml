@@ -19,6 +19,7 @@ dependencyCheckPlugin = "0.64.0"
 detektPlugin = "2.0.0-alpha.6"
 detektPluginCompose = "0.6.7"
 dokkaPlugin = "2.2.0"
+fileKit = "0.16.0"
 gradle = "9.7.1"
 gradleSha256 = "92c1a136d76b5017732a66d2e0a648ebff00dd3687d8bff0d0047a1bd904fdf2"
 composeMultiplatform = "1.12.1"
@@ -76,6 +77,7 @@ androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-mani
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
 detekt-plugin-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektPluginCompose" }
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "fileKit" }
 jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 jetbrains-compose-components-ui-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
