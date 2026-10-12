@@ -97,15 +97,25 @@ Example:
 <component>-1.0.0
 ```
 
-Trigger the `Publish Release` workflow from `main` and provide the component path, for example
+Trigger the **Publish - Release a Component** workflow from `main` and provide the component path, for example
 `:components:bom`.
 
 The workflow creates the release tag locally, writes GitHub Release notes from the finalized component changelog,
 publishes the component to Maven Central, then pushes the tag and creates the GitHub Release after publishing succeeds.
 
-For a coordinated release of multiple components, run the `Publish Release` workflow once per component from the same
-merged `main` commit. Each run creates the component-specific tag, GitHub Release, and Maven Central publication for
-that component.
+For a BOM release train, run **Publish - Release All Components** from the merged `main` commit instead. It lists the
+project constraints in `components/bom/build.gradle.kts` (`./gradlew -q :components:bom:printReleaseGroups`), groups
+them by their nearest `version.properties`, and releases each group with its own tag and GitHub Release, the BOM last.
+Prepare and finalize the changelog for each group you bumped (including the BOM) in the release PR.
+
+A group whose tag already exists is skipped if nothing in its version directory changed since that tag, so unchanged
+components need no version bump and a failed run can be rerun. If a group changed since its tag, the run stops before
+publishing anything; bump its version and finalize its changelog. Every group is validated before the first one is
+published.
+
+Each group is tagged and its GitHub Release created right after it is published. Maven Central rejects versions that
+already exist, so a rerun never republishes a group. If publishing succeeds but pushing the tag fails, push the tag
+and create the GitHub Release manually. Published groups cannot be rolled back.
 
 The workflow performs these Gradle steps:
 
@@ -153,7 +163,10 @@ the release commit so the release tag continues to point at the exact released v
 Snapshots are published from an untagged `main` commit. Do not create a release pull request, do not finalize the
 changelog, and do not create a release tag for a snapshot.
 
-The `Publish Snapshot` workflow is triggered manually from `main` and publishes all publishable components.
+The **Publish - Snapshot All Components** workflow is triggered manually from `main` and publishes the components of the
+BOM release train, the same projects as **Publish - Release All Components**. `printReleaseGroups` fails if a project
+under `components/` is missing from the BOM constraints, so every component is published as a snapshot and released with
+the BOM.
 
 The workflow skips publishing when the mutable `snapshot/latest` marker tag already points at the current `main`
 commit. After a successful publish, the workflow moves `snapshot/latest` to the published commit.
@@ -165,15 +178,12 @@ manifest is written to the workflow step summary.
 To preview the manifest locally:
 
 ```bash
-scripts/ci/write-snapshot-manifest.sh
+./gradlew -q :components:bom:printReleaseGroups | grep -v '^\[' > release-groups.txt
+scripts/ci/write-snapshot-manifest.sh release-groups.txt
 ```
 
-The workflow performs these Gradle steps:
-
-```bash
-./gradlew validateSnapshotVersionForPublishing
-./gradlew publishToMavenCentral
-```
+The workflow runs `validateSnapshotVersionForPublishing` and then `publishToMavenCentral` for each project listed by
+`printReleaseGroups`, each in a single Gradle invocation.
 
 For local verification, publish to Maven Local instead:
 

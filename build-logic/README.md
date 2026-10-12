@@ -32,6 +32,10 @@ Supportive/quality and tooling plugins:
   - Common tasks: `./gradlew koverHtmlReport`, `./gradlew koverXmlReport`, `./gradlew koverVerify`
 - `net.thunderbird.gradle.plugin.publishing` — Configures publishing (Maven coordinates, POM metadata, and common
   repositories like `mavenLocal()` and a local build repo under `build/maven-repo`)
+- `net.thunderbird.gradle.plugin.bom` — Publishes a Java platform BOM with changelog, versioning, and publishing.
+  - `printReleaseGroups`: prints one `<tag> <version dir> <project path>...` line per version group of the BOM
+    constraints, followed by the BOM itself. Fails if a project under `components/` is missing from the BOM. Used by
+    the **Publish - Release All Components** and **Publish - Snapshot All Components** workflows.
 - `net.thunderbird.gradle.plugin.versioning` — Reads and updates component versions from the nearest
   `version.properties`.
   - Version resolution: builds from a commit tagged with `<component>-<version>` use `<version>`;
