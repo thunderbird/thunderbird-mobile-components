@@ -1,0 +1,46 @@
+name: Validate - Release
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/publish-*.yml'
+      - '.github/workflows/validate-release.yml'
+      - 'build-logic/**'
+      - 'components/bom/**'
+      - 'components/**/CHANGELOG.md'
+      - 'components/**/version.properties'
+      - 'scripts/ci/publish-snapshot.sh'
+      - 'scripts/ci/release-all.sh'
+      - 'scripts/ci/write-snapshot-manifest.sh'
+      - 'settings.gradle.kts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-release:
+    name: Dry run release and snapshot publishing
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+
+      - name: Dry run snapshot
+        run: bash scripts/ci/publish-snapshot.sh --dry-run
+
+      - name: Dry run release all
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/release-all.sh --dry-run
