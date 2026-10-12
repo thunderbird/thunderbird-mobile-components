@@ -90,6 +90,7 @@ abstract class WriteReleaseNotesTask : DefaultTask() {
     private fun StringBuilder.appendEntry(entry: ChangelogEntry) {
         if (entry.text.isNotBlank()) {
             appendLine("- ${entry.text}")
+            entry.subEntries.forEach { subEntry -> appendLine("  - $subEntry") }
         }
     }
 

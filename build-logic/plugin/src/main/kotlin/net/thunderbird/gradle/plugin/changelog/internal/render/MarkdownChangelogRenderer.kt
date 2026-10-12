@@ -66,6 +66,7 @@ internal class MarkdownChangelogRenderer : ChangelogRenderer {
             entries.forEach { entry ->
                 if (entry.text.isNotBlank()) {
                     appendLine("- ${entry.text}")
+                    entry.subEntries.forEach { subEntry -> appendLine("  - $subEntry") }
                 }
             }
         }

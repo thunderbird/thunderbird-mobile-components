@@ -44,6 +44,34 @@ class UpdateChangelogTaskTest {
     }
 
     @Test
+    fun `update preserves nested bullet entries`() {
+        val repo = createRepositoryWithMergedComponentCommits()
+        repo.componentChangelogFile.writeText(
+            """
+            # Changelog
+
+            ## Unreleased
+
+            ### Chores
+
+            - update build-plugin ([#4](https://github.com/thunderbird/thunderbird-mobile-components/pull/4))
+              - Explain the component.
+            """.trimIndent(),
+        )
+        val task = createTask(repo, taskName = "${UpdateChangelogTask.TASK_NAME}WithSubEntries")
+
+        task.update()
+        task.update()
+
+        val changelog = repo.componentChangelogFile.readText()
+        assertThat(changelog).contains(
+            "- update build-plugin ([#4](https://github.com/thunderbird/thunderbird-mobile-components/pull/4))\n" +
+                "  - Explain the component.",
+        )
+        assertThat(Regex("^- update build-plugin ", RegexOption.MULTILINE).findAll(changelog).count()).isEqualTo(1)
+    }
+
+    @Test
     fun `update uses latest release tag as exact lower bound`() {
         // Arrange
         val repo = createRepositoryWithReleaseTag()
