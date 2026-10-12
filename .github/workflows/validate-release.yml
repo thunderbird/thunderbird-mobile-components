@@ -1,18 +1,12 @@
 name: Validate - Release
 
+# Runs only for release pull requests, which finalize component changelogs. Between releases the
+# component versions have no finalized changelog section, so a release dry run fails by design.
 on:
   pull_request:
     paths:
-      - '.github/workflows/publish-*.yml'
       - '.github/workflows/validate-release.yml'
-      - 'build-logic/**'
-      - 'components/bom/**'
       - 'components/**/CHANGELOG.md'
-      - 'components/**/version.properties'
-      - 'scripts/ci/publish-snapshot.sh'
-      - 'scripts/ci/release-all.sh'
-      - 'scripts/ci/write-snapshot-manifest.sh'
-      - 'settings.gradle.kts'
   workflow_dispatch:
 
 permissions:
@@ -24,7 +18,7 @@ concurrency:
 
 jobs:
   validate-release:
-    name: Dry run release and snapshot publishing
+    name: Dry run release
     runs-on: macos-26
     timeout-minutes: 60
 
@@ -36,9 +30,6 @@ jobs:
 
       - name: Setup Gradle environment
         uses: ./.github/actions/setup-gradle
-
-      - name: Dry run snapshot
-        run: bash scripts/ci/publish-snapshot.sh --dry-run
 
       - name: Dry run release all
         env:

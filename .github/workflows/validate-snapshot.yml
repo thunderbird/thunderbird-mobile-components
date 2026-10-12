@@ -1,0 +1,39 @@
+name: Validate - Snapshot
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/publish-snapshot.yml'
+      - '.github/workflows/validate-snapshot.yml'
+      - 'build-logic/**'
+      - 'components/bom/**'
+      - 'components/**/version.properties'
+      - 'scripts/ci/publish-snapshot.sh'
+      - 'scripts/ci/write-snapshot-manifest.sh'
+      - 'settings.gradle.kts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-snapshot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-snapshot:
+    name: Dry run snapshot
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Gradle environment
+        uses: ./.github/actions/setup-gradle
+
+      - name: Dry run snapshot
+        run: bash scripts/ci/publish-snapshot.sh --dry-run
