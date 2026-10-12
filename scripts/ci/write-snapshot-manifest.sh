@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-output="${1:-/dev/stdout}"
+# Usage: write-snapshot-manifest.sh <release groups file> [output]
+# The release groups file is the output of `./gradlew -q :components:bom:printReleaseGroups`.
+groups_file="$1"
+output="${2:-/dev/stdout}"
 repository_url="${SNAPSHOT_REPOSITORY_URL:-https://central.sonatype.com/repository/maven-snapshots/}"
 commit="${GITHUB_SHA:-$(git rev-parse HEAD)}"
 
@@ -15,33 +18,13 @@ commit="${GITHUB_SHA:-$(git rev-parse HEAD)}"
   echo "| --- | --- |"
 } > "${output}"
 
-while IFS= read -r build_file; do
-  project_dir="${build_file%/build.gradle.kts}"
-  project_path=":${project_dir//\//:}"
-  artifact_id="${project_dir##*/}"
-  parent_path="${project_dir%/*}"
-  group_id="net.thunderbird.${parent_path//\//.}"
-
-  version_dir="${project_dir}"
-  version_file=""
-  while [[ "${version_dir}" != "." && "${version_dir}" != "/" ]]; do
-    if [[ -f "${version_dir}/version.properties" ]]; then
-      version_file="${version_dir}/version.properties"
-      break
-    fi
-    version_dir="$(dirname "${version_dir}")"
+while read -r tag _ paths; do
+  version="${tag##*-}-SNAPSHOT"
+  for project_path in ${paths}; do
+    artifact_id="${project_path##*:}"
+    parent_path="${project_path%:*}"
+    group_id="net.thunderbird${parent_path//:/.}"
+    metadata_url="${repository_url%/}/${group_id//.//}/${artifact_id}/${version}/maven-metadata.xml"
+    echo "| \`${project_path}\` | [\`${group_id}:${artifact_id}:${version}\`](${metadata_url}) |" >> "${output}"
   done
-
-  if [[ -z "${version_file}" ]]; then
-    echo "No version.properties found for ${project_path}" >&2
-    exit 1
-  fi
-
-  # shellcheck disable=SC1090
-  source "${version_file}"
-  version="${MAJOR}.${MINOR}.${PATCH}-SNAPSHOT"
-
-  metadata_path="${group_id//.//}/${artifact_id}/${version}/maven-metadata.xml"
-  metadata_url="${repository_url%/}/${metadata_path}"
-  echo "| \`${project_path}\` | [\`${group_id}:${artifact_id}:${version}\`](${metadata_url}) |" >> "${output}"
-done < <(find components -name build.gradle.kts -print | sort)
+done < "${groups_file}"

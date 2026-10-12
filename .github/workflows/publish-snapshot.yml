@@ -1,4 +1,4 @@
-name: Publish - Snapshot
+name: Publish - Snapshot All Components
 
 on:
   workflow_dispatch:
@@ -60,8 +60,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          ./gradlew validateSnapshotVersionForPublishing
-          ./gradlew publishToMavenCentral
+          # Publish exactly the BOM release train, the same projects as Publish - Release All Components.
+          groups_file="${RUNNER_TEMP}/release-groups.txt"
+          ./gradlew -q :components:bom:printReleaseGroups | grep -E '^[a-zA-Z0-9._-]+-[0-9]+\.[0-9]+\.[0-9]+ ' > "${groups_file}"
+          read -r -a projects <<< "$(cut -d ' ' -f 3- "${groups_file}" | tr '\n' ' ')"
+
+          ./gradlew "${projects[@]/%/:validateSnapshotVersionForPublishing}"
+          ./gradlew "${projects[@]/%/:publishToMavenCentral}"
 
       - name: Write snapshot manifest
         if: steps.snapshot-marker.outputs.publish == 'true'
@@ -69,7 +74,7 @@ jobs:
           set -euo pipefail
 
           manifest="${RUNNER_TEMP}/snapshot-manifest.md"
-          scripts/ci/write-snapshot-manifest.sh "${manifest}"
+          scripts/ci/write-snapshot-manifest.sh "${RUNNER_TEMP}/release-groups.txt" "${manifest}"
           cat "${manifest}" >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Update snapshot marker
