@@ -118,9 +118,10 @@ already exist, so a rerun never republishes a group. If publishing succeeds but 
 and create the GitHub Release manually. Published groups cannot be rolled back.
 
 To check a release train without publishing, run the same steps as a dry run. It writes release notes, creates the
-release tags locally, and runs the stable version check, then deletes the local tags. It skips publishing, pushing
-tags, and creating GitHub Releases. The **Validate - Release** workflow runs it on pull requests that touch the release
-setup, versions, or changelogs, and can be triggered manually on `main` before a release.
+release tags locally, and runs the stable version check, then deletes the local tags. It skips publishing, pushing tags,
+and creating GitHub Releases. The **Validate - Release** workflow runs it on release pull requests, which change a
+`CHANGELOG.md`, and can be triggered manually on `main` before a release. Between releases it fails by design, because
+the bumped versions have no finalized changelog section yet.
 
 ```bash
 scripts/ci/release-all.sh --dry-run
@@ -189,7 +190,7 @@ The workflow runs `scripts/ci/publish-snapshot.sh`, which runs `validateSnapshot
 the manifest to `$RUNNER_TEMP/snapshot-manifest.md`.
 
 To check snapshot publishing and preview the manifest without publishing, run it as a dry run. The **Validate -
-Release** workflow runs this dry run on pull requests too.
+Snapshot** workflow runs this dry run on pull requests that touch the publishing setup or component versions.
 
 ```bash
 RUNNER_TEMP="$PWD/build" scripts/ci/publish-snapshot.sh --dry-run
