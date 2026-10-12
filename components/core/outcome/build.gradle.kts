@@ -6,3 +6,5 @@
 plugins {
     alias(libs.plugins.tb.library.kmp)
 }
+
+description = "Result type with a typed, domain-specific failure for Thunderbird mobile components."

@@ -82,7 +82,12 @@ class PublishingPlugin : Plugin<Project> {
                 version = version.toString(),
             )
 
+            val pomName = "${project.group}:${project.name}"
+            val pomDescription = provider { project.description }
             pom {
+                // Maven Central requires a name and description in every POM.
+                name.set(pomName)
+                description.set(pomDescription)
                 inceptionYear.set(ProjectConfig.Publishing.year)
                 url.set(ProjectConfig.Publishing.url)
 
@@ -123,6 +128,7 @@ class PublishingPlugin : Plugin<Project> {
             version.set(project.version.toString())
             projectPath.set(currentProjectPath)
             snapshotRequired.set(false)
+            pomDescription.set(provider { project.description })
         }
         tasks.register<ValidatePublicationVersionTask>("validateSnapshotVersionForPublishing") {
             group = "publishing"
@@ -130,6 +136,7 @@ class PublishingPlugin : Plugin<Project> {
             version.set(project.version.toString())
             projectPath.set(currentProjectPath)
             snapshotRequired.set(true)
+            pomDescription.set(provider { project.description })
         }
     }
 }

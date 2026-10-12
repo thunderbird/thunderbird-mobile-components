@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.tb.library.kmp)
 }
 
+description = "Test logger and log level manager for the Thunderbird mobile components logging API."
+
 kotlin {
     sourceSets {
         commonMain.dependencies {

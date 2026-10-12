@@ -141,11 +141,42 @@ class PublishingPluginTest {
         failure.messageContains("Daily snapshots require a SNAPSHOT version")
     }
 
+    @Test
+    fun `validateStableVersionForPublishing rejects missing description`() {
+        // Arrange
+        val fixture = createVersionedPublishingProjectFixture(releaseTagged = true, description = null)
+
+        // Act
+        val failure = assertFailure {
+            fixture.project.executeTask("validateStableVersionForPublishing")
+        }
+
+        // Assert
+        failure.messageContains("Maven Central requires a POM description")
+    }
+
+    @Test
+    fun `validateSnapshotVersionForPublishing rejects missing description`() {
+        // Arrange
+        val fixture = createVersionedPublishingProjectFixture(description = " ")
+
+        // Act
+        val failure = assertFailure {
+            fixture.project.executeTask("validateSnapshotVersionForPublishing")
+        }
+
+        // Assert
+        failure.messageContains("Maven Central requires a POM description")
+    }
+
     private fun createVersionedPublishingProject(): Project {
         return createVersionedPublishingProjectFixture().project
     }
 
-    private fun createVersionedPublishingProjectFixture(releaseTagged: Boolean = false): ProjectFixture {
+    private fun createVersionedPublishingProjectFixture(
+        releaseTagged: Boolean = false,
+        description: String? = "Test component.",
+    ): ProjectFixture {
         val rootDir = temporaryFolder.newFolder("publishing-version-test")
         rootDir.runGit("init")
         rootDir.runGit("config", "user.email", "test@example.com")
@@ -173,6 +204,7 @@ class PublishingPluginTest {
             .build()
         project.plugins.apply(VersioningPlugin::class.java)
         project.plugins.apply(PublishingPlugin::class.java)
+        project.description = description
 
         return ProjectFixture(rootDir, project)
     }
