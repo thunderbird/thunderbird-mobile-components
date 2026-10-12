@@ -51,6 +51,18 @@ class WriteReleaseNotesTaskTest {
     }
 
     @Test
+    fun `writeReleaseNotes preserves nested bullet entries`() {
+        val componentDir = createComponentDir(CHANGELOG_WITH_SUB_ENTRIES)
+        val task = createTask(componentDir)
+
+        task.writeReleaseNotes()
+
+        assertThat(task.outputFile.get().asFile.readText()).contains(
+            "- add feature\n  - Explain feature.\n  - Explain another feature.",
+        )
+    }
+
+    @Test
     fun `writeReleaseNotes accepts matching release version override`() {
         // Arrange
         val componentDir = createComponentDir(CHANGELOG)
@@ -133,6 +145,20 @@ class WriteReleaseNotesTaskTest {
             ### Bug Fixes
 
             - fix bug
+        """.trimIndent()
+
+        private val CHANGELOG_WITH_SUB_ENTRIES = """
+            # Changelog
+
+            ## Unreleased
+
+            ## 1.2.3 - 2026-06-18
+
+            ### Features
+
+            - add feature
+              - Explain feature.
+              - Explain another feature.
         """.trimIndent()
 
         private val CHANGELOG_WITHOUT_RELEASE = """

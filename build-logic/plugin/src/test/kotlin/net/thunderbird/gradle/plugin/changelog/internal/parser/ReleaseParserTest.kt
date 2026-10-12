@@ -43,6 +43,29 @@ class ReleaseParserTest {
     }
 
     @Test
+    fun `parse keeps indented bullets under their parent entry`() {
+        val lines = listOf(
+            "## Unreleased",
+            "",
+            "### Features",
+            "",
+            "- add component",
+            "  - Provide typed failures.",
+            "  - Add mapping helpers.",
+            "- add another component",
+        )
+
+        val release = parser.parse(lines)
+
+        assertThat(release).isNotNull().given { parsed ->
+            val entries = parsed.sections.getValue(SectionType.Features)
+            assertThat(entries.map { it.text }).isEqualTo(listOf("add component", "add another component"))
+            assertThat(entries.first().subEntries).isEqualTo(listOf("Provide typed failures.", "Add mapping helpers."))
+            assertThat(entries.last().subEntries).isEqualTo(emptyList())
+        }
+    }
+
+    @Test
     fun `parse handles bracketed dated release`() {
         // Arrange
         val lines = listOf(

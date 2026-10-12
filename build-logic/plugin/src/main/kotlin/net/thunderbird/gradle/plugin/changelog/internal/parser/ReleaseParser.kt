@@ -39,8 +39,7 @@ internal class ReleaseParser {
         for (block in sectionBlocks) {
             val headerLine = block.firstOrNull() ?: continue
             val sectionType = parseSectionType(headerLine) ?: continue
-            val entries = block.drop(1)
-                .mapNotNull { parseSectionEntryOrNull(it) }
+            val entries = parseEntries(block.drop(1))
             if (entries.isNotEmpty()) {
                 sections.getOrPut(sectionType) { mutableListOf() }.addAll(entries)
             }
@@ -64,12 +63,22 @@ internal class ReleaseParser {
         return SectionType.fromHeader(header)
     }
 
-    private fun parseSectionEntryOrNull(line: String): ChangelogEntry? {
-        val trimmed = line.trim()
-        if (!trimmed.startsWith(CHANGELOG_ENTRY_PREFIX)) return null
-        val text = trimmed.removePrefix(CHANGELOG_ENTRY_PREFIX).trim()
-        if (text.isEmpty()) return null
-        return ChangelogEntry(text = text)
+    private fun parseEntries(lines: List<String>): List<ChangelogEntry> {
+        val entries = mutableListOf<ChangelogEntry>()
+        for (line in lines) {
+            val trimmed = line.trim()
+            if (line.startsWith(SUB_ENTRY_PREFIX) && entries.isNotEmpty()) {
+                val text = trimmed.removePrefix(CHANGELOG_ENTRY_PREFIX).trim()
+                if (text.isNotEmpty()) {
+                    val previous = entries.last()
+                    entries[entries.lastIndex] = previous.copy(subEntries = previous.subEntries + text)
+                }
+            } else if (line.startsWith(CHANGELOG_ENTRY_PREFIX)) {
+                val text = trimmed.removePrefix(CHANGELOG_ENTRY_PREFIX).trim()
+                if (text.isNotEmpty()) entries.add(ChangelogEntry(text))
+            }
+        }
+        return entries
     }
 
     private companion object {
@@ -77,5 +86,6 @@ internal class ReleaseParser {
         const val RELEASE_HEADER_REGEX =
             "^##\\s+(?:\\[(?<bracketedVersion>[^]]+)]|(?<plainVersion>[^-]+?))(?:\\s+-\\s+(?<date>\\d{4}-\\d{2}-\\d{2}))?\\s*$"
         const val CHANGELOG_ENTRY_PREFIX = "- "
+        const val SUB_ENTRY_PREFIX = "  - "
     }
 }

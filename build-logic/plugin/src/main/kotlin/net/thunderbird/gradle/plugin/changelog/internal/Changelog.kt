@@ -37,6 +37,7 @@ internal data class Release(
  */
 internal data class ChangelogEntry(
     val text: String,
+    val subEntries: List<String> = emptyList(),
 )
 
 /**

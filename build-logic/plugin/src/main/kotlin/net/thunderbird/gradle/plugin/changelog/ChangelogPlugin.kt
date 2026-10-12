@@ -34,7 +34,9 @@ class ChangelogPlugin : Plugin<Project> {
                         "CHANGELOG.md will not be created or updated.",
                 )
             } else if (start != versionDir && !(start.parentFile == versionDir && start.name == "core")) {
-                logger.debug("[changelog] Skipping changelog tasks for ${start.path}; version.properties belongs to ${versionDir.path}")
+                logger.debug(
+                    "[changelog] Skipping changelog tasks for ${start.path}; version.properties belongs to ${versionDir.path}",
+                )
             } else {
                 logger.debug("[changelog] Using folder at: ${versionDir.path} for component changelog")
 

@@ -43,6 +43,20 @@ class FinalizeChangelogTaskTest {
     }
 
     @Test
+    fun `finalizeChangelog preserves nested bullet entries`() {
+        val componentDir = createComponentDir(CHANGES_WITH_SUB_ENTRIES)
+        val task = createTask(componentDir, releaseDate = "2026-06-18")
+
+        task.finalizeChangelog()
+
+        val changelog = componentDir.resolve(FileHelper.CHANGELOG_FILE).readText()
+        assertThat(changelog).contains(
+            "## 0.1.0 - 2026-06-18\n\n### Features\n\n- add component\n" +
+                "  - Provide typed failures.\n  - Add mapping helpers.",
+        )
+    }
+
+    @Test
     fun `finalizeChangelog accepts matching release version override`() {
         // Arrange
         val componentDir = createComponentDir(CHANGES_UNDER_UNRELEASED)
@@ -159,6 +173,19 @@ class FinalizeChangelogTaskTest {
             ### Chores
 
             - update build-plugin ([#4](https://github.com/thunderbird/thunderbird-mobile-components/pull/4))
+
+        """.trimIndent()
+
+        private val CHANGES_WITH_SUB_ENTRIES = """
+            # Changelog
+
+            ## Unreleased
+
+            ### Features
+
+            - add component
+              - Provide typed failures.
+              - Add mapping helpers.
 
         """.trimIndent()
 
