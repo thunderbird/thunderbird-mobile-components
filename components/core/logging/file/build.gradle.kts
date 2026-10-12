@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.tb.library.kmp)
 }
 
+description = "File logging sink for the Thunderbird mobile components logging API."
+
 kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {

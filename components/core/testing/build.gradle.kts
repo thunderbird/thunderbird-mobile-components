@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.tb.library.kmp)
 }
 
+description = "Shared test utilities, such as a controllable clock, for Thunderbird mobile components."
+
 kotlin {
     sourceSets {
         commonMain.dependencies {

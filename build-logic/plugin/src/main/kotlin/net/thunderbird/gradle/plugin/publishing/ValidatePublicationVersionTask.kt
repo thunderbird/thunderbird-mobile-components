@@ -9,6 +9,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 
 abstract class ValidatePublicationVersionTask : DefaultTask() {
@@ -22,13 +23,27 @@ abstract class ValidatePublicationVersionTask : DefaultTask() {
     @get:Input
     abstract val snapshotRequired: Property<Boolean>
 
+    @get:Input
+    @get:Optional
+    abstract val pomDescription: Property<String>
+
     @TaskAction
     fun validate() {
+        requirePomDescription()
         val versionString = version.get()
         if (snapshotRequired.get()) {
             requireSnapshotVersion(versionString)
         } else {
             requireStableVersion(versionString)
+        }
+    }
+
+    private fun requirePomDescription() {
+        if (pomDescription.orNull.isNullOrBlank()) {
+            throw GradleException(
+                "Maven Central requires a POM description, but project '${projectPath.get()}' has none. " +
+                    "Set `description = \"...\"` in its build.gradle.kts.",
+            )
         }
     }
 

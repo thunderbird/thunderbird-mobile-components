@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.tb.library.kmp)
 }
 
+description = "Logging API with composite and console sinks for Thunderbird mobile components."
+
 kotlin {
     sourceSets {
         commonMain.dependencies {

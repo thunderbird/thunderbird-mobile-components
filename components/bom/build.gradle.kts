@@ -2,6 +2,8 @@ plugins {
     id("net.thunderbird.gradle.plugin.bom")
 }
 
+description = "Bill of materials that aligns the versions of Thunderbird mobile components."
+
 dependencies {
     constraints {
         api(projects.components.core.outcome)
