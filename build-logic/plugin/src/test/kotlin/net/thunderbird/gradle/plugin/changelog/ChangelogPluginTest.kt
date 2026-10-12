@@ -11,6 +11,10 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import java.io.File
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import net.thunderbird.gradle.plugin.ProjectConfig
 import net.thunderbird.gradle.plugin.changelog.internal.fs.FileHelper
 import net.thunderbird.gradle.plugin.versioning.VersioningPlugin
@@ -27,7 +31,7 @@ class ChangelogPluginTest {
     @Test
     fun `apply registers changelog tasks next to nearest version properties`() {
         // Arrange
-        val fixture = createNestedComponentProject()
+        val fixture = createNestedComponentProject(projectPath = "core")
 
         // Act
         fixture.project.plugins.apply(ChangelogPlugin::class.java)
@@ -49,10 +53,24 @@ class ChangelogPluginTest {
             .isEqualTo(fixture.changelogFile.canonicalFile)
     }
 
+    @OptIn(ExperimentalTime::class)
+    @Test
+    fun `finalizeChangelog defaults to current local date when releaseDate is absent`() {
+        val fixture = createNestedComponentProject("changelog-default-date-test", projectPath = "core")
+        fixture.project.plugins.apply(ChangelogPlugin::class.java)
+        val task = fixture.project.tasks.named(FinalizeChangelogTask.TASK_NAME).get() as FinalizeChangelogTask
+
+        val before = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+        val actual = task.releaseDate.get()
+        val after = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+
+        assertThat(actual in setOf(before, after)).isEqualTo(true)
+    }
+
     @Test
     fun `apply is compatible with versioning plugin version properties`() {
         // Arrange
-        val fixture = createNestedComponentProject("changelog-versioning-plugin-test")
+        val fixture = createNestedComponentProject("changelog-versioning-plugin-test", projectPath = "core")
 
         // Act
         fixture.project.plugins.apply(ChangelogPlugin::class.java)
@@ -63,6 +81,39 @@ class ChangelogPluginTest {
         assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNotNull()
         assertThat(fixture.project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNotNull()
         assertThat(fixture.project.tasks.findByName("versionBumpPatch")).isNotNull()
+    }
+
+    @Test
+    fun `apply registers changelog tasks for core module sharing a version file`() {
+        val fixture = createNestedComponentProject("changelog-core-module-test", projectPath = "core")
+
+        fixture.project.plugins.apply(ChangelogPlugin::class.java)
+
+        assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNotNull()
+        assertThat(fixture.project.tasks.findByName(FinalizeChangelogTask.TASK_NAME)).isNotNull()
+        assertThat(fixture.project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNotNull()
+    }
+
+    @Test
+    fun `apply skips sibling modules sharing a version file`() {
+        val fixture = createNestedComponentProject("changelog-file-module-test", projectPath = "file")
+
+        fixture.project.plugins.apply(ChangelogPlugin::class.java)
+
+        assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNull()
+        assertThat(fixture.project.tasks.findByName(FinalizeChangelogTask.TASK_NAME)).isNull()
+        assertThat(fixture.project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNull()
+    }
+
+    @Test
+    fun `apply skips changelog tasks in deeper nested modules sharing a version file`() {
+        val fixture = createNestedComponentProject("changelog-nested-module-test")
+
+        fixture.project.plugins.apply(ChangelogPlugin::class.java)
+
+        assertThat(fixture.project.tasks.findByName(UpdateChangelogTask.TASK_NAME)).isNull()
+        assertThat(fixture.project.tasks.findByName(FinalizeChangelogTask.TASK_NAME)).isNull()
+        assertThat(fixture.project.tasks.findByName(WriteReleaseNotesTask.TASK_NAME)).isNull()
     }
 
     @Test
@@ -86,10 +137,11 @@ class ChangelogPluginTest {
 
     private fun createNestedComponentProject(
         rootFolderName: String = "changelog-plugin-test",
+        projectPath: String = "nested/module",
     ): ComponentProject {
         val rootDir = temporaryFolder.newFolder(rootFolderName)
         val componentDir = rootDir.resolve("components/bom")
-        val projectDir = componentDir.resolve("nested/module")
+        val projectDir = componentDir.resolve(projectPath)
         projectDir.mkdirs()
         componentDir.resolve(FileHelper.VERSION_FILE).writeText(versionProperties())
 

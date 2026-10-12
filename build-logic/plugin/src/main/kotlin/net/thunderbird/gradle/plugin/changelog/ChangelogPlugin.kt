@@ -16,8 +16,8 @@ import org.gradle.kotlin.dsl.register
  * Plugin that helps maintain a component-oriented CHANGELOG.md.
  *
  * It derives the component group from the directory that contains the nearest
- * version.properties (walking up from the current project directory). This way,
- * multiple modules that share the same nearest version.properties are grouped together.
+ * version.properties (walking up from the current project directory). Changelog tasks
+ * belong to the project at that directory, or its `core` module when the directory itself is not a project.
  */
 class ChangelogPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -33,6 +33,8 @@ class ChangelogPlugin : Plugin<Project> {
                     "[changelog] No version.properties found between ${start.path} and ${root.path}. " +
                         "CHANGELOG.md will not be created or updated.",
                 )
+            } else if (start != versionDir && !(start.parentFile == versionDir && start.name == "core")) {
+                logger.debug("[changelog] Skipping changelog tasks for ${start.path}; version.properties belongs to ${versionDir.path}")
             } else {
                 logger.debug("[changelog] Using folder at: ${versionDir.path} for component changelog")
 
@@ -72,7 +74,7 @@ class ChangelogPlugin : Plugin<Project> {
                         ),
                     )
                     releaseVersion.convention(providers.gradleProperty("releaseVersion"))
-                    releaseDate.convention(providers.gradleProperty("releaseDate"))
+                    providers.gradleProperty("releaseDate").orNull?.let { releaseDate.set(it) }
                 }
 
                 tasks.register<WriteReleaseNotesTask>(WriteReleaseNotesTask.TASK_NAME) {
