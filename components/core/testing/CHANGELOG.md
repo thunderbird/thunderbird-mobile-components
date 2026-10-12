@@ -6,7 +6,9 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 
 Changelog entries are derived from commit history and grouped by commit type.
 
-## Unreleased 
+## Unreleased
+
+## 0.1.0 - 2026-10-12
 
 ### Features
 
