@@ -9,9 +9,12 @@ import java.io.File
 import net.thunderbird.gradle.plugin.versioning.internal.VersionManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.UntrackedTask
 
@@ -19,6 +22,9 @@ import org.gradle.api.tasks.UntrackedTask
  * Prints the release groups of a BOM release train, one per line:
  *
  * `<release tag> <version directory> <project path>...`
+ *
+ * The lines are also written to [outputFile] when it is set, so CI scripts can read them without
+ * hiding the Gradle output.
  *
  * Projects are grouped by their nearest version.properties file, in the order they are declared.
  * Project directories are derived from project paths, relative to the repository root.
@@ -36,6 +42,10 @@ abstract class PrintReleaseGroupsTask : DefaultTask() {
 
     @get:Internal
     abstract val componentsDir: DirectoryProperty
+
+    @get:OutputFile
+    @get:Optional
+    abstract val outputFile: RegularFileProperty
 
     @TaskAction
     fun print() {
@@ -57,12 +67,14 @@ abstract class PrintReleaseGroupsTask : DefaultTask() {
             groups.getOrPut(versionFile.parentFile) { mutableListOf() } += path
         }
 
-        for ((versionDir, paths) in groups) {
+        val lines = groups.map { (versionDir, paths) ->
             val version = VersionManager(base = versionDir, root = root).get()
             val tag = "${versionDir.name}-${version.toStringValue()}"
             val relativeDir = versionDir.relativeTo(root).invariantSeparatorsPath
-            println("$tag $relativeDir ${paths.joinToString(" ")}")
+            "$tag $relativeDir ${paths.joinToString(" ")}"
         }
+        lines.forEach(::println)
+        outputFile.orNull?.asFile?.writeText(lines.joinToString(separator = "\n", postfix = "\n"))
     }
 
     private fun findProjectPaths(root: File, dir: File): Set<String> = dir.walkTopDown()

@@ -104,7 +104,7 @@ The workflow creates the release tag locally, writes GitHub Release notes from t
 publishes the component to Maven Central, then pushes the tag and creates the GitHub Release after publishing succeeds.
 
 For a BOM release train, run **Publish - Release All Components** from the merged `main` commit instead. It lists the
-project constraints in `components/bom/build.gradle.kts` (`./gradlew -q :components:bom:printReleaseGroups`), groups
+project constraints in `components/bom/build.gradle.kts` (`./gradlew :components:bom:printReleaseGroups`), groups
 them by their nearest `version.properties`, and releases each group with its own tag and GitHub Release, the BOM last.
 Prepare and finalize the changelog for each group you bumped (including the BOM) in the release PR.
 
@@ -178,7 +178,7 @@ manifest is written to the workflow step summary.
 To preview the manifest locally:
 
 ```bash
-./gradlew -q :components:bom:printReleaseGroups | grep -v '^\[' > release-groups.txt
+./gradlew :components:bom:printReleaseGroups -PreleaseGroupsFile="$PWD/release-groups.txt"
 scripts/ci/write-snapshot-manifest.sh release-groups.txt
 ```
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Usage: write-snapshot-manifest.sh <release groups file> [output]
-# The release groups file is the output of `./gradlew -q :components:bom:printReleaseGroups`.
+# The release groups file is written by `./gradlew :components:bom:printReleaseGroups -PreleaseGroupsFile=<file>`.
 groups_file="$1"
 output="${2:-/dev/stdout}"
 repository_url="${SNAPSHOT_REPOSITORY_URL:-https://central.sonatype.com/repository/maven-snapshots/}"

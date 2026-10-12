@@ -55,6 +55,24 @@ class PrintReleaseGroupsTaskTest {
     }
 
     @Test
+    fun `print writes groups to output file when set`() {
+        // Arrange
+        val rootDir = temporaryFolder.newFolder("print-release-groups-task-test")
+        rootDir.writeVersion("components/bom", "3.0.1")
+        rootDir.createProject("components/bom")
+        val outputFile = rootDir.resolve("out/release-groups.txt")
+        outputFile.parentFile.mkdirs()
+        val task = createTask(rootDir, ":components:bom")
+        task.outputFile.set(outputFile)
+
+        // Act
+        captureStandardOut { task.print() }
+
+        // Assert
+        assertThat(outputFile.readText()).isEqualTo("bom-3.0.1 components/bom :components:bom\n")
+    }
+
+    @Test
     fun `print fails for project without build file`() {
         // Arrange
         val rootDir = temporaryFolder.newFolder("print-release-groups-task-test")

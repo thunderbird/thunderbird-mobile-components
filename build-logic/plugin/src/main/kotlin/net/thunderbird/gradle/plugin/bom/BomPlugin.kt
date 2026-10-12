@@ -5,6 +5,7 @@
  */
 package net.thunderbird.gradle.plugin.bom
 
+import java.io.File
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependencyConstraint
@@ -49,6 +50,9 @@ class BomPlugin : Plugin<Project> {
             @Suppress("UnstableApiUsage")
             repoRootDir.set(project.isolated.rootProject.projectDirectory)
             componentsDir.set(project.layout.projectDirectory.dir(".."))
+            providers.gradleProperty("releaseGroupsFile").orNull?.let { releaseGroupsFile ->
+                outputFile.set(layout.file(provider { File(releaseGroupsFile) }))
+            }
         }
     }
 }

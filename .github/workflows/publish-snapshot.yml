@@ -54,6 +54,8 @@ jobs:
       - name: Setup Gradle environment
         if: steps.snapshot-marker.outputs.publish == 'true'
         uses: ./.github/actions/setup-gradle
+        with:
+          disable-cache: 'true'
 
       - name: Publish snapshot
         if: steps.snapshot-marker.outputs.publish == 'true'
@@ -62,7 +64,7 @@ jobs:
 
           # Publish exactly the BOM release train, the same projects as Publish - Release All Components.
           groups_file="${RUNNER_TEMP}/release-groups.txt"
-          ./gradlew -q :components:bom:printReleaseGroups | grep -E '^[a-zA-Z0-9._-]+-[0-9]+\.[0-9]+\.[0-9]+ ' > "${groups_file}"
+          ./gradlew :components:bom:printReleaseGroups -PreleaseGroupsFile="${groups_file}"
           read -r -a projects <<< "$(cut -d ' ' -f 3- "${groups_file}" | tr '\n' ' ')"
 
           ./gradlew "${projects[@]/%/:validateSnapshotVersionForPublishing}"

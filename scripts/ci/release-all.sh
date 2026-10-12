@@ -11,10 +11,12 @@ groups_file="${work_dir}/release-groups.txt"
 pending_file="${work_dir}/release-pending.txt"
 
 # One line per version group: <tag> <version dir> <project path>..., BOM last.
-./gradlew -q :components:bom:printReleaseGroups | grep -E '^[a-zA-Z0-9._-]+-[0-9]+\.[0-9]+\.[0-9]+ ' > "$groups_file"
+./gradlew :components:bom:printReleaseGroups -PreleaseGroupsFile="$groups_file"
 
 # Preflight every group before publishing anything. A group whose tag already exists is
 # skipped if nothing in its version dir changed since; otherwise its version must be bumped.
+# Pending groups are tagged locally, because a project only resolves to its release version
+# when HEAD carries its tag. Tags are pushed only after the group is published.
 : > "$pending_file"
 while read -r tag version_dir paths <&3; do
   read -r -a projects <<< "$paths"
@@ -33,16 +35,22 @@ while read -r tag version_dir paths <&3; do
     continue
   fi
 
-  ./gradlew "${projects[0]}:writeReleaseNotes" -PreleaseNotesFile="$notes_file" \
-    "${projects[@]/%/:validateStableVersionForPublishing}"
+  ./gradlew "${projects[0]}:writeReleaseNotes" -PreleaseNotesFile="$notes_file" "${projects[0]}:createReleaseTag"
   echo "$tag $version_dir $paths" >> "$pending_file"
 done 3< "$groups_file"
 
+if [[ ! -s "$pending_file" ]]; then
+  echo "All groups already released."
+  exit 0
+fi
+
+read -r -a pending_projects <<< "$(cut -d ' ' -f 3- "$pending_file" | tr '\n' ' ')"
+./gradlew "${pending_projects[@]/%/:validateStableVersionForPublishing}"
+
 # Maven Central rejects versions that already exist, so a rerun cannot republish a group.
-# Tag each group right after publishing so a rerun skips it.
+# Push each tag right after publishing its group so a rerun skips it.
 while read -r tag version_dir paths <&3; do
   read -r -a projects <<< "$paths"
-  ./gradlew "${projects[0]}:createReleaseTag"
   ./gradlew "${projects[@]/%/:publishAndReleaseToMavenCentral}"
   git push origin "refs/tags/${tag}"
   gh release create "$tag" --title "$tag" --verify-tag \
