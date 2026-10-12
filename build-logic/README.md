@@ -35,7 +35,8 @@ Supportive/quality and tooling plugins:
 - `net.thunderbird.gradle.plugin.bom` — Publishes a Java platform BOM with changelog, versioning, and publishing.
   - `printReleaseGroups`: prints one `<tag> <version dir> <project path>...` line per version group of the BOM
     constraints, followed by the BOM itself. Fails if a project under `components/` is missing from the BOM. Used by
-    the **Publish - Release All Components** and **Publish - Snapshot All Components** workflows.
+    the **Publish - Release All Components** and **Publish - Snapshot All Components** workflows, which pass
+    `-PreleaseGroupsFile=<file>` to also write the lines to a file.
 - `net.thunderbird.gradle.plugin.versioning` — Reads and updates component versions from the nearest
   `version.properties`.
   - Version resolution: builds from a commit tagged with `<component>-<version>` use `<version>`;

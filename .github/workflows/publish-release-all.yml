@@ -37,6 +37,8 @@ jobs:
 
       - name: Setup Gradle environment
         uses: ./.github/actions/setup-gradle
+        with:
+          disable-cache: 'true'
 
       - name: Configure Git author
         run: |

@@ -104,7 +104,7 @@ The workflow creates the release tag locally, writes GitHub Release notes from t
 publishes the component to Maven Central, then pushes the tag and creates the GitHub Release after publishing succeeds.
 
 For a BOM release train, run **Publish - Release All Components** from the merged `main` commit instead. It lists the
-project constraints in `components/bom/build.gradle.kts` (`./gradlew -q :components:bom:printReleaseGroups`), groups
+project constraints in `components/bom/build.gradle.kts` (`./gradlew :components:bom:printReleaseGroups`), groups
 them by their nearest `version.properties`, and releases each group with its own tag and GitHub Release, the BOM last.
 Prepare and finalize the changelog for each group you bumped (including the BOM) in the release PR.
 
@@ -116,6 +116,15 @@ published.
 Each group is tagged and its GitHub Release created right after it is published. Maven Central rejects versions that
 already exist, so a rerun never republishes a group. If publishing succeeds but pushing the tag fails, push the tag
 and create the GitHub Release manually. Published groups cannot be rolled back.
+
+To check a release train without publishing, run the same steps as a dry run. It writes release notes, creates the
+release tags locally, and runs the stable version check, then deletes the local tags. It skips publishing, pushing
+tags, and creating GitHub Releases. The **Validate - Release** workflow runs it on pull requests that touch the release
+setup, versions, or changelogs, and can be triggered manually on `main` before a release.
+
+```bash
+scripts/ci/release-all.sh --dry-run
+```
 
 The workflow performs these Gradle steps:
 
@@ -175,15 +184,17 @@ The `snapshot/latest` marker is an annotated tag. Its tag message contains the p
 the commit, snapshot repository URL, and the Gradle path plus Maven coordinates for each published component. The same
 manifest is written to the workflow step summary.
 
-To preview the manifest locally:
+The workflow runs `scripts/ci/publish-snapshot.sh`, which runs `validateSnapshotVersionForPublishing` and then
+`publishToMavenCentral` for each project listed by `printReleaseGroups`, each in a single Gradle invocation, and writes
+the manifest to `$RUNNER_TEMP/snapshot-manifest.md`.
+
+To check snapshot publishing and preview the manifest without publishing, run it as a dry run. The **Validate -
+Release** workflow runs this dry run on pull requests too.
 
 ```bash
-./gradlew -q :components:bom:printReleaseGroups | grep -v '^\[' > release-groups.txt
-scripts/ci/write-snapshot-manifest.sh release-groups.txt
+RUNNER_TEMP="$PWD/build" scripts/ci/publish-snapshot.sh --dry-run
+cat build/snapshot-manifest.md
 ```
-
-The workflow runs `validateSnapshotVersionForPublishing` and then `publishToMavenCentral` for each project listed by
-`printReleaseGroups`, each in a single Gradle invocation.
 
 For local verification, publish to Maven Local instead:
 
