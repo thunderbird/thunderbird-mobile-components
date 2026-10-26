@@ -10,7 +10,7 @@
 # 3. Run the examples and check for any issues.
 
 [versions]
-androidGradlePlugin = "9.2.1"
+androidGradlePlugin = "9.4.1"
 androidXActivity = "1.13.0"
 androidXCompose = "1.11.3"
 assertk = "0.28.1"
