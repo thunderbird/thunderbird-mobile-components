@@ -5,9 +5,10 @@
  */
 package net.thunderbird.components.core.logging
 
+import assertk.assertThat
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import de.infix.testBalloon.framework.core.testSuite
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 val logSinkTest by testSuite("LogSink") {
 
@@ -16,7 +17,7 @@ val logSinkTest by testSuite("LogSink") {
         val testSubject = TestLogSink(LogLevel.INFO)
 
         // Act && Assert
-        assertTrue { testSubject.canLog(LogLevel.INFO) }
+        assertThat(testSubject.canLog(LogLevel.INFO)).isTrue()
     }
 
     test("canLog should return false for level below sink level") {
@@ -24,7 +25,7 @@ val logSinkTest by testSuite("LogSink") {
         val testSubject = TestLogSink(LogLevel.INFO)
 
         // Act && Assert
-        assertFalse { testSubject.canLog(LogLevel.DEBUG) }
+        assertThat(testSubject.canLog(LogLevel.DEBUG)).isFalse()
     }
 
     test("canLog should return true for level above sink level") {
@@ -32,7 +33,7 @@ val logSinkTest by testSuite("LogSink") {
         val testSubject = TestLogSink(LogLevel.INFO)
 
         // Act && Assert
-        assertTrue { testSubject.canLog(LogLevel.WARN) }
+        assertThat(testSubject.canLog(LogLevel.WARN)).isTrue()
     }
 }
 

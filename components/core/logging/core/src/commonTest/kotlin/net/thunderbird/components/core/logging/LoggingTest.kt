@@ -5,11 +5,12 @@
  */
 package net.thunderbird.components.core.logging
 
+import assertk.assertThat
+import assertk.assertions.isInstanceOf
 import de.infix.testBalloon.framework.core.testSuite
-import kotlin.test.assertIs
 
 val loggingTest by testSuite("Logging") {
     test("create returns a default logger") {
-        assertIs<DefaultLogger>(Logging.create())
+        assertThat(Logging.create()).isInstanceOf<DefaultLogger>()
     }
 }
