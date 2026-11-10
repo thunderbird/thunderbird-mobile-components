@@ -5,8 +5,10 @@
  */
 package net.thunderbird.quality.util
 
+import com.lemonappdev.konsist.api.container.KoScope
+
 /**
- * Fails if any project import matches [isForbidden], except in [excludedFileNames].
+ * Fails if any import in [scope] matches [isForbidden], except in [excludedFileNames].
  *
  * Reports violations grouped by import, with replacements and clickable source locations.
  */
@@ -14,9 +16,10 @@ fun assertNoForbiddenImports(
     message: String,
     replacementFor: (importName: String) -> String,
     excludedFileNames: Set<String> = emptySet(),
+    scope: KoScope = projectScope,
     isForbidden: (importName: String) -> Boolean,
 ) {
-    val violations = projectScope.files
+    val violations = scope.files
         .filterNot { it.name in excludedFileNames }
         .flatMap { it.imports }
         .filter { isForbidden(it.name) }
