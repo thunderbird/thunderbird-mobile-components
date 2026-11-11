@@ -5,10 +5,11 @@
  */
 package net.thunderbird.components.core.logging.console
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogEvent
 import net.thunderbird.components.core.logging.LogLevel
 
@@ -21,7 +22,7 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
         val testSubject = ConsoleLogSink(LogLevel.INFO)
 
         // Act & Assert
-        assertEquals(expected = LogLevel.INFO, actual = testSubject.level)
+        assertThat(testSubject.level).isEqualTo(LogLevel.INFO)
     }
 
     test("shouldLogMessages") {
@@ -52,7 +53,7 @@ val consoleLogSinkTest by testSuite("ConsoleLogSink") {
                 val expectedOutput = "[INFO] [$TAG] This is an info message"
                 println("[DEBUG_LOG] Expected output: '$expectedOutput'")
 
-                assertEquals(expected = expectedOutput, actual = output)
+                assertThat(output).isEqualTo(expectedOutput)
             } finally {
                 System.setOut(originalOut)
             }

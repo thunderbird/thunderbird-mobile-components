@@ -5,8 +5,9 @@
  */
 package net.thunderbird.components.core.logging.testing
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
-import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogLevel
 
 val testLogLevelManagerTest by testSuite("TestLogLevelManager") {
@@ -14,9 +15,9 @@ val testLogLevelManagerTest by testSuite("TestLogLevelManager") {
         val manager = TestLogLevelManager()
 
         manager.override(LogLevel.ERROR)
-        assertEquals(expected = LogLevel.ERROR, actual = manager.current())
+        assertThat(manager.current()).isEqualTo(LogLevel.ERROR)
 
         manager.restoreDefault()
-        assertEquals(expected = LogLevel.VERBOSE, actual = manager.current())
+        assertThat(manager.current()).isEqualTo(LogLevel.VERBOSE)
     }
 }

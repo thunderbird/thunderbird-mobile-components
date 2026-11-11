@@ -5,9 +5,10 @@
  */
 package net.thunderbird.components.core.logging.testing
 
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
 import de.infix.testBalloon.framework.core.testSuite
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
 import net.thunderbird.components.core.logging.LogLevel
 
 private const val TAG = "TestLoggerTest"
@@ -18,14 +19,11 @@ val testLoggerTest by testSuite("TestLogger") {
         logger.info(tag = TAG) { "first line\nsecond line" }
         logger.error(tag = TAG, throwable = IllegalStateException("failure")) { "failed" }
 
-        assertEquals(
-            expected = "I: first line   \n   second line\n",
-            actual = logger.formatForDump(logger.events[0]),
-        )
+        assertThat(logger.formatForDump(logger.events[0])).isEqualTo("I: first line   \n   second line\n")
         val errorOutput = logger.formatForDump(logger.events[1])
-        assertContains(charSequence = errorOutput, other = "E: failed")
-        assertContains(charSequence = errorOutput, other = "IllegalStateException: failure")
-        assertContains(charSequence = errorOutput, other = "      ")
+        assertThat(errorOutput).contains("E: failed")
+        assertThat(errorOutput).contains("IllegalStateException: failure")
+        assertThat(errorOutput).contains("      ")
     }
 
     test("records every log level") {
@@ -37,9 +35,8 @@ val testLoggerTest by testSuite("TestLogger") {
         logger.warn(tag = TAG) { "warn" }
         logger.error(tag = TAG) { "error" }
 
-        assertEquals(
-            expected = listOf(LogLevel.VERBOSE, LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR),
-            actual = logger.events.map { it.level },
+        assertThat(logger.events.map { it.level }).isEqualTo(
+            listOf(LogLevel.VERBOSE, LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR),
         )
     }
 }

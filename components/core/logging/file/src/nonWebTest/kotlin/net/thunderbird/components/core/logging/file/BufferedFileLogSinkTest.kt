@@ -5,13 +5,15 @@
  */
 package net.thunderbird.components.core.logging.file
 
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isTrue
 import de.infix.testBalloon.framework.core.testSuite
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
 import io.github.vinceglb.filekit.writeString
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import net.thunderbird.components.core.logging.LogEvent
@@ -43,12 +45,12 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             )
 
             sink.flush()
-            assertContains(logFile.readString(), "First event")
+            assertThat(logFile.readString()).contains("First event")
 
             sink.exportAndClear(exportedFile)
 
-            assertContains(exportedFile.readString(), "First event")
-            assertEquals("", logFile.readString())
+            assertThat(exportedFile.readString()).contains("First event")
+            assertThat(logFile.readString()).isEqualTo("")
         }
 
         test("flush appends to an existing file") { directory ->
@@ -60,8 +62,8 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             sink.flush()
 
             val content = logFile.readString()
-            assertTrue(content.startsWith("Existing content\n"))
-            assertContains(content, "New event")
+            assertThat(content.startsWith("Existing content\n")).isTrue()
+            assertThat(content).contains("New event")
         }
 
         test("formats aligned levels and stack traces") { _ ->
@@ -86,10 +88,10 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
             sink.flush()
 
             val lines = appended.single().lines()
-            assertContains(lines.first(), "[ERROR  ] [Short")
-            assertContains(lines.first(), "] Failure")
-            assertTrue(lines[1].startsWith(" ".repeat(lines.first().indexOf("Failure"))))
-            assertContains(lines[1], "IllegalStateException: broken")
+            assertThat(lines.first()).contains("[ERROR  ] [Short")
+            assertThat(lines.first()).contains("] Failure")
+            assertThat(lines[1].startsWith(" ".repeat(lines.first().indexOf("Failure")))).isTrue()
+            assertThat(lines[1]).contains("IllegalStateException: broken")
         }
 
         test("export preserves the source log") { directory ->
@@ -106,7 +108,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
 
             sink.export(destination)
 
-            assertEquals(expected = listOf(destination), actual = copiedDestinations)
+            assertThat(copiedDestinations).isEqualTo(listOf(destination))
         }
 
         test("flushes automatically after the buffer is full") { _ ->
@@ -124,8 +126,8 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
                 sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event $index", timestamp = 0))
             }
 
-            assertEquals(expected = 1, actual = appendedContent.size)
-            assertContains(charSequence = appendedContent.single(), other = "event 4")
+            assertThat(appendedContent.size).isEqualTo(1)
+            assertThat(appendedContent.single()).contains("event 4")
         }
 
         test("reports write errors") { _ ->
@@ -143,7 +145,7 @@ val bufferedFileLogSinkTest by testSuite("BufferedFileLogSink") {
                 sink.log(LogEvent(level = LogLevel.INFO, tag = TAG, message = "event", timestamp = 0))
             }
 
-            assertTrue(reportedErrors.single() is IllegalStateException)
+            assertThat(reportedErrors.single()).isInstanceOf<IllegalStateException>()
         }
     }
 }
