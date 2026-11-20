@@ -45,7 +45,7 @@ android-lint = { id = "com.android.lint", version.ref = "androidGradlePlugin" }
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinBom" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
-dependency-check = { id = "com.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
+dependency-check = { id = "io.github.ben-manes.versions", version.ref = "dependencyCheckPlugin" }
 detekt = { id = "dev.detekt", version.ref = "detektPlugin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaPlugin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinBom" }

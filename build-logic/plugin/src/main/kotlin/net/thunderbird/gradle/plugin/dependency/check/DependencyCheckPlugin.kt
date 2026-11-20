@@ -17,7 +17,7 @@ import org.gradle.kotlin.dsl.withType
 class DependencyCheckPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.github.ben-manes.versions")
+            pluginManager.apply("io.github.ben-manes.versions")
 
             tasks.withType<DependencyUpdatesTask> {
                 rejectVersionIf {
