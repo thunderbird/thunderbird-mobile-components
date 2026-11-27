@@ -26,6 +26,24 @@ If you encounter a bug or have a feature request, please follow these steps:
 - Search the [existing issues](https://github.com/thunderbird/thunderbird-mobile-components/issues?q=is%3Aissue) to see if your issue or feature has already been reported.
 - If you can't find an existing issue, please [open a new issue](https://github.com/thunderbird/thunderbird-mobile-components/issues/new/choose) on GitHub.
 
+## Translations
+
+English source strings are maintained in this repository. Translations are managed through Weblate and stored in the
+[localization repository](https://github.com/thunderbird/thunderbird-mobile-components-l10n).
+
+After source changes merge, maintainers run the localization repository's
+[Import from Source workflow](https://github.com/thunderbird/thunderbird-mobile-components-l10n/actions/workflows/l10n-sync-from-source.yml)
+and review and merge its import pull request. The import records the files and keys belonging to `main` in
+`l10n-sync-manifest.json`.
+
+The [Translation Update workflow](https://github.com/thunderbird/thunderbird-mobile-components/actions/workflows/l10n-translation-update.yml)
+runs weekly or manually. It uses the localization repository's released `scripts/l10n-sync` launcher to export only
+translations for `main`, without changing English source files, and opens a pull request. The pull request records the
+localization revision and includes contributor attribution in `Co-authored-by` trailers.
+
+Translation edits should be made through Weblate, not directly in this source repository. For tooling setup and
+component management, see the localization repository's README.
+
 ## Contributing Code
 
 > [!IMPORTANT]
